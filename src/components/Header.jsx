@@ -12,7 +12,7 @@ export default function Header() {
             ['Community', '#community'],
             ['Events', '#events'],
             ['Goals', '#goals'],
-            ['Contact', '#goals'],
+            ['Contact', '#contact'],
           ].map(([label, href]) => (
             <li key={href}><a className="nav__link" href={href}>{label}</a></li>
           ))}
