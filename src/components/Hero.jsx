@@ -7,7 +7,7 @@ export default function Hero() {
         <p className="hero__tagline">Robotics • IoT</p>
         <div className="hero__buttons">
           <a className="btn btn--primary" href="#projects">View Projects</a>
-          <a className="btn btn--secondary" href="#goals">Contact</a>
+          <a className="btn btn--secondary" href="#contact">Contact</a>
         </div>
       </div>
     </section>
