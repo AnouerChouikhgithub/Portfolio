@@ -12,7 +12,7 @@ export default function Contact() {
     const formData = new FormData(form);
 
     try {
-      const res = await fetch('/', {
+      const res = await fetch('/__forms.html', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(formData).toString(),
@@ -44,7 +44,7 @@ export default function Contact() {
           onSubmit={handleSubmit}
         >
           <input type="hidden" name="form-name" value="contact" />
-          <input type="hidden" name="bot-field" />
+          <p style={{ display: 'none' }}><label>Don't fill this out: <input name="bot-field" /></label></p>
           <div className="contact__row">
             <label className="contact__field">
               <span>Enter your name <sup>*</sup></span>
