@@ -5,8 +5,8 @@ import * as nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "anouer.chouikh2005@gmail.com",
-    pass: "pwyb awgi vnzu svgn",
+    user: "your-email",
+    pass: "your-app-password",
   },
 });
 
@@ -20,8 +20,8 @@ export const sendContactEmail = onDocumentCreated(
     const data = snap.data();
 
     const mailOptions = {
-      from: "Portfolio Contact <anouer.chouikh2005@gmail.com>",
-      to: "anouer.chouikh2005@gmail.com",
+      from: "Portfolio Contact <your-email>",
+      to: "your-email",
       subject: `New message from ${data.name}`,
       text: `
 Name: ${data.name}
