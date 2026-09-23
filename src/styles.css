@@ -211,6 +211,17 @@ a:focus-visible {
     animation: fadeInUp 1s ease-out;
 }
 
+.hero__portrait {
+    display: block;
+    width: clamp(160px, 20vw, 210px);
+    aspect-ratio: 1;
+    margin: 0 auto 1.75rem;
+    border: 3px solid var(--accent);
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.35);
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -2102,6 +2113,11 @@ a:focus-visible {
     .hero__buttons {
         flex-direction: column;
         align-items: center;
+    }
+
+    .hero__portrait {
+        width: 160px;
+        margin-bottom: 1.5rem;
     }
 
     .btn {

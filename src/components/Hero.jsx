@@ -46,6 +46,11 @@ export default function Hero() {
     <>
       <section className="hero container" aria-labelledby="hero-heading">
         <div className="hero__content">
+          <img
+            className="hero__portrait"
+            src="/me2.jpg"
+            alt="Portrait of Anouer Chouikh"
+          />
           <h1 id="hero-heading" className="hero__name">Anouer Chouikh</h1>
           <p className="hero__title">3rd year student in  Computer Engneering & Internet of Things (ISITCom)</p>
           <p className="hero__tagline">Robotics • IoT</p>
