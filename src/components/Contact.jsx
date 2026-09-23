@@ -62,6 +62,7 @@ export default function Contact() {
     } finally {
       setIsSending(false);
     }
+    console.log('KEY:', import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
   };
 
   return (
