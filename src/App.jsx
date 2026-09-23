@@ -6,7 +6,6 @@ import Skills from './components/Skills'
 import Projects from './components/Projects'
 import Community from './components/Community'
 import Events from './components/Events'
-import Goals from './components/Goals'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 
@@ -21,7 +20,6 @@ export default function App() {
         <section id="projects" className="projects"><Projects /></section>
         <section id="community" className="community"><Community /></section>
         <section id="events" className="events"><Events /></section>
-        <section id="goals" className="goals"><Goals /></section>
         <section id="contact" className="contact"><Contact /></section>
         <DeviceDetector />
       </main>

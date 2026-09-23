@@ -1,19 +1,20 @@
-import React, { useState } from "react";
-import { db } from "../firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import React, { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
 
 export default function Contact() {
   const [status, setStatus] = useState('');
   const [errors, setErrors] = useState({});
+  const [isSending, setIsSending] = useState(false);
+  const form = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = e.target;
+    const formElement = e.target;
 
-    const name = form.name.value.trim();
-    const email = form.email.value.trim();
-    const phone = form.phone.value.trim();
-    const message = form.message.value.trim();
+    const name = formElement.from_name.value.trim();
+    const email = formElement.from_email.value.trim();
+    const phone = formElement.phone.value.trim();
+    const message = formElement.message.value.trim();
 
     let newErrors = {};
 
@@ -43,27 +44,23 @@ export default function Contact() {
     }
 
     setErrors({});
+    setStatus('');
+    setIsSending(true);
 
     try {
-      await addDoc(collection(db, "contacts"), {
-        name,
-        email,
-        phone: phone || null,
-        message,
-        createdAt: serverTimestamp(),
-      });
-
+      await emailjs.sendForm(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        form.current,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
       setStatus('Message sent — thank you!');
-      form.reset();
+      formElement.reset();
     } catch (err) {
-      console.error(err);
-      
-      // If we got an error, it's often a Firestore permissions error rather than a connection drop
-      if (err.message && err.message.includes("Missing or insufficient permissions")) {
-        setStatus('Send failed: Permission Denied. Please ensure your Firestore Rules allow writes!');
-      } else {
-        setStatus(`Send failed: ${err.message || 'please check your connection.'}`);
-      }
+      console.error('EmailJS error:', err);
+      setStatus('Send failed: please check your connection and try again.');
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -76,12 +73,13 @@ export default function Contact() {
           name="contact"
           className="contact__form"
           noValidate
+          ref={form}
           onSubmit={handleSubmit}
         >
           <div className="contact__row">
             <label className="contact__field">
               <span>Enter your name <sup>*</sup></span>
-              <input type="text" name="name" placeholder="Name" />
+              <input type="text" name="from_name" placeholder="Name" />
               {errors.name && (
                 <span className="contact__error" style={{ color: '#ff4d4f', fontSize: '0.875rem', marginTop: '0.25rem' }}>
                   {errors.name}
@@ -91,7 +89,7 @@ export default function Contact() {
 
             <label className="contact__field">
               <span>Enter your email <sup>*</sup></span>
-              <input type="email" name="email" placeholder="Email" />
+              <input type="email" name="from_email" placeholder="Email" />
               {errors.email && (
                 <span className="contact__error" style={{ color: '#ff4d4f', fontSize: '0.875rem', marginTop: '0.25rem' }}>
                   {errors.email}
@@ -120,8 +118,8 @@ export default function Contact() {
             )}
           </label>
 
-          <button type="submit" className="btn btn--primary contact__button">
-            Send
+          <button type="submit" className="btn btn--primary contact__button" disabled={isSending}>
+            {isSending ? 'Sending...' : 'Send'}
           </button>
 
           {status && <p className="contact__status">{status}</p>}
