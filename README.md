@@ -2,7 +2,7 @@
 
 My personal portfolio website, built with React. Showcases my projects, skills, and a contact form to get in touch.
 
-🔗 **Live site:** [add your live URL here]
+🔗 **Live site:** [chouikh-anouer.netlify.app****]
 
 ## Features
 
@@ -14,7 +14,7 @@ My personal portfolio website, built with React. Showcases my projects, skills, 
 ## Tech Stack
 
 - React
-- [Add any other libraries you used: e.g. Tailwind CSS, React Router, Framer Motion]
+- [Tailwind CSS, React Router, Framer Motion]
 
 ## Getting Started
 
