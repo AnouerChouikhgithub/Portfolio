@@ -1,7 +1,7 @@
 // Netlify Function: receives contact form submissions and forwards them
 // Configure `DASHBOARD_WEBHOOK` in Netlify site environment variables
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
