@@ -98,16 +98,8 @@ emailjs.send(
 );
 ```
 
-## Deployment
-
-[Add notes on how/where this is deployed — e.g. Vercel, Netlify, GitHub Pages — and whether it auto-deploys on push to `main`.]
-
-## License
-
-[Add a license if you want, e.g. MIT]
-
 ## Contact
 
-- Portfolio: [your live URL]
-- Email: [your contact email]
-- LinkedIn: [your LinkedIn URL]
+- Portfolio: [https://chouikh-anouer.netlify.app/]
+- Email: [anouer.chouikh2005@mail.com]
+- LinkedIn: [[your LinkedIn URL](https://www.linkedin.com/in/anouer-chouikh-303306220/)]
