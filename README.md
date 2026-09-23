@@ -1,19 +1,113 @@
+# Portfolio
 
-# Anouer — Engineering & Innovation Portfolio (React + Vite)
+My personal portfolio website, built with React. Showcases my projects, skills, and a contact form to get in touch.
 
-This project is a React conversion of your static `index.html` + `style.css` portfolio.
+🔗 **Live site:** [add your live URL here]
 
-## Commands
+## Features
+
+- Responsive design
+- Project showcase section
+- About / Skills section
+- Contact ("Connect") form powered by EmailJS
+
+## Tech Stack
+
+- React
+- [Add any other libraries you used: e.g. Tailwind CSS, React Router, Framer Motion]
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v16+ recommended)
+- npm or yarn
+
+### Installation
 
 ```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
 npm install
-npm run dev     # start in development
-npm run build   # production build
-npm run preview # preview the production build
 ```
 
-## Notes
-- All sections are React components in `src/components`.
-- Styles are from your original `style.css` and imported in `src/main.jsx`.
-- Replace `public/portrait.svg` with a real photo (e.g., `portrait.jpg`) if you wish — keep the same path/name.
-- Update links for GitHub/LinkedIn in `Contact.jsx` and `Footer.jsx`.
+### Running Locally
+
+```bash
+npm start
+```
+
+The app will run at `http://localhost:3000`.
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+## Contact Form Setup (EmailJS)
+
+The Connect/Contact form uses [EmailJS](https://www.emailjs.com/) to send messages directly from the frontend without a backend server.
+
+### 1. Create an EmailJS account
+
+Sign up at [emailjs.com](https://www.emailjs.com/) and create a project.
+
+### 2. Add an Email Service
+
+- Go to **Email Services** in the EmailJS dashboard.
+- Add an SMTP service (e.g. Gmail SMTP).
+- **Sender account:** use the email address you want messages to be sent *from*.
+- If using Gmail, you'll need to generate an **App Password**:
+  1. Enable 2-Step Verification on that Google account.
+  2. Go to `myaccount.google.com/apppasswords`.
+  3. Create a new app password and paste it into the EmailJS "App Password" field.
+
+> ⚠️ **Important:** Don't set the sender and recipient to the *same* Gmail address — Gmail suppresses notifications for self-sent mail. Use a different address as the sender than the one you want notified.
+
+### 3. Create a Template
+
+- Go to **Email Templates** and create a new template.
+- On the **Content** tab, set the **To Email** field to the address you want to receive messages at.
+- Design your template using variables like `{{name}}`, `{{email}}`, `{{message}}` to match your form fields.
+
+### 4. Add Environment Variables
+
+Create a `.env` file in the project root (and add it to `.gitignore`):
+
+```
+REACT_APP_EMAILJS_SERVICE_ID=your_service_id
+REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id
+REACT_APP_EMAILJS_PUBLIC_KEY=your_public_key
+```
+
+### 5. Send Emails from the Form
+
+```javascript
+import emailjs from '@emailjs/browser';
+
+emailjs.send(
+  process.env.REACT_APP_EMAILJS_SERVICE_ID,
+  process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+  {
+    name: formData.name,
+    email: formData.email,
+    message: formData.message,
+  },
+  process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+);
+```
+
+## Deployment
+
+[Add notes on how/where this is deployed — e.g. Vercel, Netlify, GitHub Pages — and whether it auto-deploys on push to `main`.]
+
+## License
+
+[Add a license if you want, e.g. MIT]
+
+## Contact
+
+- Portfolio: [your live URL]
+- Email: [your contact email]
+- LinkedIn: [your LinkedIn URL]
