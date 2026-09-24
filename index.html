@@ -19,6 +19,16 @@
     <link rel="icon" href="/AnouerChouikhLogo.ico" />
   </head>
   <body>
+    <!-- Netlify: static form markup so Netlify can detect the form at build time -->
+    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input type="hidden" name="bot-field" />
+      <input type="text" name="from_name" />
+      <input type="email" name="from_email" />
+      <input type="tel" name="phone" />
+      <textarea name="message"></textarea>
+    </form>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
