@@ -91,6 +91,7 @@ export default function Contact() {
           name="contact"
           className="contact__form"
           method="POST"
+          action="/"
           data-netlify="true"
           data-netlify-honeypot="bot-field"
           noValidate

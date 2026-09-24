@@ -20,7 +20,7 @@
   </head>
   <body>
     <!-- Netlify: static form markup so Netlify can detect the form at build time -->
-    <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <form name="contact" method="POST" action="/" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
       <input type="hidden" name="form-name" value="contact" />
       <input type="hidden" name="bot-field" />
       <input type="text" name="from_name" />
