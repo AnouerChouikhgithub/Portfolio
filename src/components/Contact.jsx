@@ -75,12 +75,11 @@ export default function Contact() {
       setStatus(t('contact.sent'));
       formElement.reset();
     } catch (err) {
-      console.error('EmailJS error:', err);
+      console.error('Contact form submission error:', err);
       setStatus(t('contact.failed'));
     } finally {
       setIsSending(false);
     }
-    console.log('KEY:', import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
   };
 
   return (
@@ -94,6 +93,7 @@ export default function Contact() {
           method="POST"
           action="/"
           data-netlify="true"
+          netlify
           netlify-honeypot="bot-field"
           noValidate
           ref={form}
