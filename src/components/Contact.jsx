@@ -51,17 +51,21 @@ export default function Contact() {
 
     try {
       if (import.meta.env.PROD) {
-        const formData = new URLSearchParams(new FormData(formElement));
-        formData.set('form-name', 'contact');
+        const payload = {
+          from_name: name,
+          from_email: email,
+          phone: phone || undefined,
+          message,
+        };
 
-        const response = await fetch('/', {
+        const response = await fetch('/.netlify/functions/notify', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData.toString(),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
-          throw new Error(`Netlify Forms submission failed with status ${response.status}`);
+          throw new Error(`Submission failed with status ${response.status}`);
         }
       } else {
         await emailjs.sendForm(
@@ -88,18 +92,11 @@ export default function Contact() {
         <h2 className="section__title">{t('sections.contact')}</h2>
 
         <form
-          name="contact"
           className="contact__form"
-          method="POST"
-          data-netlify="true"
-          netlify
-          netlify-honeypot="bot-field"
           noValidate
           ref={form}
           onSubmit={handleSubmit}
         >
-          <input type="hidden" name="form-name" value="contact" />
-          <input type="hidden" name="bot-field" />
           <div className="contact__row">
             <label className="contact__field">
               <span>{t('contact.nameLabel')} <sup>*</sup></span>
