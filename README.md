@@ -76,9 +76,9 @@ Sign up at [emailjs.com](https://www.emailjs.com/) and create a project.
 Create a `.env` file in the project root (and add it to `.gitignore`):
 
 ```
-REACT_APP_EMAILJS_SERVICE_ID=your_service_id
-REACT_APP_EMAILJS_TEMPLATE_ID=your_template_id
-REACT_APP_EMAILJS_PUBLIC_KEY=your_public_key
+VITE_EMAILJS_SERVICE_ID=your_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_public_key
 ```
 
 ### 5. Send Emails from the Form

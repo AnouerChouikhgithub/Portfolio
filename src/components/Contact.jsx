@@ -50,12 +50,28 @@ export default function Contact() {
     setIsSending(true);
 
     try {
-      await emailjs.sendForm(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        form.current,
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      );
+      if (import.meta.env.PROD) {
+        const formData = new URLSearchParams(new FormData(formElement));
+        formData.set('form-name', 'contact');
+
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString(),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Netlify Forms submission failed with status ${response.status}`);
+        }
+      } else {
+        await emailjs.sendForm(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          form.current,
+          import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        );
+      }
+
       setStatus(t('contact.sent'));
       formElement.reset();
     } catch (err) {
@@ -75,10 +91,16 @@ export default function Contact() {
         <form
           name="contact"
           className="contact__form"
+          method="POST"
+          action="/"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
           noValidate
           ref={form}
           onSubmit={handleSubmit}
         >
+          <input type="hidden" name="form-name" value="contact" />
+          <input type="hidden" name="bot-field" />
           <div className="contact__row">
             <label className="contact__field">
               <span>{t('contact.nameLabel')} <sup>*</sup></span>
