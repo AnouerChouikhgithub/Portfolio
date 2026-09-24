@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useI18n } from '../i18n/I18nProvider';
 
 const projects = [
   {
@@ -81,6 +82,7 @@ const projects = [
 ];
 
 function ProjectModal({ project, onClose }) {
+  const { t } = useI18n();
   const modalRef = useRef(null);
   const closeButtonRef = useRef(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
@@ -182,7 +184,7 @@ function ProjectModal({ project, onClose }) {
           ref={closeButtonRef}
           type="button"
           className="project-modal__close"
-          aria-label="Close project details"
+          aria-label={t('common.close')}
           onClick={onClose}
         >
           ×
@@ -190,7 +192,7 @@ function ProjectModal({ project, onClose }) {
 
         <div className="project-modal__content">
           <div className="project-modal__details">
-            <p className="project-card__meta">{project.meta || 'Date TBD'}</p>
+            <p className="project-card__meta">{project.meta || t('common.dateTbd')}</p>
             <h3 id="project-modal-title" className="project-modal__title">
               {project.title}
             </h3>
@@ -216,11 +218,11 @@ function ProjectModal({ project, onClose }) {
                 rel="noopener noreferrer"
                 className="project-modal__link"
               >
-                View on GitHub
+                {t('common.viewGithub')}
               </a>
             ) : (
               <span className="project-modal__link project-modal__link--disabled" aria-disabled="true">
-                GitHub link not available yet
+                {t('common.githubUnavailable')}
               </span>
             )}
           </div>
@@ -277,7 +279,7 @@ function ProjectModal({ project, onClose }) {
               </>
             ) : (
               <div className="project-modal__empty">
-                <span>No photos added yet</span>
+                <span>{t('common.noPhotos')}</span>
               </div>
             )}
           </div>
@@ -288,6 +290,7 @@ function ProjectModal({ project, onClose }) {
 }
 
 export default function Projects() {
+  const { t } = useI18n();
   const [activeProject, setActiveProject] = useState(null);
 
   useEffect(() => {
@@ -314,7 +317,7 @@ export default function Projects() {
 
   return (
     <div id="projects" className="container projects">
-      <h2 className="section__title">Projects</h2>
+      <h2 className="section__title">{t('sections.projects')}</h2>
 
       <div className="projects__grid">
         {projects.map((project) => (
@@ -326,7 +329,7 @@ export default function Projects() {
             aria-expanded={activeProject?.slug === project.slug}
             onClick={() => setActiveProject(project)}
           >
-            <span className="project-card__meta">{project.meta || 'Date TBD'}</span>
+            <span className="project-card__meta">{project.meta || t('common.dateTbd')}</span>
             <h3 className="project-card__title">{project.title}</h3>
             <p className="project-card__description">{project.preview || project.description}</p>
           </button>

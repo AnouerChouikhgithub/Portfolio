@@ -1,9 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { Download } from 'lucide-react';
+import { useI18n } from '../i18n/I18nProvider';
 
-const resumePath = '/Anouer_Chouikh_CV.pdf';
+const resumePaths = {
+  en: '/Anouer_Chouikh_CV_EN.pdf',
+  fr: '/Anouer_Chouikh_CV_FR.pdf',
+  ar: '/Anouer_Chouikh_CV_EN.pdf',
+};
 
 export default function Hero() {
+  const { language, t } = useI18n();
+  const resumePath = resumePaths[language] || resumePaths.en;
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const modalRef = useRef(null);
 
@@ -52,12 +59,12 @@ export default function Hero() {
             alt="Portrait of Anouer Chouikh"
           />
           <h1 id="hero-heading" className="hero__name">Anouer Chouikh</h1>
-          <p className="hero__title">3rd year student in  Computer Engneering & Internet of Things (ISITCom)</p>
-          <p className="hero__tagline">Robotics • IoT</p>
+          <p className="hero__title">{t('hero.title')}</p>
+          <p className="hero__tagline">{t('hero.tagline')}</p>
           <div className="hero__buttons">
-            <a className="btn btn--primary" href="#projects">View Projects</a>
-            <a className="btn btn--secondary" href="#contact">Contact</a>
-            <a className="btn btn--secondary" href={resumePath} onClick={openResume}>View Résumé</a>
+            <a className="btn btn--primary" href="#projects">{t('hero.projects')}</a>
+            <a className="btn btn--secondary" href="#contact">{t('hero.contact')}</a>
+            <a className="btn btn--secondary" href={resumePath} onClick={openResume}>{t('hero.resume')}</a>
           </div>
         </div>
       </section>
@@ -68,14 +75,14 @@ export default function Hero() {
             className="event-modal__panel"
             role="dialog"
             aria-modal="true"
-            aria-label="Résumé preview"
+            aria-label={t('hero.resumePreview')}
             onClick={(event) => event.stopPropagation()}
             ref={modalRef}
           >
             <button
               type="button"
               className="event-modal__close"
-              aria-label="Close résumé"
+              aria-label={t('hero.closeResume')}
               onClick={() => setIsResumeOpen(false)}
             >
               ×
@@ -84,8 +91,8 @@ export default function Hero() {
               className="btn btn--secondary resume-modal__download"
               href={resumePath}
               download
-              aria-label="Download résumé"
-              title="Download résumé"
+              aria-label={t('hero.downloadResume')}
+              title={t('hero.downloadResume')}
             >
               <Download size={17} aria-hidden="true" />
             </a>
@@ -95,7 +102,7 @@ export default function Hero() {
                 <iframe
                   className="resume-modal__frame"
                   src={`${resumePath}#toolbar=0&navpanes=0`}
-                  title="Anouer Chouikh résumé"
+                  title={t('hero.resumeTitle')}
                 />
               </div>
             </div>

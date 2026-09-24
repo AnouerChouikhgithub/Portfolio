@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { clubs } from './Community';
+import { useI18n } from '../i18n/I18nProvider';
 
 const imageList = (folder, files) => files.map((file) => `/Events/${folder}/${file}`);
 
@@ -346,6 +347,7 @@ const orderedParticipatedEvents = [...otherEvents].sort((a, b) => {
 const allEvents = [...organizedEvents, ...orderedParticipatedEvents];
 
 function EventModal({ event, onClose }) {
+  const { t } = useI18n();
   const modalRef = useRef(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const lastUserActionRef = useRef(0);
@@ -442,7 +444,7 @@ function EventModal({ event, onClose }) {
         <button
           type="button"
           className="event-modal__close"
-          aria-label="Close event details"
+          aria-label={t('common.closeEvent')}
           onClick={onClose}
         >
           ×
@@ -456,24 +458,24 @@ function EventModal({ event, onClose }) {
             <div className="event-modal__text-group">
               {event.description ? (
                 <>
-                  <h4 className="event-modal__section-label">Event overview</h4>
+                  <h4 className="event-modal__section-label">{t('common.eventOverview')}</h4>
                   <p className="event-modal__description">
                     {typeof event.description === 'string' ? renderProjectLinksInText(event.description, onClose) : event.description}
                   </p>
                 </>
               ) : (
-                <p className="event-modal__description event-modal__description--muted">Event overview coming soon</p>
+                <p className="event-modal__description event-modal__description--muted">{t('common.overviewSoon')}</p>
               )}
             </div>
 
             <div className="event-modal__text-group">
               {event.role ? (
                 <>
-                  <h4 className="event-modal__section-label">My role</h4>
+                  <h4 className="event-modal__section-label">{t('common.myRole')}</h4>
                   <p className="event-modal__description">{typeof event.role === 'string' ? renderProjectLinksInText(event.role, onClose) : event.role}</p>
                 </>
               ) : (
-                <p className="event-modal__description event-modal__description--muted">My role coming soon</p>
+                <p className="event-modal__description event-modal__description--muted">{t('common.roleSoon')}</p>
               )}
             </div>
           </div>
@@ -526,7 +528,7 @@ function EventModal({ event, onClose }) {
               </>
             ) : (
               <div className="event-modal__empty">
-                <span>No photos added yet</span>
+                <span>{t('common.noPhotos')}</span>
               </div>
             )}
           </div>
@@ -537,6 +539,7 @@ function EventModal({ event, onClose }) {
 }
 
 export default function Events() {
+  const { t } = useI18n();
   const [activeEvent, setActiveEvent] = useState(null);
 
   useEffect(() => {
@@ -563,7 +566,7 @@ export default function Events() {
 
   return (
     <div id="events" className="container events">
-      <h2 className="section__title">Events I'm involved in</h2>
+      <h2 className="section__title">{t('sections.events')}</h2>
 
       <div className="events__organized">
         {organizedEvents.map((event) => (
@@ -585,7 +588,7 @@ export default function Events() {
       </div>
 
       <div className="events__other">
-        <h3 className="events__subheading">Also participated in</h3>
+        <h3 className="events__subheading">{t('sections.alsoParticipated')}</h3>
         <ul className="events__list">
           {orderedParticipatedEvents.map((event) => (
             <li key={event.slug} className="events__list-item">

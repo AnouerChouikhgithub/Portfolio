@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useI18n } from '../i18n/I18nProvider';
 
 const communityImageList = (folder, files) => files.map((file) => `/Communities/${folder}/${file}`);
 
@@ -171,6 +172,7 @@ export const clubs = [
 ];
 
 function CommunityModal({ community, onClose, initialChapter = null }) {
+  const { t } = useI18n();
   const modalRef = useRef(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [activeChapter, setActiveChapter] = useState(initialChapter);
@@ -268,7 +270,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
         <button
           type="button"
           className="event-modal__close"
-          aria-label="Close community details"
+          aria-label={t('common.closeCommunity')}
           onClick={onClose}
         >
           ×
@@ -280,13 +282,13 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
             <h3 id="community-modal-title" className="event-modal__title">{community.fullName || community.name}</h3>
 
             <div className="event-modal__text-group">
-              <h4 className="event-modal__section-label">Description</h4>
+              <h4 className="event-modal__section-label">{t('common.description')}</h4>
               <p className="event-modal__description">{community.description}</p>
             </div>
 
             {community.chapterLogos?.length ? (
               <div className="event-modal__text-group">
-                <h4 className="event-modal__section-label">Chapters</h4>
+                <h4 className="event-modal__section-label">{t('common.chapters')}</h4>
                 <div className="community-modal__chapter-logos" aria-label={`${community.name} chapters`}>
                   {community.chapterLogos.map((chapterLogo) => (
                     <button
@@ -305,12 +307,12 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
             ) : null}
 
             <div className="event-modal__text-group">
-              <h4 className="event-modal__section-label">Location</h4>
+              <h4 className="event-modal__section-label">{t('common.location')}</h4>
               <p className="event-modal__description">{community.location || 'Location coming soon'}</p>
             </div>
 
             <div className="event-modal__text-group">
-              <h4 className="event-modal__section-label">Events related</h4>
+              <h4 className="event-modal__section-label">{t('common.eventsRelated')}</h4>
               {community.relatedEvents?.length ? (
                 <ul className="community-modal__related-list">
                   {[...community.relatedEvents]
@@ -341,7 +343,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
                     ))}
                 </ul>
               ) : (
-                <p className="event-modal__description event-modal__description--muted">Related events coming soon</p>
+                <p className="event-modal__description event-modal__description--muted">{t('common.relatedSoon')}</p>
               )}
             </div>
           </div>
@@ -391,7 +393,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
               </>
             ) : (
               <div className="event-modal__empty">
-                <span>No photos added yet</span>
+                <span>{t('common.noPhotos')}</span>
               </div>
             )}
           </div>
@@ -404,6 +406,8 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
 }
 
 function ChapterDetailModal({ chapter, onClose }) {
+  const { t } = useI18n();
+
   if (!chapter) {
     return null;
   }
@@ -425,7 +429,7 @@ function ChapterDetailModal({ chapter, onClose }) {
         <button
           type="button"
           className="community-chapter-modal__close"
-          aria-label="Close chapter details"
+          aria-label={t('common.closeChapter')}
           onClick={handleClose}
         >
           ×
@@ -482,6 +486,7 @@ if (typeof window !== 'undefined') {
 }
 
 export default function Community() {
+  const { t } = useI18n();
   const [activeCommunity, setActiveCommunity] = useState(null);
   const [activeChapter, setActiveChapter] = useState(null);
 
@@ -551,7 +556,7 @@ export default function Community() {
 
   return (
     <div id="community" className="container">
-      <h2 className="section__title">Community & Leadership</h2>
+      <h2 className="section__title">{t('sections.community')}</h2>
       <div className="community__grid">
         {clubs.map((club) => (
           <button

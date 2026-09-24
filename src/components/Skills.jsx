@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useI18n } from '../i18n/I18nProvider';
 
 const experiences = [
   {
@@ -67,12 +68,12 @@ const softSkills = [
 const languages = [
   'Arabic (Native)',
   'English (Fluent)',
-  'French (Fluent)',
-  "German (Basic)"
+  'French (Fluent)'
 ]
 
 
 export default function Skills() {
+  const { t } = useI18n();
   const [activeTechnicalCategory, setActiveTechnicalCategory] = useState('All');
   const activeSkills = activeTechnicalCategory === 'All'
     ? allTechSkills
@@ -102,10 +103,10 @@ export default function Skills() {
 
   return (
     <div className="container">
-      <h2 className="section__title">Skills & Expertise</h2>
+      <h2 className="section__title">{t('sections.skills')}</h2>
 
       <div className="skills__section">
-        <h3 className="skills__subtitle">Professional Experience</h3>
+        <h3 className="skills__subtitle">{t('sections.experience')}</h3>
         <div className="skills__experience-grid">
           {experiences.map((experience) => (
             <article key={`${experience.company}-${experience.dates}`} className="events-card skills__experience-card">
@@ -129,7 +130,7 @@ export default function Skills() {
       </div>
 
       <div className="skills__section">
-        <h3 className="skills__subtitle">Technical Skills</h3>
+        <h3 className="skills__subtitle">{t('sections.technical')}</h3>
         <div className="skills__tabs" role="tablist" aria-label="Technical skill categories">
           {technicalTabs.map((tab, index) => (
             <button
@@ -162,7 +163,7 @@ export default function Skills() {
       </div>
 
       <div className="skills__section">
-        <h3 className="skills__subtitle">Soft Skills</h3>
+        <h3 className="skills__subtitle">{t('sections.soft')}</h3>
         <div className="skills__tags">
           {softSkills.map((s) => (
             <span key={s} className="skill-tag">{s}</span>
@@ -171,7 +172,7 @@ export default function Skills() {
       </div>
 
       <div className="skills__section">
-        <h3 className="skills__subtitle">Languages</h3>
+        <h3 className="skills__subtitle">{t('sections.languages')}</h3>
         <ul className="skills__tags">
           {languages.map((l) => (
             <li key={l} className="skills__item"><i>•</i> {l}</li>
