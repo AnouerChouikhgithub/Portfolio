@@ -23,7 +23,7 @@ export default async (req) => {
   const email = String(from_email ?? "").trim();
   const msg = String(message ?? "").trim();
 
-  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !msg) {
+  if (!name || name.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !msg) {
     return json({ error: "Invalid fields" }, 400);
   }
   if (msg.length > 5000) return json({ error: "Message too long" }, 400);
@@ -36,33 +36,40 @@ export default async (req) => {
   } = process.env;
 
   if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY || !EMAILJS_PRIVATE_KEY) {
+    // Log details server-side only; never expose them to the client.
     console.error("Missing EmailJS environment variables");
     return json({ error: "Server misconfigured" }, 500);
   }
 
-  const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      service_id: EMAILJS_SERVICE_ID,
-      template_id: EMAILJS_TEMPLATE_ID,
-      user_id: EMAILJS_PUBLIC_KEY,
-      accessToken: EMAILJS_PRIVATE_KEY,
-      template_params: {
-        from_name: name,
-        from_email: email,
-        phone: String(phone ?? "").trim() || "N/A",
-        message: msg,
-      },
-    }),
-  });
+  try {
+    const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_id: EMAILJS_SERVICE_ID,
+        template_id: EMAILJS_TEMPLATE_ID,
+        user_id: EMAILJS_PUBLIC_KEY,
+        accessToken: EMAILJS_PRIVATE_KEY,
+        template_params: {
+          from_name: name,
+          from_email: email,
+          phone: String(phone ?? "").trim() || "N/A",
+          message: msg,
+        },
+      }),
+    });
 
-  if (!res.ok) {
-    console.error("EmailJS error:", res.status, await res.text());
+    if (!res.ok) {
+      // Log provider response server-side; return a generic error to the client.
+      console.error("EmailJS error:", res.status, await res.text());
+      return json({ error: "Email provider error" }, 502);
+    }
+
+    return json({ ok: true });
+  } catch (err) {
+    console.error("EmailJS request failed:", err?.message ?? err);
     return json({ error: "Email provider error" }, 502);
   }
-
-  return json({ ok: true });
 };
 
 export const config = { path: "/api/contact" };

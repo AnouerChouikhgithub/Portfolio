@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, memo, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
+import useModalAccessibility from '../hooks/useModalAccessibility';
 
 const ACCENT_COLORS = {
   green:  '#22c55e',
@@ -115,11 +116,12 @@ const projects = [
 function ProjectModal({ project, onClose }) {
   const { t, isRtl } = useI18n();
   const modalRef = useRef(null);
-  const closeButtonRef = useRef(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const lastUserActionRef = useRef(0);
   const hasPhotos = Array.isArray(project.photos) && project.photos.length > 0;
   const hasGithubUrl = typeof project.githubUrl === 'string' && project.githubUrl.trim().length > 0;
+
+  useModalAccessibility({ panelRef: modalRef, onClose });
 
   const projectMeta = t(`projects.items.${project.slug}.meta`, '');
   const projectDescription = t(`projects.items.${project.slug}.description`, '');
@@ -128,9 +130,7 @@ function ProjectModal({ project, onClose }) {
   const activateManualSelection = (nextIndex) => {
     lastUserActionRef.current = Date.now();
     setSelectedPhotoIndex(nextIndex);
-  };
-
-  useEffect(() => {
+  };  useEffect(() => {
     setSelectedPhotoIndex(0);
     lastUserActionRef.current = 0;
   }, [project.slug]);
@@ -150,61 +150,6 @@ function ProjectModal({ project, onClose }) {
     return () => window.clearTimeout(timerId);
   }, [hasPhotos, project.photos, selectedPhotoIndex]);
 
-  useEffect(() => {
-    const previousActiveElement = document.activeElement;
-    const focusableSelectors = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-    document.body.style.overflow = 'hidden';
-
-    const focusFirst = () => {
-      const focusable = modalRef.current?.querySelectorAll(focusableSelectors);
-      if (focusable && focusable.length > 0) {
-        focusable[0].focus();
-      }
-    };
-
-    focusFirst();
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        onClose();
-        return;
-      }
-
-      if (event.key !== 'Tab' || !modalRef.current) {
-        return;
-      }
-
-      const focusable = Array.from(
-        modalRef.current.querySelectorAll(focusableSelectors)
-      );
-
-      if (!focusable.length) {
-        event.preventDefault();
-        return;
-      }
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = '';
-      document.removeEventListener('keydown', handleKeyDown);
-      previousActiveElement?.focus();
-    };
-  }, [onClose]);
-
   const accentStyle = {
     ...(project.accent ? { '--accent': project.accent } : {}),
     ...(project.bg    ? { background: project.bg }      : {}),
@@ -222,7 +167,6 @@ function ProjectModal({ project, onClose }) {
         style={accentStyle}
       >
         <button
-          ref={closeButtonRef}
           type="button"
           className="project-modal__close"
           aria-label={t('common.close')}
@@ -337,9 +281,41 @@ function ProjectModal({ project, onClose }) {
   );
 }
 
+/**
+ * Memoized project card — only re-renders when its project data, the active
+ * selection, or translations change (not on every parent state update).
+ */
+const ProjectCard = memo(function ProjectCard({ project, meta, preview, description, isActive, isRtl, onSelect, dateTbdLabel, logoAltPrefix }) {
+  return (
+    <button
+      type="button"
+      className="project-card"
+      aria-haspopup="dialog"
+      aria-expanded={isActive}
+      onClick={onSelect}
+    >
+      {project.logo && (
+        <img
+          className="project-card__logo"
+          src={project.logo}
+          alt={`${project.title} ${logoAltPrefix}`}
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+      <span className="project-card__meta">{meta || dateTbdLabel}</span>
+      <h3 className="project-card__title" style={project.accent ? { color: project.accent } : undefined}>{project.title}</h3>
+      <p className="project-card__description">
+        <MixedText text={preview || description} isRtl={isRtl} />
+      </p>
+    </button>
+  );
+});
+
 export default function Projects() {
   const { t, isRtl } = useI18n();
   const [activeProject, setActiveProject] = useState(null);
+  const closeProject = useCallback(() => setActiveProject(null), []);
 
   useEffect(() => {
     const syncProjectFromHash = () => {
@@ -374,33 +350,23 @@ export default function Projects() {
           const description = t(`projects.items.${project.slug}.description`, '');
 
           return (
-            <button
-              type="button"
+            <ProjectCard
               key={project.slug}
-              className="project-card"
-              aria-haspopup="dialog"
-              aria-expanded={activeProject?.slug === project.slug}
-              onClick={() => setActiveProject(project)}
-            >
-              {project.logo && (
-                <img
-                  className="project-card__logo"
-                  src={project.logo}
-                  alt={`${project.title} ${t('common.logo')}`}
-                  loading="lazy"
-                />
-              )}
-              <span className="project-card__meta">{meta || t('common.dateTbd')}</span>
-              <h3 className="project-card__title" style={project.accent ? { color: project.accent } : {}}>{project.title}</h3>
-              <p className="project-card__description">
-                <MixedText text={preview || description} isRtl={isRtl} />
-              </p>
-            </button>
+              project={project}
+              meta={meta}
+              preview={preview}
+              description={description}
+              isActive={activeProject?.slug === project.slug}
+              isRtl={isRtl}
+              onSelect={() => setActiveProject(project)}
+              dateTbdLabel={t('common.dateTbd')}
+              logoAltPrefix={t('common.logo')}
+            />
           );
         })}
       </div>
 
-      {activeProject && <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />}
+      {activeProject && <ProjectModal project={activeProject} onClose={closeProject} />}
     </div>
   );
 }

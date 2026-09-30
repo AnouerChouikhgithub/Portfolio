@@ -1,21 +1,28 @@
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Anouer Chouikh — Engineering & Innovation Portfolio" />
     <title>Anouer — Engineering & Innovation Portfolio</title>
-    <link rel="alternate" hreflang="en" href="/" />
-    <link rel="alternate" hreflang="fr" href="/?lang=fr" />
-    <link rel="alternate" hreflang="ar" href="/?lang=ar" />
-    <link rel="alternate" hreflang="x-default" href="/" />
+    <link rel="canonical" href="https://chouikh-anouer.netlify.app/" />
+    <link rel="alternate" hreflang="en" href="https://chouikh-anouer.netlify.app/" />
+    <link rel="alternate" hreflang="fr" href="https://chouikh-anouer.netlify.app/?lang=fr" />
+    <link rel="alternate" hreflang="ar" href="https://chouikh-anouer.netlify.app/?lang=ar" />
+    <link rel="alternate" hreflang="x-default" href="https://chouikh-anouer.netlify.app/" />
     <script>
       (() => {
-        const savedTheme = localStorage.getItem('portfolio-theme');
-        document.documentElement.dataset.theme = savedTheme === 'light' ? 'light' : 'dark';
+        try {
+          const savedTheme = localStorage.getItem('portfolio-theme');
+          document.documentElement.dataset.theme = savedTheme === 'light' ? 'light' : 'dark';
+        } catch {
+          document.documentElement.dataset.theme = 'dark';
+        }
       })();
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
     <link rel="icon" href="/AnouerChouikhLogo.ico" />
   </head>
   <body>

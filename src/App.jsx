@@ -1,4 +1,3 @@
-import DeviceDetector from "./DeviceDetector";
 import Header from './components/Header'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -21,7 +20,6 @@ export default function App() {
         <section id="community" className="community"><Community /></section>
         <section id="events" className="events"><Events /></section>
         <section id="contact" className="contact"><Contact /></section>
-        <DeviceDetector />
       </main>
       <Footer />
     </>

@@ -2,24 +2,25 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import en from './en.json';
 import fr from './fr.json';
 import ar from './ar.json';
+import { readStorage, writeStorage } from '../utils/storage';
+import { LANGUAGE_STORAGE_KEY, DEFAULT_LANGUAGE, RTL_LANGUAGES } from '../constants/i18nConfig';
 
 const dictionaries = { en, fr, ar };
-const storageKey = 'portfolio-language';
 const supportedLanguages = Object.keys(dictionaries);
 
 const getInitialLanguage = () => {
-  if (typeof window === 'undefined') return 'en';
+  if (typeof window === 'undefined') return DEFAULT_LANGUAGE;
   try {
     const queryLanguage = new URLSearchParams(window.location.search).get('lang');
     if (supportedLanguages.includes(queryLanguage)) return queryLanguage;
-    const storedLanguage = window.localStorage.getItem(storageKey);
+    const storedLanguage = readStorage(LANGUAGE_STORAGE_KEY);
     if (supportedLanguages.includes(storedLanguage)) return storedLanguage;
     const browserLang = window.navigator.language?.slice(0, 2);
     if (supportedLanguages.includes(browserLang)) return browserLang;
-  } catch (e) {
+  } catch {
     // Ignore storage/navigator access errors
   }
-  return 'en';
+  return DEFAULT_LANGUAGE;
 };
 
 const getValue = (dictionary, key) => key.split('.').reduce((value, part) => value?.[part], dictionary);
@@ -29,7 +30,7 @@ const I18nContext = createContext(null);
 export function I18nProvider({ children }) {
   const [language, setLanguage] = useState(getInitialLanguage);
   const dictionary = dictionaries[language] || dictionaries.en;
-  const isRtl = language === 'ar';
+  const isRtl = RTL_LANGUAGES.has(language);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -59,11 +60,7 @@ export function I18nProvider({ children }) {
       }
     }
 
-    try {
-      window.localStorage.setItem(storageKey, language);
-    } catch {
-      // Ignore storage errors
-    }
+    writeStorage(LANGUAGE_STORAGE_KEY, language);
   }, [language, isRtl]);
 
   const value = useMemo(() => ({

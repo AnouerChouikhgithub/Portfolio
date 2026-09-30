@@ -46,7 +46,9 @@
     "footer": "Navigation du pied de page",
     "language": "Langue",
     "lightMode": "Passer au thème clair",
-    "darkMode": "Passer au thème sombre"
+    "darkMode": "Passer au thème sombre",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
   },
   "hero": {
     "title": "Étudiant en 3ème année d'ingénierie des systèmes informatiques & Internet des objets (ISITCom)",

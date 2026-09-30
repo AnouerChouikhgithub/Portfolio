@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
+import useModalAccessibility from '../hooks/useModalAccessibility';
 
 const imageList = (folder, files) => files.map((file) => `/Events/${folder}/${file}`);
 
@@ -312,6 +313,8 @@ function EventModal({ event, onClose }) {
   const lastUserActionRef = useRef(0);
   const hasPhotos = Array.isArray(event.photos) && event.photos.length > 0;
 
+  useModalAccessibility({ panelRef: modalRef, onClose });
+
   const meta = t(`events.items.${event.slug}.meta`);
   const description = t(`events.items.${event.slug}.description`);
   const role = t(`events.items.${event.slug}.role`);
@@ -340,59 +343,6 @@ function EventModal({ event, onClose }) {
 
     return () => window.clearTimeout(timerId);
   }, [event.photos, hasPhotos, selectedPhotoIndex]);
-
-  useEffect(() => {
-    const previousActiveElement = document.activeElement;
-    const focusableSelectors = 'button:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-    document.body.style.overflow = 'hidden';
-
-    const focusFirst = () => {
-      const focusable = modalRef.current?.querySelectorAll(focusableSelectors);
-      if (focusable && focusable.length > 0) {
-        focusable[0].focus();
-      }
-    };
-
-    focusFirst();
-
-    const handleKeyDown = (eventKey) => {
-      if (eventKey.key === 'Escape') {
-        onClose();
-        return;
-      }
-
-      if (eventKey.key !== 'Tab' || !modalRef.current) {
-        return;
-      }
-
-      const focusable = Array.from(modalRef.current.querySelectorAll(focusableSelectors));
-
-      if (!focusable.length) {
-        eventKey.preventDefault();
-        return;
-      }
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (eventKey.shiftKey && document.activeElement === first) {
-        eventKey.preventDefault();
-        last.focus();
-      } else if (!eventKey.shiftKey && document.activeElement === last) {
-        eventKey.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = '';
-      document.removeEventListener('keydown', handleKeyDown);
-      previousActiveElement?.focus();
-    };
-  }, [onClose]);
 
   return (
     <div className="event-modal" onClick={onClose}>

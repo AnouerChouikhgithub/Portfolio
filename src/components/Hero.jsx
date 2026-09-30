@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
-import PdfModal from './PdfModal';
+
+// Lazy-loaded: pdfjs-dist (~450 KB) is only fetched when the user opens the resume.
+const PdfModal = lazy(() => import('./PdfModal'));
 
 const resumePaths = {
   en: '/Anouer_Chouikh_CV_EN.pdf',
@@ -53,13 +55,15 @@ export default function Hero() {
       </section>
 
       {isResumeOpen && (
-        <PdfModal
-          src={resumePath}
-          title={t('hero.resumePreview')}
-          showDownload={true}
-          onClose={() => setIsResumeOpen(false)}
-          triggerRef={triggerRef}
-        />
+        <Suspense fallback={null}>
+          <PdfModal
+            src={resumePath}
+            title={t('hero.resumePreview')}
+            showDownload={true}
+            onClose={() => setIsResumeOpen(false)}
+            triggerRef={triggerRef}
+          />
+        </Suspense>
       )}
     </>
   );

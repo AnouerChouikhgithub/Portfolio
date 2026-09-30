@@ -46,7 +46,9 @@
     "footer": "Footer navigation",
     "language": "Language",
     "lightMode": "Switch to light mode",
-    "darkMode": "Switch to dark mode"
+    "darkMode": "Switch to dark mode",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "hero": {
     "title": "3rd year student in Computer Engineering & Internet of Things (ISITCom)",

@@ -1,8 +1,10 @@
-import { useRef, useState } from 'react';
+import { lazy, Suspense, useRef, useState, useMemo } from 'react';
 import { Eye } from 'lucide-react';
 import { useI18n } from '../i18n/I18nProvider';
-import PdfModal from './PdfModal';
 import MixedText from './MixedText';
+
+// Lazy-loaded: pdfjs-dist is only fetched when the certificate is opened.
+const PdfModal = lazy(() => import('./PdfModal'));
 
 const staticExperiences = [
   {
@@ -47,11 +49,17 @@ export default function Skills() {
   const [isCertOpen, setIsCertOpen] = useState(false);
   const certTriggerRef = useRef(null);
 
-  const activeSkills = activeTechnicalCategory === 'All'
-    ? allTechSkills
-    : techSkillGroups.find((group) => group.key === activeTechnicalCategory)?.skills || [];
+  const activeSkills = useMemo(
+    () => (activeTechnicalCategory === 'All'
+      ? allTechSkills
+      : techSkillGroups.find((group) => group.key === activeTechnicalCategory)?.skills || []),
+    [activeTechnicalCategory],
+  );
 
-  const technicalTabKeys = ['All', ...techSkillGroups.map((group) => group.key)];
+  const technicalTabKeys = useMemo(
+    () => ['All', ...techSkillGroups.map((group) => group.key)],
+    [],
+  );
 
   const handleTechnicalTabKeyDown = (event, tabIndex) => {
     let nextTabIndex = tabIndex;
@@ -183,13 +191,15 @@ export default function Skills() {
       </div>
 
       {isCertOpen && (
-        <PdfModal
-          src="/internship-certificate.pdf"
-          title={t('certificate.dialogTitle')}
-          showDownload={false}
-          onClose={() => setIsCertOpen(false)}
-          triggerRef={certTriggerRef}
-        />
+        <Suspense fallback={null}>
+          <PdfModal
+            src="/internship-certificate.pdf"
+            title={t('certificate.dialogTitle')}
+            showDownload={false}
+            onClose={() => setIsCertOpen(false)}
+            triggerRef={certTriggerRef}
+          />
+        </Suspense>
       )}
     </>
   );

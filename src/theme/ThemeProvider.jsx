@@ -1,11 +1,12 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { readStorage, writeStorage } from '../utils/storage';
+import { STORAGE_KEYS, THEMES, DEFAULT_THEME } from '../constants/theme';
 
-const storageKey = 'portfolio-theme';
 const ThemeContext = createContext(null);
 
 const getInitialTheme = () => {
-  if (typeof document === 'undefined') return 'dark';
-  return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+  if (typeof document === 'undefined') return DEFAULT_THEME;
+  return document.documentElement.dataset.theme === THEMES.light ? THEMES.light : DEFAULT_THEME;
 };
 
 export function ThemeProvider({ children }) {
@@ -13,11 +14,17 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem(storageKey, theme);
+    writeStorage(STORAGE_KEYS.theme, theme);
   }, [theme]);
 
+  const value = useMemo(() => ({
+    theme,
+    setTheme,
+    toggleTheme: () => setTheme((current) => (current === THEMES.dark ? THEMES.light : THEMES.dark)),
+  }), [theme]);
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme: () => setTheme((current) => current === 'dark' ? 'light' : 'dark') }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
