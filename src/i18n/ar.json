@@ -7,5 +7,6 @@
   "common": {"close":"إغلاق","description":"الوصف","chapters":"الفصول","location":"الموقع","eventsRelated":"الفعاليات ذات الصلة","eventOverview":"نظرة عامة على الفعالية","myRole":"دوري","detailsSoon":"التفاصيل قريباً","overviewSoon":"نظرة عامة على الفعالية قريباً","roleSoon":"تفاصيل الدور قريباً","relatedSoon":"الفعاليات ذات الصلة قريباً","noPhotos":"لا توجد صور بعد","dateTbd":"التاريخ سيحدد لاحقاً","moreDetails":"مزيد من التفاصيل","viewGithub":"عرض على GitHub","githubUnavailable":"رابط GitHub غير متاح بعد","previousPhoto":"الصورة السابقة","nextPhoto":"الصورة التالية","photo":"صورة","communityPhoto":"صورة المجتمع","logo":"الشعار","closeCommunity":"إغلاق تفاصيل المجتمع","closeChapter":"إغلاق تفاصيل الفصل","closeEvent":"إغلاق تفاصيل الفعالية"},
   "footer": {"copyright":"© 2025 أنور الشيخ. جميع الحقوق محفوظة."},
   "languages": {"en":"EN","fr":"FR","ar":"AR"},
-  "certificate": {"viewButton":"عرض الشهادة","dialogTitle":"شهادة التدريب","loading":"جارٍ تحميل الشهادة...","loadError":"تعذّر تحميل الشهادة."}
+  "certificate": {"viewButton":"عرض الشهادة","dialogTitle":"شهادة التدريب","loading":"جارٍ تحميل الشهادة...","loadError":"تعذّر تحميل الشهادة."},
+  "pdf": {"zoomIn":"تكبير","zoomOut":"تصغير","resetZoom":"إعادة ضبط التكبير","zoomLevel":"مستوى التكبير"}
 }

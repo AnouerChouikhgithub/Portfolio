@@ -7,5 +7,6 @@
   "common": {"close":"Close","description":"Description","chapters":"Chapters","location":"Location","eventsRelated":"Events related","eventOverview":"Event overview","myRole":"My role","detailsSoon":"Details coming soon","overviewSoon":"Event overview coming soon","roleSoon":"My role coming soon","relatedSoon":"Related events coming soon","noPhotos":"No photos added yet","dateTbd":"Date TBD","moreDetails":"More details","viewGithub":"View on GitHub","githubUnavailable":"GitHub link not available yet","previousPhoto":"Previous photo","nextPhoto":"Next photo","photo":"photo","communityPhoto":"community photo","logo":"logo","closeCommunity":"Close community details","closeChapter":"Close chapter details","closeEvent":"Close event details"},
   "footer": {"copyright":"© 2025 Anouer Chouikh. All rights reserved."},
   "languages": {"en":"EN","fr":"FR","ar":"AR"},
-  "certificate": {"viewButton":"View certificate","dialogTitle":"Internship certificate","loading":"Loading certificate...","loadError":"Could not load the certificate."}
+  "certificate": {"viewButton":"View certificate","dialogTitle":"Internship certificate","loading":"Loading certificate...","loadError":"Could not load the certificate."},
+  "pdf": {"zoomIn":"Zoom in","zoomOut":"Zoom out","resetZoom":"Reset zoom","zoomLevel":"Zoom level"}
 }

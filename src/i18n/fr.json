@@ -7,5 +7,6 @@
   "common": {"close":"Fermer","description":"Description","chapters":"Chapitres","location":"Lieu","eventsRelated":"Événements associés","eventOverview":"Présentation de l'événement","myRole":"Mon rôle","detailsSoon":"Détails à venir","overviewSoon":"Présentation à venir","roleSoon":"Rôle à venir","relatedSoon":"Événements associés à venir","noPhotos":"Aucune photo pour le moment","dateTbd":"Date à venir","moreDetails":"Plus de détails","viewGithub":"Voir sur GitHub","githubUnavailable":"Lien GitHub bientôt disponible","previousPhoto":"Photo précédente","nextPhoto":"Photo suivante","photo":"photo","communityPhoto":"photo de la communauté","logo":"logo","closeCommunity":"Fermer les détails de la communauté","closeChapter":"Fermer les détails du chapitre","closeEvent":"Fermer les détails de l'événement"},
   "footer": {"copyright":"© 2025 Anouer Chouikh. Tous droits réservés."},
   "languages": {"en":"EN","fr":"FR","ar":"AR"},
-  "certificate": {"viewButton":"Voir l'attestation","dialogTitle":"Attestation de stage","loading":"Chargement de l'attestation...","loadError":"Impossible de charger l'attestation."}
+  "certificate": {"viewButton":"Voir l'attestation","dialogTitle":"Attestation de stage","loading":"Chargement de l'attestation...","loadError":"Impossible de charger l'attestation."},
+  "pdf": {"zoomIn":"Zoom avant","zoomOut":"Zoom arrière","resetZoom":"Réinitialiser le zoom","zoomLevel":"Niveau de zoom"}
 }
