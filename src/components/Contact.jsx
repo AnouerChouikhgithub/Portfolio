@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import React, { useState } from "react";
+import { sendContact } from "../lib/sendContact";
 import { useI18n } from '../i18n/I18nProvider';
 
 export default function Contact() {
@@ -7,7 +7,6 @@ export default function Contact() {
   const [status, setStatus] = useState('');
   const [errors, setErrors] = useState({});
   const [isSending, setIsSending] = useState(false);
-  const form = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,28 +49,13 @@ export default function Contact() {
     setIsSending(true);
 
     try {
-      if (import.meta.env.PROD) {
-        const formData = new URLSearchParams(new FormData(formElement));
-        formData.set('form-name', 'contact');
-
-        const response = await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData.toString(),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Netlify Forms submission failed with status ${response.status}`);
-        }
-      } else {
-        await emailjs.sendForm(
-          import.meta.env.VITE_EMAILJS_SERVICE_ID,
-          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-          form.current,
-          import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-        );
-      }
-
+      await sendContact({
+        from_name: name,
+        from_email: email,
+        phone,
+        message,
+        website: formElement.website.value,
+      });
       setStatus(t('contact.sent'));
       formElement.reset();
     } catch (err) {
@@ -87,19 +71,16 @@ export default function Contact() {
       <div className="container contact__content">
         <h2 className="section__title">{t('sections.contact')}</h2>
 
-        <form
-          name="contact"
-          className="contact__form"
-          method="POST"
-          action="/"
-          data-netlify="true"
-          data-netlify-honeypot="bot-field"
-          noValidate
-          ref={form}
-          onSubmit={handleSubmit}
-        >
-          <input type="hidden" name="form-name" value="contact" />
-          <input type="hidden" name="bot-field" />
+        <form className="contact__form" noValidate onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: "absolute", left: "-9999px" }}
+          />
+
           <div className="contact__row">
             <label className="contact__field">
               <span>{t('contact.nameLabel')} <sup>*</sup></span>
