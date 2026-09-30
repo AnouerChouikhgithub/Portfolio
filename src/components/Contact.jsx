@@ -21,7 +21,7 @@ export default function Contact() {
 
     if (!name) {
       newErrors.name = t('contact.nameRequired');
-    } else if (!/^[A-Za-z\s]+$/.test(name)) {
+    } else if (!/^[\p{L}\p{M}\s'’.-]+$/u.test(name)) {
       newErrors.name = t('contact.nameLetters');
     }
 

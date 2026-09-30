@@ -1,12 +1,370 @@
 {
-  "nav": {"home":"Accueil","about":"À propos","skills":"Compétences","projects":"Projets","community":"Communauté","events":"Événements","contact":"Contact","primary":"Navigation principale","footer":"Navigation du pied de page","language":"Langue","lightMode":"Passer au thème clair","darkMode":"Passer au thème sombre"},
-  "hero": {"title":"Étudiant en 3eme année d'ingénierie des systemes informatiques & Internet des objets (ISITCom)","tagline":"Robotique • IoT","projects":"Voir les projets","contact":"Contact","resume":"Voir le CV","resumePreview":"Aperçu du CV","closeResume":"Fermer le CV","downloadResume":"Télécharger le CV","resumeTitle":"CV d'Anouer Chouikh"},
-  "sections": {"about":"À propos de moi","mission":"Mission et vision","skills":"Compétences et expertise","experience":"Expérience professionnelle","technical":"Compétences techniques","soft":"Compétences humaines","languages":"Langues","projects":"Projets","community":"Communauté et leadership","events":"Événements auxquels je participe","alsoParticipated":"Autres participations","contact":"Contact"},
-  "about": {"intro":"Je suis Anouer, étudiant passionné en ingénierie informatique à l'ISITCom, spécialisé en robotique et IoT. Je conçois des machines intelligentes et des solutions innovantes pour résoudre des problèmes réels, avec un fort intérêt pour les technologies durables et l'automatisation.","missionText":"Créer des systèmes intelligents ayant un impact environnemental et social, puis devenir fondateur d'une startup technologique dédiée à l'éco-innovation et à la robotique."},
-  "contact": {"nameLabel":"Saisissez votre nom","emailLabel":"Saisissez votre e-mail","phoneLabel":"Saisissez votre numéro de téléphone","messageLabel":"Écrivez votre message","name":"Nom","email":"E-mail","phone":"Téléphone","message":"Message","send":"Envoyer","sending":"Envoi...","sent":"Message envoyé, merci !","failed":"Échec de l'envoi : vérifiez votre connexion et réessayez.","nameRequired":"Le nom est obligatoire.","nameLetters":"Le nom ne doit contenir que des lettres.","emailRequired":"L'e-mail est obligatoire.","emailValid":"L'e-mail doit contenir un \"@\" et un domaine valide.","phoneValid":"Le numéro doit contenir exactement 8 chiffres.","messageRequired":"Le message ne peut pas être vide."},
-  "common": {"close":"Fermer","description":"Description","chapters":"Chapitres","location":"Lieu","eventsRelated":"Événements associés","eventOverview":"Présentation de l'événement","myRole":"Mon rôle","detailsSoon":"Détails à venir","overviewSoon":"Présentation à venir","roleSoon":"Rôle à venir","relatedSoon":"Événements associés à venir","noPhotos":"Aucune photo pour le moment","dateTbd":"Date à venir","moreDetails":"Plus de détails","viewGithub":"Voir sur GitHub","githubUnavailable":"Lien GitHub bientôt disponible","previousPhoto":"Photo précédente","nextPhoto":"Photo suivante","photo":"photo","communityPhoto":"photo de la communauté","logo":"logo","closeCommunity":"Fermer les détails de la communauté","closeChapter":"Fermer les détails du chapitre","closeEvent":"Fermer les détails de l'événement"},
-  "footer": {"copyright":"© 2025 Anouer Chouikh. Tous droits réservés."},
-  "languages": {"en":"EN","fr":"FR","ar":"AR"},
-  "certificate": {"viewButton":"Voir l'attestation","dialogTitle":"Attestation de stage","loading":"Chargement de l'attestation...","loadError":"Impossible de charger l'attestation."},
-  "pdf": {"zoomIn":"Zoom avant","zoomOut":"Zoom arrière","resetZoom":"Réinitialiser le zoom","zoomLevel":"Niveau de zoom"}
+  "common": {
+    "name": "Anouer Chouikh",
+    "firstName": "Anouer",
+    "portraitAlt": "Portrait d'Anouer Chouikh",
+    "close": "Fermer",
+    "description": "Description",
+    "chapters": "Chapitres",
+    "location": "Lieu",
+    "eventsRelated": "Événements associés",
+    "eventOverview": "Présentation de l'événement",
+    "myRole": "Mon rôle",
+    "detailsSoon": "Détails à venir",
+    "overviewSoon": "Présentation à venir",
+    "roleSoon": "Rôle à venir",
+    "relatedSoon": "Événements associés à venir",
+    "noPhotos": "Aucune photo pour le moment",
+    "dateTbd": "Date à venir",
+    "moreDetails": "Plus de détails",
+    "viewGithub": "Voir sur GitHub",
+    "githubUnavailable": "Lien GitHub bientôt disponible",
+    "previousPhoto": "Photo précédente",
+    "nextPhoto": "Photo suivante",
+    "photo": "photo",
+    "communityPhoto": "photo de la communauté",
+    "logo": "logo",
+    "closeCommunity": "Fermer les détails de la communauté",
+    "closeChapter": "Fermer les détails du chapitre",
+    "closeEvent": "Fermer les détails de l'événement",
+    "social": {
+      "email": "E-mail",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "instagram": "Instagram"
+    }
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "skills": "Compétences",
+    "projects": "Projets",
+    "community": "Communauté",
+    "events": "Événements",
+    "contact": "Contact",
+    "primary": "Navigation principale",
+    "footer": "Navigation du pied de page",
+    "language": "Langue",
+    "lightMode": "Passer au thème clair",
+    "darkMode": "Passer au thème sombre"
+  },
+  "hero": {
+    "title": "Étudiant en 3ème année d'ingénierie des systèmes informatiques & Internet des objets (ISITCom)",
+    "tagline": "Robotique • IoT",
+    "projects": "Voir les projets",
+    "contact": "Contact",
+    "resume": "Voir le CV",
+    "resumePreview": "Aperçu du CV",
+    "closeResume": "Fermer le CV",
+    "downloadResume": "Télécharger le CV",
+    "resumeTitle": "CV d'Anouer Chouikh",
+    "arabicCvNotice": "Version anglaise du CV affichée."
+  },
+  "sections": {
+    "about": "À propos de moi",
+    "mission": "Mission et vision",
+    "skills": "Compétences et expertise",
+    "experience": "Expérience professionnelle",
+    "technical": "Compétences techniques",
+    "soft": "Compétences humaines",
+    "languages": "Langues",
+    "projects": "Projets",
+    "community": "Communauté et leadership",
+    "events": "Événements auxquels je participe",
+    "alsoParticipated": "Autres participations",
+    "contact": "Contact"
+  },
+  "about": {
+    "intro": "Je suis Anouer, étudiant passionné en ingénierie informatique à l'ISITCom, spécialisé en robotique et IoT. Je conçois des machines intelligentes et des solutions innovantes pour résoudre des problèmes réels, avec un fort intérêt pour les technologies durables et l'automatisation.",
+    "missionText": "Créer des systèmes intelligents ayant un impact environnemental et social, puis devenir fondateur d'une startup technologique dédiée à l'éco-innovation et à la robotique."
+  },
+  "skills": {
+    "categories": {
+      "All": "Tous",
+      "Embedded/IoT": "Embarqué / IoT",
+      "Hardware": "Matériel",
+      "Web/Mobile": "Web / Mobile",
+      "Programming": "Programmation",
+      "Tools/DevOps": "Outils / DevOps",
+      "Data/Cloud": "Données / Cloud"
+    },
+    "experience": [
+      {
+        "id": "andalusoft",
+        "title": "Stagiaire en génie logiciel",
+        "dates": "Juin 2026 – Août 2026",
+        "bullets": [
+          "Conception et implémentation de bout en bout d'une fonctionnalité d'évaluation de produits pour une application mobile (UI, backend et frontend).",
+          "Développement de modules de gestion de comptes et d'interfaces utilisateur pour un système ERP complet avec React et React Native.",
+          "Développement et tests d'API REST Symfony avec Doctrine ORM en utilisant Docker et Postman."
+        ],
+        "subtext": "Collaboration au sein d'une équipe de 5 personnes (1 développeur senior/chef d'équipe, 3 stagiaires) avec Git, Yarn, Composer et Expo."
+      }
+    ],
+    "soft": [
+      "Travail d'équipe",
+      "Résolution de problèmes",
+      "Gestion de projet",
+      "Adaptabilité",
+      "Communication",
+      "Leadership",
+      "Gestion du temps",
+      "Pensée critique",
+      "Esprit d'analyse",
+      "Sens de l'initiative",
+      "Créativité",
+      "Auto-apprentissage",
+      "Prise de décision",
+      "Résilience",
+      "Autonomie",
+      "Souci du détail"
+    ],
+    "languages": [
+      "Arabe (Langue maternelle)",
+      "Anglais (Courant)",
+      "Français (Courant)"
+    ]
+  },
+  "projects": {
+    "items": {
+      "pet-filament-machine": {
+        "meta": "Projet solo · 2024 – Présent",
+        "preview": "Transformation des déchets plastiques en filament réutilisable grâce à un système d'extrusion sur mesure.",
+        "description": "Conception et fabrication autonome d'un système de contrôle d'extrusion basé sur Arduino utilisant une régulation thermique PID (cible 245 °C) via thermistance et cartouche chauffante pilotée par PWM, couplé à un pilote pas-à-pas microstepping (1/2 à 1/16 de pas, jusqu'à 3200 pas/tour) pour une extrusion maîtrisée avec rampes d'accélération. Perfectionné au fil de multiples itérations sur plusieurs années de développement solo — actuellement en 3ème version.",
+        "role": null
+      },
+      "neurofocus": {
+        "meta": "2026",
+        "preview": "Un dispositif portable pour enfants qui mesure les signaux physiologiques en temps réel.",
+        "description": "Câblage de l'électronique des capteurs et implémentation de la communication I2C pour interfacer un oxymètre de pouls MAX30100 et un accéléromètre/gyroscope MPU6050 avec un ESP32, ainsi qu'un capteur GSR de conductance cutanée. Développement du firmware pour acquérir la fréquence cardiaque, l'intervalle RR, les mouvements et la conductance cutanée, puis transmission continue via Wi-Fi vers Firebase Realtime Database chaque seconde au format JSON pour le suivi à distance.",
+        "role": null
+      },
+      "carthago": {
+        "meta": "2024",
+        "preview": "Un concept de robot autonome de collecte de déchets conçu autour de la robotique intelligente.",
+        "description": "Conception et fabrication du châssis mécanique prototype et assemblage des composants structuraux d'un robot autonome de détection et collecte de déchets, au sein d'une équipe de 4 personnes — deux coéquipiers gérant la vision par ordinateur et l'intégration du contrôle sous Raspberry Pi.",
+        "role": "Mon rôle : conception mécanique et fabrication"
+      },
+      "fighter-robot": {
+        "meta": "2022",
+        "preview": "Un robot de combat compétitif conçu pour la performance et le contrôle.",
+        "description": "Robot de combat pour compétitions de robotique.",
+        "role": null
+      },
+      "all-terrain-robot": {
+        "meta": "2023",
+        "preview": "Un robot robuste conçu pour évoluer sur des terrains difficiles et accidentés.",
+        "description": "Robot tout-terrain robuste à 4 moteurs conçu pour les sols accidentés, doté de deux ponts en H haute puissance BTS7960 (IBT_2) indépendants (un par côté) offrant un couple supérieur à un module L298N standard. Développé en trois variantes de contrôle : ESP32 avec Bluetooth intégré, Arduino avec module Bluetooth HC-05, et Arduino avec manette PS2 filaire pour un pilotage direct de type char.",
+        "role": null
+      },
+      "line-follower-robot": {
+        "meta": "2024",
+        "preview": "Un robot autonome qui suit une trajectoire guidée avec précision.",
+        "description": "Robot suiveur de ligne basé sur Arduino UNO utilisant cinq capteurs infrarouges analogiques et un régulateur PID pour un suivi fluide sans oscillation. Comprend une routine de calibrage automatique des capteurs et un algorithme de récupération de ligne en cas de perte de trajectoire.",
+        "role": null
+      },
+      "junior-robot": {
+        "meta": "2022",
+        "preview": "Un robot radioguidé compact conçu pour le défi junior à FSB SmarTech.",
+        "description": "Voiture radiocommandée 4 roues motrices pilotée par Bluetooth, réalisée en deux versions matérielles : une version Arduino Uno + HC-05, et une version autonome ESP32 exploitant son Bluetooth embarqué sans module externe.",
+        "role": "Robot du défi Junior"
+      }
+    }
+  },
+  "events": {
+    "items": {
+      "robokids-2026": {
+        "meta": "Formateur en robotique & Organisateur · Juillet – Août 2026",
+        "preview": "Un atelier pratique de robotique où les enfants ont conçu et programmé des projets concrets.",
+        "description": "Organisé par Tunisian Youth Science Association, El Alia, à El Alia Bizerte, cet atelier immersif de robotique a accueilli 25 jeunes élèves de 7 à 14 ans pour une formation structurée en programmation C++/Arduino, conception de circuits et intégration de capteurs. L'événement a guidé les participants dans la construction de projets matériels fonctionnels — tels que des voitures télécommandées — tout en leur apportant un mentorat technique direct pour le débogage de code embarqué et la résolution de pannes de câblage.",
+        "role": "Co-organisation et animation de l'événement, enseignement structuré en programmation C++/Arduino, conception de circuits et intégration de capteurs pour 25 élèves âgés de 7 à 14 ans lors de la construction de voitures télécommandées. Mentorat technique direct pour le débogage et l'apprentissage des principes fondamentaux des STEM."
+      },
+      "smc-3": {
+        "meta": "Équipe d'organisation · 2026",
+        "preview": "Un défi rythmé où j'ai contribué à l'organisation et au processus d'évaluation du jury.",
+        "description": "Organisé par le chapitre IEEE ESSTHS SB RAS à Pristini School of AI, le Speed Modeling Challenge est une compétition de CAO intense où les participants s'affrontent en binômes pour modéliser rapidement des pièces 3D sous contrainte de temps stricte. Le modèle gagnant est sélectionné selon la rapidité, la précision géométrique, le bon choix des matériaux et la masse exacte de la pièce.",
+        "role": "Membre officiel du jury, responsable de l'évaluation des modèles paramétriques réalisés, de la vérification des propriétés des matériaux et de la déclaration des lauréats."
+      },
+      "algo-arena-4": {
+        "meta": "Responsable des problèmes · 2025",
+        "preview": "Gestion de la structure du défi et diffusion fluide des problèmes compétitifs.",
+        "description": "Organisé par Tunisian Youth Science Association, El Alia, à El Alia, Algo Arena est un concours intensif de programmation compétitive d'une journée (~8h) hébergé sur HackerRank, confrontant des équipes sur plusieurs niveaux : Facile, Moyen, Difficile et Avancé. Les équipes accumulent des points en concevant des algorithmes optimisés qui réussissent l'ensemble des jeux de tests automatisés.",
+        "role": "Concepteur technique des problèmes, chargé de la création, de la rédaction et de la gestion d'environ 40 problèmes de programmation compétitive pour tous les niveaux. Configuration et implémentation des cas de tests automatisés sur HackerRank (cas limites, entrées masquées et sorties attendues) pour garantir une évaluation rigoureuse."
+      },
+      "robots-league-3": {
+        "meta": "Équipe d'organisation · 2025",
+        "preview": "Soutien logistique et coordination technique du bon déroulement de la compétition.",
+        "description": "Organisée par le chapitre IEEE ESSTHS SB RAS à l'ESSTHS, cette compétition de robotique propose trois défis techniques distincts : le Junior Challenge (course contre la montre de voitures télécommandées pour les moins de 18 ans), le Line Follower Challenge (navigation autonome) et l'All Terrain Challenge (franchissement d'obstacles complexes par des robots avancés).",
+        "role": "Membre officiel du jury pour le défi Junior, chargé de la coordination des matches, du déroulement des manches et de la désignation des vainqueurs selon les temps de parcours et le respect du règlement."
+      },
+      "robotsleague-2": {
+        "meta": "Responsable des pistes & modèles · 2024",
+        "preview": "Pilotage des opérations sur les pistes et coordination technique de la compétition.",
+        "description": "Organisée par le chapitre IEEE ESSTHS SB RAS, cette compétition de robotique regroupe trois épreuves techniques : le Junior Challenge (voitures radiocommandées pour les moins de 18 ans), le Line Follower Challenge (suivi de ligne autonome) et l'All Terrain Challenge (robots tout-terrain).",
+        "role": "Responsable de la piste du défi Junior, pilotant la conception, la planification et la construction du parcours. Supervision de la mécanique du circuit et gestion du processus officiel d'homologation (inspection, pesée, mesures et conformité électronique des robots)."
+      },
+      "algo-arena-2": {
+        "meta": "Trésorier et Responsable logistique · 2023",
+        "preview": "Gestion de la logistique de l'événement et de la coordination financière du concours.",
+        "description": "Organisé par Tunisian Youth Science Association, El Alia, à El Alia, Algo Arena est un concours intensif de programmation compétitive d'une journée (~8h) sur HackerRank, opposant des équipes sur plusieurs niveaux de difficulté. Les équipes marquent des points en résolvant des problèmes algorithmiques validés par des tests automatisés.",
+        "role": "Responsable de la logistique et trésorier de l'événement, supervisant l'infrastructure technique, l'installation matérielle et les opérations financières (alimentation électrique, réseau, gestion du budget et comptabilité générale)."
+      },
+      "eniso-smart-challenge": {
+        "meta": "Participant · 2022",
+        "preview": "Un défi robotique exigeant axé sur la stratégie, la qualité d'assemblage et la performance.",
+        "description": "Organisée par l'équipe ENISo à l'École Nationale d'Ingénieurs de Sousse, cette compétition rassemble des concepteurs juniors et seniors pour évaluer la navigation autonome, la durabilité structurelle et la résilience matérielle à travers plusieurs arènes spécialisées (Junior Challenge, Line Follower, All-Terrain et Fighter Challenge).",
+        "role": "Représentation de Tunisian Youth Science Association, El Alia en tant que développeur matériel principal dans une équipe de 4 personnes pour le Fighter Robot challenge. Contribution à l'assemblage, à l'alignement mécanique et au calibrage de la motorisation d'un robot de combat, avec gestion des réparations rapides entre les matches."
+      },
+      "fsb-smartech": {
+        "meta": "Participant au défi Junior · 2022",
+        "preview": "Une expérience stimulante axée sur la créativité technique et la pratique matérielle.",
+        "description": "Organisée par SmarTech FSB à la Faculté des Sciences de Bizerte (FSB), cette compétition réunit des passionnés de robotique sur trois épreuves : le défi Junior (course sur piste), le Line Follower autonome et l'All-Terrain Challenge sur parcours d'obstacles.",
+        "role": "Représentation de Tunisian Youth Science Association, El Alia en tant que membre actif dans le défi Junior Robot, collaborant sur la conception du robot, l'assemblage matériel et l'optimisation des performances en temps réel lors des manches éliminatoires."
+      },
+      "esprit-ras-robots-2025": {
+        "meta": "Participant · 2025",
+        "preview": "Participation à l'All Terrain Challenge pour tester la maniabilité, la stabilité et l'endurance.",
+        "description": "Participation à l'All Terrain Challenge lors d'ESPRIT RAS Robots 2025, où les robots s'affrontent sur un sol accidenté. L'épreuve met l'accent sur la robustesse mécanique, l'adhérence et les ajustements en temps réel.",
+        "role": "Représentation du chapitre IEEE ESSTHS RAS et participation active au défi All Terrain Robot. Contribution directe aux réglages, aux tests systématiques et à l'optimisation de la réactivité et de la stabilité du robot."
+      },
+      "tsyp12": {
+        "meta": "Participant · 2024",
+        "preview": "Un congrès professionnel réunissant ingénierie, innovation et réseautage étudiant.",
+        "description": "Le 12ème congrès IEEE des étudiants et jeunes professionnels tunisiens (TSYP 12) a réuni plus de 1 200 participants au Palais des Congrès El Medina à Yasmine Hammamet autour du thème « TUNISIA 2056 », explorant les avancées technologiques en santé, agritech et industries créatives.",
+        "role": "Représentation de la branche étudiante IEEE ESSTHS au TSYP 12 lors des défis techniques des groupes SIGHT et RAS avec le projet Carthago. Co-conception et soutenance technique devant les jurys d'évaluation."
+      },
+      "nrw": {
+        "meta": "Participant Startup Junior · 2023",
+        "preview": "Un week-end alliant esprit entrepreneurial et exploration technique concrète.",
+        "description": "Organisé par la branche étudiante IEEE RAS INSAT, le National Robotics Weekend (NRW) 5.0 est un congrès national et hackathon de 3 jours à Tunis réunissant des étudiants d'ingénierie et de commerce autour de défis compétitifs, de makeathons et de panels sur l'IA et l'industrie 4.0.",
+        "role": "Représentation de Tunisian Youth Science Association, El Alia à la tête d'une équipe de 4 jeunes innovateurs pour concevoir et présenter le prototype fonctionnel d'une machine de recyclage de bouteilles plastiques PET en filament 3D."
+      },
+      "crt-palestine-campaign": {
+        "meta": "Participant · 2023",
+        "preview": "Un engagement solidaire significatif lors d'une période de crise humanitaire.",
+        "description": "Menée par le Croissant-Rouge Tunisien (CRT), cette opération nationale a mobilisé une aide humanitaire et médicale d'urgence pour la bande de Gaza en 2023 via des collectes citoyennes, le tri logistique et l'acheminement de fret aérien militaire.",
+        "role": "Bénévole actif et coordinateur logistique, assurant la collecte, le tri et l'emballage des fournitures médicales et denrées alimentaires dans les dépôts locaux."
+      },
+      "algo-arena-1": {
+        "meta": "Participant au concours d'algorithmique · 2023",
+        "preview": "Un défi algorithmique récompensant la réflexion rapide et la résolution sous pression.",
+        "description": "Organisé par Tunisian Youth Science Association, El Alia, à El Alia, Algo Arena est un concours de programmation compétitive d'une journée sur HackerRank testant l'optimisation et l'efficacité des solutions logicielles.",
+        "role": "Compétiteur au sein d'une équipe de 3 personnes, assurant l'analyse des problèmes, la modélisation mathématique et l'implémentation de code optimisé sous contrainte de temps, décrochant la 3ème place du concours."
+      },
+      "nettawaa-mall": {
+        "meta": "Participant · 2025",
+        "preview": "Une rencontre enrichissante axée sur l'engagement citoyen, la technologie et l'échange associatif.",
+        "description": "Organisée par Future Visions (رؤى المستقبل) à Messadine, Sousse, cette initiative associative forme et mobilise les jeunes autour de projets technologiques et d'ateliers d'innovation collaborative.",
+        "role": "Représentation de Tunisian Youth Science Association, El Alia en tant que participant actif aux ateliers technologiques et aux laboratoires d'innovation collaborative."
+      },
+      "nuit-info-2025": {
+        "meta": "Participant · 2025",
+        "preview": "Un hackathon nocturne mémorable dans une ambiance dynamique et collaborative.",
+        "description": "Organisée à l'ISITCom à Hammam Sousse dans le cadre du hackathon franco-tunisien La Nuit de l'Info, cette compétition rassemble étudiants et professionnels pour concevoir et déployer une application web complète du coucher au lever du soleil.",
+        "role": "Participant"
+      },
+      "ieeextreme": {
+        "meta": "Participant · 2025",
+        "preview": "Un défi de programmation international de 24 heures stimulant le dépassement de soi.",
+        "description": "IEEEXtreme est un marathon mondial virtuel de programmation compétitive de 24 heures organisé par l'IEEE, réunissant des milliers d'étudiants pour résoudre en continu des défis algorithmiques et mathématiques complexes.",
+        "role": "Représentation du chapitre IEEE ESSTHS SB CS au sein d'une équipe compétitive de 3 étudiants, collaborant sans interruption pendant 24 heures pour analyser et optimiser des solutions algorithmiques face à des équipes internationales."
+      },
+      "sdc-4": {
+        "meta": "Participant · 2026",
+        "preview": "Présentation du projet NeuroFocus lors du défi technique pour l'accessibilité éducative.",
+        "description": "Organisé par la section IEEE SIGHT Tunisie, le congrès SDC est un rendez-vous annuel mobilisant l'ingénierie et les technologies humanitaires au service des enjeux éducatifs, sociaux et de santé.",
+        "role": "Représentation du groupe IEEE ESSTHS SB SIGHT au défi technique SDC avec le projet NeuroFocus, mettant en avant des innovations techniques pour l'accessibilité éducative."
+      },
+      "el-alia-robots-1": {
+        "meta": "Participant · 2026",
+        "preview": "Une compétition robotique stimulante alliant créativité, esprit d'équipe et défis techniques.",
+        "description": "Organisée par le club CODING4EVER à El Alia, El Alia Robots est une compétition de deux jours pour juniors et seniors articulée autour de l'assemblage, du réglage et de matches de précision avec des véhicules radiocommandés.",
+        "role": "Représentation de Tunisian Youth Science Association, El Alia en tant que chef d'équipe et mentor technique, encadrant deux équipes juniors et une équipe senior qui a décroché la 3ème place sur le podium."
+      },
+      "caux-forum": {
+        "meta": "Délégué jeunesse · 2017",
+        "preview": "Une mission représentative reliant leadership des jeunes et impact social inclusif.",
+        "description": "Organisé au Caux Palace en Suisse par la Fondation Initiatives et Changement, le Caux Forum 2017 a réuni des dirigeants et acteurs de la société civile internationale autour de la gouvernance inclusive, du dialogue interculturel et de la consolidation de la paix.",
+        "role": "Représentation de la Tunisie à l'âge de 11 ans en tant que jeune délégué en collaboration avec l'OTDDPH au Caux Forum, participant aux dialogues sur la consolidation de la paix et l'inclusion citoyenne."
+      }
+    }
+  },
+  "community": {
+    "items": {
+      "ieee-essths-sb": {
+        "since": "depuis 2024",
+        "location": "ESSTHS, Sousse",
+        "description": "Un réseau étudiant international sous l'égide de l'IEEE (Institute of Electrical and Electronics Engineers), composé de chapitres techniques spécialisés formant les futurs ingénieurs à travers la robotique, la recherche, les projets pratiques et le développement professionnel."
+      },
+      "ajst": {
+        "since": "depuis 2020",
+        "location": "El Alia, Bizerte",
+        "description": "Une communauté de sciences et d'innovation pour les jeunes encourageant la pratique des STEM, la résolution créative de problèmes et l'apprentissage collaboratif à travers des initiatives citoyennes."
+      },
+      "tunisian-red-crescent": {
+        "since": "depuis 2023",
+        "location": "El Alia, Bizerte",
+        "title": "Action humanitaire & coordination bénévole",
+        "description": "Une organisation humanitaire active dans le bénévolat, le soutien communautaire et la mobilisation d'aide d'urgence pour apporter une assistance solidaire concrète."
+      },
+      "otddph": {
+        "since": "depuis 2017",
+        "location": "Beb Saadoun, Tunisie",
+        "title": "Organisation pour le développement durable et la protection des droits humains",
+        "description": "Organisation non gouvernementale indépendante en Tunisie fondée par des jeunes en situation de handicap après la révolution du 14 janvier 2011. Elle défend une approche inclusive fondée sur les droits humains et veille à l'application de la convention de l'ONU (CRDPH)."
+      },
+      "igc": {
+        "since": "depuis 2025",
+        "location": "ISITCom, Hammam Sousse",
+        "description": "Une communauté technologique étudiante axée sur les technologies Google, l'apprentissage développeur et les projets pratiques renforçant l'autonomie technique et la collaboration."
+      }
+    },
+    "chapters": {
+      "cs": "Le chapitre Computer Society promeut l'excellence informatique à travers l'apprentissage technique, l'innovation logicielle et des projets collaboratifs qui renforcent les compétences pratiques des étudiants.",
+      "iip": "Le chapitre conjoint IIP réunit trois sociétés spécialisées de l'IEEE : IES (Industrial Electronics Society), IAS (Industry Applications Society) et PES (Power & Energy Society), offrant une formation d'ingénierie multidisciplinaire en automatisation industrielle et énergies durables.",
+      "ras": "Le chapitre IEEE Robotics and Automation Society (RAS) est dédié à la robotique, à la navigation autonome et aux systèmes de contrôle intelligent, offrant une expérience pratique en prototypage matériel et développement embarqué.",
+      "sight": "Le chapitre IEEE Special Interest Group on Humanitarian Technology (SIGHT) met la technologie au service de l'impact social, permettant aux membres de concevoir des solutions durables pour les défis communautaires.",
+      "wie": "Le chapitre IEEE Women in Engineering (WIE) soutient et valorise les femmes dans les domaines scientifiques et technologiques à travers le mentorat, le réseautage et des initiatives inclusives en STEM."
+    }
+  },
+  "contact": {
+    "nameLabel": "Saisissez votre nom",
+    "emailLabel": "Saisissez votre e-mail",
+    "phoneLabel": "Saisissez votre numéro de téléphone",
+    "messageLabel": "Écrivez votre message",
+    "name": "Nom",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "message": "Message",
+    "send": "Envoyer",
+    "sending": "Envoi...",
+    "sent": "Message envoyé, merci !",
+    "failed": "Échec de l'envoi : vérifiez votre connexion et réessayez.",
+    "nameRequired": "Le nom est obligatoire.",
+    "nameLetters": "Le nom ne doit contenir que des lettres.",
+    "emailRequired": "L'e-mail est obligatoire.",
+    "emailValid": "L'e-mail doit contenir un \"@\" et un domaine valide.",
+    "phoneValid": "Le numéro doit contenir exactement 8 chiffres.",
+    "messageRequired": "Le message ne peut pas être vide."
+  },
+  "footer": {
+    "copyright": "© 2026 Anouer Chouikh. Tous droits réservés."
+  },
+  "languages": {
+    "en": "EN",
+    "fr": "FR",
+    "ar": "AR"
+  },
+  "certificate": {
+    "viewButton": "Voir l'attestation",
+    "dialogTitle": "Attestation de stage",
+    "loading": "Chargement de l'attestation...",
+    "loadError": "Impossible de charger l'attestation."
+  },
+  "pdf": {
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "resetZoom": "Réinitialiser le zoom",
+    "zoomLevel": "Niveau de zoom"
+  }
 }

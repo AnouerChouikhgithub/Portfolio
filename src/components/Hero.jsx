@@ -32,9 +32,9 @@ export default function Hero() {
           <img
             className="hero__portrait"
             src="/me2.jpg"
-            alt="Portrait of Anouer Chouikh"
+            alt={t('common.portraitAlt')}
           />
-          <h1 id="hero-heading" className="hero__name">Anouer Chouikh</h1>
+          <h1 id="hero-heading" className="hero__name">{t('common.name')}</h1>
           <p className="hero__title">{t('hero.title')}</p>
           <p className="hero__tagline">{t('hero.tagline')}</p>
           <div className="hero__buttons">

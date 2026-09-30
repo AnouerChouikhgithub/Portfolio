@@ -18,11 +18,10 @@ export default function Footer() {
           ))}
         </nav>
         <div className="footer__social">
-          <a className="footer__social-link" href="mailto:anouer.chouikh2005@gmail.com" aria-label="Email" ><SiGmail /></a>
-          <a className="footer__social-link" href="https://github.com/AnouerChouikhgithub" aria-label="GitHub" target="_blank" rel="noopener noreferrer"><PiGithubLogoLight /></a>
-          <a className="footer__social-link" href="https://www.linkedin.com/in/anouer-chouikh-303306220" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
-          <a className="footer__social-link" href="https://www.instagram.com/anouerchouikhh" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><FaInstagram />  </a>
-
+          <a className="footer__social-link" href="mailto:anouer.chouikh2005@gmail.com" aria-label={t('common.social.email')} title={t('common.social.email')}><SiGmail /></a>
+          <a className="footer__social-link" href="https://github.com/AnouerChouikhgithub" aria-label={t('common.social.github')} title={t('common.social.github')} target="_blank" rel="noopener noreferrer"><PiGithubLogoLight /></a>
+          <a className="footer__social-link" href="https://www.linkedin.com/in/anouer-chouikh-303306220" aria-label={t('common.social.linkedin')} title={t('common.social.linkedin')} target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
+          <a className="footer__social-link" href="https://www.instagram.com/anouerchouikhh" aria-label={t('common.social.instagram')} title={t('common.social.instagram')} target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
         </div>
       </div>
     </footer>

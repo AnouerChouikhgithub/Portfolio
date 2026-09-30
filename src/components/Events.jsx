@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { clubs } from './Community';
 import { useI18n } from '../i18n/I18nProvider';
+import MixedText from './MixedText';
 
 const imageList = (folder, files) => files.map((file) => `/Events/${folder}/${file}`);
 
-const renderProjectLinksInText = (text, onClose) => {
+const renderProjectLinksInText = (text, onClose, isRtl = false) => {
   if (!text) {
     return text;
   }
@@ -77,12 +77,18 @@ const renderProjectLinksInText = (text, onClose) => {
     }
 
     if (!bestMatch) {
-      parts.push(text.slice(cursor));
+      parts.push(<MixedText key={`chunk-${cursor}`} text={text.slice(cursor)} isRtl={isRtl} />);
       break;
     }
 
     if (bestMatch.matchIndex > cursor) {
-      parts.push(text.slice(cursor, bestMatch.matchIndex));
+      parts.push(
+        <MixedText
+          key={`chunk-${cursor}`}
+          text={text.slice(cursor, bestMatch.matchIndex)}
+          isRtl={isRtl}
+        />
+      );
     }
 
     parts.push(
@@ -111,10 +117,10 @@ const renderProjectLinksInText = (text, onClose) => {
           window.location.hash = bestMatch.href;
         }}
         className={bestMatch.className}
-        aria-label={`${bestMatch.matchedText}. More details`}
-        title="More details"
+        aria-label={`${bestMatch.matchedText}`}
+        title={bestMatch.matchedText}
       >
-        {bestMatch.matchedText}
+        <MixedText text={bestMatch.matchedText} isRtl={isRtl} />
       </a>
     );
 
@@ -124,14 +130,11 @@ const renderProjectLinksInText = (text, onClose) => {
   return parts;
 };
 
-const organizedEvents = [
+export const organizedEvents = [
   {
     slug: 'robokids-2026',
     title: 'ROBOKIDS 2026',
-    meta: 'Robotics Instructor & Organizer · July -- August 2026',
-    preview: 'A hands-on robotics workshop where kids built and debugged smart projects with real hardware.',
-    description: "Organized by Tunisian Youth Science Association, El Alia, in El Alia Bizerte, this immersive, hands-on robotics workshop was designed for 25 young students aged 7–14, delivering structured instruction in C++/Arduino programming, circuit design, and sensor integration. The event guided participants through building functional hardware projects—such as remote-controlled cars—while providing technical mentorship in debugging embedded code, resolving wiring faults, and mastering core STEM concepts to foster high engagement and impactful educational outcomes.",
-    role: "Co-organized and led the event, delivering structured instruction in C++/Arduino programming, circuit design, and sensor integration to guide 25 students aged 7–14 through building functional hardware projects like remote-controlled cars. Provided direct technical mentorship to help participants debug embedded code, resolve wiring faults, and master fundamental STEM principles, driving high student engagement and earning enthusiastic parent feedback.",
+    year: 2026,
     photos: imageList('ROBOKIDS2026', [
       '1788454842030.jfif',
       '1788454842413.jfif',
@@ -152,19 +155,13 @@ const organizedEvents = [
   {
     slug: 'smc-3',
     title: 'SMC 3.0 (Speed Modeling Challenge)',
-    meta: 'Organizing Team · 2026',
-    preview: 'A fast-paced challenge where I helped shape the. event flow and judging experience.',
-    description: "Organized by IEEE ESSTHS SB RAS chapter, in Pristini scholl of AI, the Speed Modeling Challenge is an intense, head-to-head CAD competition where participants race in pairs to rapidly model designated 3D parts under strict time constraints. The winning model is selected based on speed, design accuracy, correct material selection, and precise part weight.",
-    role: "Served as an official jury member, evaluating participants' completed parametric models, verifying precise material properties and mass specs, and declaring final contest winners.",
+    year: 2026,
     photos: imageList('SMC3.0', ['IMG-20260501-WA0017.jpg', 'IMG-20260501-WA0009.jpg']),
   },
   {
     slug: 'algo-arena-4',
     title: 'Algo Arena 4.0',
-    meta: 'Problems Manager · 2025',
-    preview: 'I managed the challenge structure and kept problem delivery smooth and competitive.',
-    description: "Organized by the Tunisian Youth Science Association, El Alia, in EL ALia, Algo Arena is an intensive, day-long (~8h) competitive programming contest hosted on HackerRank, challenging participant teams across multiple difficulty tiers: Easy, Medium, Hard, and Advanced. Teams compete to accumulate points by writing optimized code that accurately solves problems and passes all automated validation test cases.",
-    role: "Served as the Technical Problem Setter, responsible for designing, authoring, and managing approximately 40 competitive programming problems across all difficulty levels. Built and configured comprehensive automated test cases on HackerRank—including edge cases, hidden inputs, and expected outputs—to ensure rigorous evaluation, accurate scoring, and precise solution verification throughout the event.",
+    year: 2025,
     photos: imageList('AlgoAreana4.0', [
       '605146256_1455065249953004_2563523498531105948_n.jpg',
       '605138693_1456072589852270_4193772306217600208_n.jpg',
@@ -174,10 +171,7 @@ const organizedEvents = [
   {
     slug: 'robots-league-3',
     title: 'IEEE ESSTHS Robots League 3.0',
-    meta: 'Organizing Team · 2025',
-    preview: 'I supported the robotics event logistics and helped keep the competition running cleanly.',
-    description: "Organized by the IEEE ESSTHS SB RAS Chapter, in ESSTHS, this multi-tier robotics competition features three distinct technical challenges: the Junior Challenge, where participants under 18 race remote-controlled cars through a timed track over multiple rounds; the Line Follower Challenge, focused on autonomous navigation; and the All Terrain Challenge, designed for participants over 18 using advanced robots to navigate larger, highly complex obstacles.",
-    role: "Served as an official jury member for the Junior Challenge, responsible for coordinating participant match brackets, running competition rounds, and determining winning teams based on course completion times and rules compliance.",
+    year: 2025,
     photos: imageList('RobotsLeague3.0', [
       '632827946_17863135260592307_7310623845599494380_n.jfif',
       '631677310_17863135410592307_1784183151617336395_n.jfif',
@@ -187,10 +181,7 @@ const organizedEvents = [
   {
     slug: 'robotsleague-2',
     title: 'IEEE ESSTHS Robots League 2.0',
-    meta: 'Model Chief · 2024',
-    preview: 'Led key model operations and helped steer the competition with strong coordination.',
-    description: "Organized by the IEEE ESSTHS SB RAS Chapter, this multi-tier robotics competition features three distinct technical challenges: the Junior Challenge, where participants under 18 race remote-controlled cars through a timed track over multiple rounds; the Line Follower Challenge, focused on autonomous navigation; and the All Terrain Challenge, designed for participants over 18 using advanced robots to navigate larger, highly complex obstacles.",
-    role: "Served as the Chief of the Junior Model Track, leading the design, planning, and hands-on construction of the competition track. Oversee model mechanics, track layout, and physical construction while managing the official homologation process to inspect, measure, weigh, and verify the electronics of each robot to authorize competition entry.",
+    year: 2024,
     photos: imageList('RobotsLeague2.0', [
       '480328048_656492480067706_7599675241454232436_n.jpg',
       '480319935_656492380067716_3718151997370951199_n.jpg',
@@ -202,31 +193,22 @@ const organizedEvents = [
   {
     slug: 'algo-arena-2',
     title: 'Algo Arena 2.0',
-    meta: 'Treasurer and Logistics Manager · 2023',
-    preview: 'I handled the event logistics and financial coordination behind the challenge experience.',
-    description: "Organized by the Tunisian Youth Science Association, El Alia, in EL ALia, Algo Arena is an intensive, day-long (~8h) competitive programming contest hosted on HackerRank, challenging participant teams across multiple difficulty tiers: Easy, Medium, Hard, and Advanced. Teams compete to accumulate points by writing optimized code that accurately solves problems and passes all automated validation test cases.",
-    role: "Served as Event Logistics Lead and Treasurer, overseeing technical infrastructure, physical setup, and financial operations. Managed on-site logistics—including power distribution, network connectivity, and equipment setup—while directing budget planning, trackable income and expenditure logging, and overall financial administration for the event.",
+    year: 2023,
     photos: imageList('AlgoArena2.0', ['DSC_0208.JPG', 'DSC_0064.JPG', 'DSC_0021.JPG']),
   },
 ];
 
-const otherEvents = [
+export const otherEvents = [
   {
     slug: 'eniso-smart-challenge',
     title: 'ENISo Smart Challenge',
-    meta: 'Participant · 2022',
-    preview: 'A robotics challenge that pushed strategy, build quality, and performance.',
-    description: "Organized by ENISo Team at the École Nationale d'Ingénieurs de Sousse (ENISo), this multi-tier robotics competition brings together junior and senior builders to test autonomous navigation, structural durability, and hardware resilience across specialized arenas. The event features multiple technical tracks, including the Junior Challenge for remote-controlled track racing, the autonomous Line Follower Challenge, the All-Terrain Challenge, and the high-impact Fighter Challenge.",
-    role: 'Representing Tunisian Youth Science Association, El Alia as a core hardware developer in a four-person team for the Fighter Robot challenge. Contributed to the assembly, mechanical alignment, and drive systems calibration of a combat robot, while managing real-time strategy, rapid repairs, and power-system troubleshooting between intense elimination matches.',
+    year: 2022,
     photos: imageList('EnisoSmartChallenge', ['IMG_20220424_180752_811.jpg']),
   },
   {
     slug: 'fsb-smartech',
     title: 'FSB SmarTech',
-    meta: 'Junior Challenge Participant · 2022',
-    preview: 'A challenge-driven experience focused on hands-on technical creativity.',
-    description: "Organized by SmarTech FSB at the Faculté des Sciences de Bizerte (FSB), this multi-tier robotics competition brings together junior and senior builders to test autonomous navigation and hardware resilience across specialized arenas. The event features three distinct technical tracks: the Junior Challenge for remote-controlled track racing, the autonomous Line Follower Challenge, and the All-Terrain Challenge, where advanced custom robots navigate large, complex obstacle courses.",
-    role: 'Representing Tunisian Youth Science Association, El Alia as an active team member in the Junior Robot challenge, collaborating on robot design, hardware assembly, and real-time performance optimization. Participated in technical testing, drive calibration, and field troubleshooting during competitive heats to maximize navigation accuracy and course completion speed.',
+    year: 2022,
     photos: imageList('FSBSmartChallenge', [
       '481775323_9115234118511643_4969609786711446471_n.jpg',
       '481252779_9115233821845006_7288383613134083637_n.jpg',
@@ -236,28 +218,19 @@ const otherEvents = [
   {
     slug: 'esprit-ras-robots-2025',
     title: 'ESPRIT RAS Robots 2025',
-    meta: 'Participant · 2025',
-    preview: 'I competed in the All Terrain Challenge and tested navigation, stability, and endurance under real race conditions.',
-    description: "Participated in the All Terrain Challenge at ESPRIT RAS Robots 2025, where competitors tested robot mobility, control precision, and obstacle-handling performance across rough, uneven terrain. The challenge emphasized robust design, reliable traction, and real-time tuning under pressure.",
-    role: 'Representing IEEE ESSTHS RAS Chapter and competed in the All Terrain Challenge as a active team member. Contributed directly to robot setup, systematic testing, and rapid on-site adjustments, optimizing control responsiveness and mechanical stability throughout the dynamic runs.',
+    year: 2025,
     photos: imageList('Esprit Ras Robots', ['received_609273398797693.jpeg', 'received_718295347292095.jpeg']),
   },
   {
     slug: 'tsyp12',
     title: 'TSYP12 (IEEE Tunisian Student Young Professional Congress)',
-    meta: 'Participant · 2024',
-    preview: 'A student-focused professional event bringing engineering and networking together.',
-    description: "The 12th IEEE Tunisian Student and Young Professional Congress (TSYP 12) brought together over 1,200 engineering students, young professionals, and industry experts at the El Medina Congress Center in Yasmine Hammamet. Centered on the theme \"TUNISIA 2056,\" the congress examined technological advancement across health tech, agritech, and creative industries through the TN2056 Forum, technical sessions, chapter challenges, and startup pitch competitions.",
-    role: 'Representing the IEEE ESSTHS Student Branch at TSYP 12, competing in both the SIGHT group and RAS chapter technical challenges with the Carthago project. Co-engineered and presented the technical solution before evaluation juries, demonstrating system functionality, hardware-software integration, and humanitarian impact under strict competition guidelines.',
+    year: 2024,
     photos: imageList('TSYP12', ['20241224_005606_563.jpg']),
   },
   {
     slug: 'nrw',
     title: 'National Robotics Weekend (NRW) 5.0',
-    meta: 'Junior Startup Participant · 2023',
-    preview: 'A robotics weekend that blended startup thinking with practical technical exploration.',
-    description: "Organized by the IEEE RAS INSAT Student Branch, National Robotics Weekend (NRW) 5.0 is a flagship 3-day national robotics congress and hackathon held in Tunis. Bringing together engineering, tech, and business students from top universities across Tunisia, the event bridges autonomous robotics engineering with startup innovation through competitive track challenges, 24-to-36-hour makeathons, technical workshops, and panels on AI, automation, and Industry 4.0 applications.",
-    role: 'Representing Tunisian Youth Science Association, El Alia, leading a team of four young innovators to design, build, and pitch the initial functional prototype of an automated plastic bottle PET recycling machine. Directed project planning, hardware iteration, and system integration while guiding team members through pitch development, business model refinement, and live technical demonstrations.',
+    year: 2023,
     photos: imageList('NRW', [
       '476436877_929557102638590_614182522696266983_n.jpg',
       '440751760_748925197368449_1967877939820872143_n.jpg',
@@ -266,10 +239,7 @@ const otherEvents = [
   {
     slug: 'crt-palestine-campaign',
     title: 'CRT Palestine Campaign',
-    meta: 'Participant · 2023',
-    preview: 'A meaningful participation during a period of crisis and collective solidarity.',
-    description: 'Led by the Tunisian Red Crescent (Croissant Rouge Tunisien), this nationwide relief operation mobilized humanitarian aid and medical supplies for the Gaza Strip during the 2023 crisis. The initiative coordinated large-scale public donation drives, managed sorting and packing at central logistics hubs, deployed military cargo airlifts to Al-Arish airport for delivery via the Rafah crossing, and facilitated medical evacuation logistics for injured individuals receiving treatment in Tunisia.',
-    role: 'Served as an active volunteer and logistics coordinator, managing the collection, sorting, and packaging of essential humanitarian aid—including medical supplies, food, and emergency relief goods—at local collection depots. Supported community outreach initiatives to mobilize public donations and assisted in streamlining warehouse operations for shipment preparation.',
+    year: 2023,
     photos: imageList('CRTPalestineCampaign', [
       '481247300_1047956810694163_8362059026597306439_n.jpg',
       '482056870_1051483890341455_7026896222072665079_n.jpg',
@@ -283,10 +253,7 @@ const otherEvents = [
   {
     slug: 'algo-arena-1',
     title: 'Algo Arena 1.0',
-    meta: 'Problem Solving Challenge Participant · 2023',
-    preview: 'A competitive challenge that rewarded creative thinking under pressure.',
-    description: 'Organized by the Tunisian Youth Science Association, El Alia, in EL ALia, Algo Arena is an intensive, day-long (~8h) competitive programming contest hosted on HackerRank, challenging participant teams across multiple difficulty tiers: Easy, Medium, Hard, and Advanced. Teams compete to accumulate points by writing optimized code that accurately solves problems and passes all automated validation test cases.',
-    role: 'Competed as part of a three-person team in the multi-tiered algorithmic challenge, driving problem analysis, mathematical modeling, and optimized code implementation under strict time constraints. Successfully solved complex algorithmic problems on HackerRank to claim 3rd place in the competition.',
+    year: 2023,
     photos: imageList('AlgoArena1.0', [
       '487124730_1216482703811261_2809329442559644233_n.jpg',
       '487016477_1216482720477926_3872804814145809501_n.jpg',
@@ -296,39 +263,37 @@ const otherEvents = [
   {
     slug: 'nettawaa-mall',
     title: 'Nettawaa Mall',
-    meta: 'Participant · 2025',
-    preview: 'An event experience centered on engagement, technology, and community interaction.',
-    description: "Organized by Future Visions (رؤى المستقبل) in Messadine, Sousse, this non-profit initiative focuses on empowering youth through targeted training, civic engagement, and hands-on technological projects. The event brings together students and young professionals across the Sahel region for interactive workshops, leadership development, and collaborative innovation labs.",
-    role: 'Representing Tunisian Youth Science Association, El Alia as an active participant. Engaged in hands-on technological workshops, civic leadership sessions, and collaborative innovation labs, contributing to regional youth empowerment and inter-association technical exchange.',
+    year: 2025,
     photos: imageList('NettawaaMall', ['IMG_0079_20251217_125506_3600 (1).jpeg']),
   },
-  { slug: 'nuit-info-2025', title: 'Nuit d’Info 2025', meta: 'Participant · 2025', preview: 'A memorable information and tech event with a strong collaborative atmosphere.', description: "Organized at ISITCOM (Institut Supérieur d'Informatique et des Techniques de Communication) in Hammam Sousse as part of the nationwide French-Tunisian hackathon La Nuit de l'Info, this overnight competition brings together students, faculty, and industry professionals. Teams work from sunset to sunrise to design, build, and deploy a functional web application addressing a national prompt alongside targeted technical and design challenges sponsored by corporate partners.", role: 'Participant', photos: [] },
-  { slug: 'ieeextreme', title: 'IEEEXtreme 19.0', meta: 'Participant · 2025', preview: 'A high-pressure programming challenge that pushed problem-solving and teamwork.', description: "IEEEXtreme is a global 24-hour virtual competitive programming marathon organized by IEEE, bringing together thousands of student members worldwide. Teams compete continuously against strict time constraints to solve a set of complex algorithmic, mathematical, and logical challenges proctored locally across university hubs.", role: 'Represented the IEEE ESSTHS SB CS Chapter as part of a three-member competitive team alongside fellow student programmers. Collaborated continuously over 24 hours to analyze complex problem statements, design optimized algorithmic solutions, and debug code under tight time constraints against international peer teams.', photos: [] },
+  {
+    slug: 'nuit-info-2025',
+    title: 'Nuit d’Info 2025',
+    year: 2025,
+    photos: [],
+  },
+  {
+    slug: 'ieeextreme',
+    title: 'IEEEXtreme 19.0',
+    year: 2025,
+    photos: [],
+  },
   {
     slug: 'sdc-4',
     title: 'SDC 4.0 (IEEE SIGHT Day Congress)',
-    meta: 'Participant · 2026',
-    preview: 'Represented the team in the technical challenge with NeuroFocus, pitching and demonstrating engineering solutions for educational accessibility.',
-    description: "Organized by the IEEE SIGHT Tunisia Section, the IEEE SIGHT Day Congress (SDC) is an annual flagship gathering uniting students, engineers, and humanitarian technology advocates across Tunisia. The congress focuses on leveraging engineering and technological innovation to address pressing social, educational, and healthcare challenges through technical competitions, keynote addresses, interactive workshops, and cross-branch collaboration.",
-    role: 'Representing IEEE ESSTHS SB SIGHT Group in the SDC technical challenge with the NeuroFocus project, presenting engineering innovations designed to address core accessibility and educational challenges.',
+    year: 2026,
     photos: imageList('SDC4.0', ['1776703382796.jfif']),
   },
   {
     slug: 'el-alia-robots-1',
     title: 'EL ALia ROBOTS 1.0',
-    meta: 'Participant · 2026',
-    preview: 'A robotics event experience focused on creativity, teamwork, and hands-on technical challenge.',
-    description: "Organized by the CODING4EVER Club in El Alia, El Alia Robots is a two-day robotics competition for both junior (under 15) and senior (above 15) participants. The event features an initial day dedicated to assembling and fine-tuning remote-controlled cars, followed by a competitive match day evaluating performance and navigation precision across age-based divisions.",
-    role: 'Representing Tunisian Youth Science Association, El Alia, serving as Team Lead and Technical Mentor. Managed two junior teams and one senior team throughout the build, optimization, and competition phases, directing hardware setup, strategic drive adjustments, and real-time troubleshooting to lead the senior team to secure a 3rd place podium finish.',
+    year: 2026,
     photos: imageList('ELAliaRobots1.0', ['IMG-20260830-WA0028.jpg']),
   },
   {
     slug: 'caux-forum',
     title: 'Caux Forum',
-    meta: 'Representative · 2017',
-    preview: 'A representative role connecting youth leadership with inclusive social impact.',
-    description: 'Hosted at the historic Caux Palace overlooking Montreux, Switzerland, the Caux Forum 2017 brought together global leaders, policymakers, researchers, and grass-roots advocates to examine the root causes of global inequalities and the rise of extremism. Organized by the Initiatives of Change (IofC) Foundation, the forum featured dedicated conference tracks on inclusive governance, land restoration, ethical business leadership, and European peace-building, combining high-level policy dialogue with personal storytelling to foster human-centered solutions to global conflict.',
-    role: 'Representing Tunisia as an 11-year-old youth delegate in collaboration with the OTDDPH organization at the Caux Forum. Engaged with international leaders, policymakers, and global peers on peace-building, youth civic engagement, and addressing global inequalities through cross-cultural dialogues, specialized workshops on ethical leadership, and community resilience discussions.',
+    year: 2017,
     photos: imageList('CAUXForum', [
       'Messenger_creation_352601875795236.jpeg',
       'Messenger_creation_340285383723292.jpeg',
@@ -338,20 +303,18 @@ const otherEvents = [
   },
 ];
 
-const orderedParticipatedEvents = [...otherEvents].sort((a, b) => {
-  const yearA = Number.parseInt(String(a.meta).match(/(\d{4})/)?.[1] || '0', 10);
-  const yearB = Number.parseInt(String(b.meta).match(/(\d{4})/)?.[1] || '0', 10);
-  return yearB - yearA;
-});
-
-const allEvents = [...organizedEvents, ...orderedParticipatedEvents];
+export const orderedParticipatedEvents = [...otherEvents].sort((a, b) => b.year - a.year);
 
 function EventModal({ event, onClose }) {
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
   const modalRef = useRef(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const lastUserActionRef = useRef(0);
   const hasPhotos = Array.isArray(event.photos) && event.photos.length > 0;
+
+  const meta = t(`events.items.${event.slug}.meta`);
+  const description = t(`events.items.${event.slug}.description`);
+  const role = t(`events.items.${event.slug}.role`);
 
   const activateManualSelection = (nextIndex) => {
     lastUserActionRef.current = Date.now();
@@ -452,15 +415,19 @@ function EventModal({ event, onClose }) {
 
         <div className="event-modal__content">
           <div className="event-modal__details">
-            <p className="event-card__meta">{event.meta}</p>
-            <h3 id="event-modal-title" className="event-modal__title">{event.title}</h3>
+            <p className="event-card__meta">
+              <MixedText text={meta} isRtl={isRtl} />
+            </p>
+            <h3 id="event-modal-title" className="event-modal__title">
+              <MixedText text={event.title} isRtl={isRtl} />
+            </h3>
 
             <div className="event-modal__text-group">
-              {event.description ? (
+              {description ? (
                 <>
                   <h4 className="event-modal__section-label">{t('common.eventOverview')}</h4>
                   <p className="event-modal__description">
-                    {typeof event.description === 'string' ? renderProjectLinksInText(event.description, onClose) : event.description}
+                    {renderProjectLinksInText(description, onClose, isRtl)}
                   </p>
                 </>
               ) : (
@@ -469,10 +436,12 @@ function EventModal({ event, onClose }) {
             </div>
 
             <div className="event-modal__text-group">
-              {event.role ? (
+              {role ? (
                 <>
                   <h4 className="event-modal__section-label">{t('common.myRole')}</h4>
-                  <p className="event-modal__description">{typeof event.role === 'string' ? renderProjectLinksInText(event.role, onClose) : event.role}</p>
+                  <p className="event-modal__description">
+                    {renderProjectLinksInText(role, onClose, isRtl)}
+                  </p>
                 </>
               ) : (
                 <p className="event-modal__description event-modal__description--muted">{t('common.roleSoon')}</p>
@@ -487,7 +456,7 @@ function EventModal({ event, onClose }) {
                   <button
                     type="button"
                     className="event-modal__nav event-modal__nav--prev"
-                    aria-label={`Previous photo for ${event.title}`}
+                    aria-label={t('common.prevPhoto')}
                     onClick={() => {
                       activateManualSelection((selectedPhotoIndex - 1 + event.photos.length) % event.photos.length);
                     }}
@@ -497,13 +466,13 @@ function EventModal({ event, onClose }) {
 
                   <img
                     src={event.photos[selectedPhotoIndex]}
-                    alt={`${event.title} photo ${selectedPhotoIndex + 1}`}
+                    alt={`${event.title} - ${selectedPhotoIndex + 1}`}
                   />
 
                   <button
                     type="button"
                     className="event-modal__nav event-modal__nav--next"
-                    aria-label={`Next photo for ${event.title}`}
+                    aria-label={t('common.nextPhoto')}
                     onClick={() => {
                       activateManualSelection((selectedPhotoIndex + 1) % event.photos.length);
                     }}
@@ -518,10 +487,10 @@ function EventModal({ event, onClose }) {
                       key={`${event.slug}-${index}`}
                       type="button"
                       className={`event-modal__thumb ${index === selectedPhotoIndex ? 'is-active' : ''}`}
-                      aria-label={`View photo ${index + 1} for ${event.title}`}
+                      aria-label={`${t('common.viewPhoto')} ${index + 1}`}
                       onClick={() => activateManualSelection(index)}
                     >
-                      <img src={photo} alt={`${event.title} thumbnail ${index + 1}`} />
+                      <img src={photo} alt={`${event.title} ${index + 1}`} />
                     </button>
                   ))}
                 </div>
@@ -539,7 +508,7 @@ function EventModal({ event, onClose }) {
 }
 
 export default function Events() {
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
   const [activeEvent, setActiveEvent] = useState(null);
 
   useEffect(() => {
@@ -569,41 +538,58 @@ export default function Events() {
       <h2 className="section__title">{t('sections.events')}</h2>
 
       <div className="events__organized">
-        {organizedEvents.map((event) => (
-          <button
-            type="button"
-            key={event.slug}
-            className="events-card"
-            aria-haspopup="dialog"
-            aria-expanded={activeEvent?.slug === event.slug}
-            onClick={() => setActiveEvent(event)}
-          >
-            <span className="events-card__meta">{event.meta}</span>
-            <h3 className="events-card__title">{event.title}</h3>
-            <p className="events-card__description">
-              {event.preview || event.description || 'Details coming soon'}
-            </p>
-          </button>
-        ))}
+        {organizedEvents.map((event) => {
+          const meta = t(`events.items.${event.slug}.meta`);
+          const preview = t(`events.items.${event.slug}.preview`);
+
+          return (
+            <button
+              type="button"
+              key={event.slug}
+              className="events-card"
+              aria-haspopup="dialog"
+              aria-expanded={activeEvent?.slug === event.slug}
+              onClick={() => setActiveEvent(event)}
+            >
+              <span className="events-card__meta">
+                <MixedText text={meta} isRtl={isRtl} />
+              </span>
+              <h3 className="events-card__title">
+                <MixedText text={event.title} isRtl={isRtl} />
+              </h3>
+              <p className="events-card__description">
+                <MixedText text={preview || 'Details coming soon'} isRtl={isRtl} />
+              </p>
+            </button>
+          );
+        })}
       </div>
 
       <div className="events__other">
         <h3 className="events__subheading">{t('sections.alsoParticipated')}</h3>
         <ul className="events__list">
-          {orderedParticipatedEvents.map((event) => (
-            <li key={event.slug} className="events__list-item">
-              <button
-                type="button"
-                className="events__list-button"
-                aria-haspopup="dialog"
-                aria-expanded={activeEvent?.slug === event.slug}
-                onClick={() => setActiveEvent(event)}
-              >
-                <span className="events__list-name">{event.title}</span>
-                <span className="events__list-meta">{event.meta}</span>
-              </button>
-            </li>
-          ))}
+          {orderedParticipatedEvents.map((event) => {
+            const meta = t(`events.items.${event.slug}.meta`);
+
+            return (
+              <li key={event.slug} className="events__list-item">
+                <button
+                  type="button"
+                  className="events__list-button"
+                  aria-haspopup="dialog"
+                  aria-expanded={activeEvent?.slug === event.slug}
+                  onClick={() => setActiveEvent(event)}
+                >
+                  <span className="events__list-name">
+                    <MixedText text={event.title} isRtl={isRtl} />
+                  </span>
+                  <span className="events__list-meta">
+                    <MixedText text={meta} isRtl={isRtl} />
+                  </span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
 

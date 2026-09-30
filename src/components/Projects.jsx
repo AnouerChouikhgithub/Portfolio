@@ -1,42 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
+import MixedText from './MixedText';
 
-// Accent colours follow the Tailwind 500-shade palette so they stay consistent
-// with the design system. They override --accent on the modal panel element so
-// every existing var(--accent) token inside the modal picks up the right colour
-// automatically.
 const ACCENT_COLORS = {
-  green:  '#22c55e',   // Tailwind green-500
-  cyan:   '#06b6d4',   // Tailwind cyan-500
-  purple: '#a855f7',   // Tailwind purple-500
-  red:    '#ef4444',   // Tailwind red-500
-  amber:  '#f59e0b',   // Tailwind amber-500
-  blue:   '#3b82f6',   // Tailwind blue-500
-  yellow: '#eab308',   // Tailwind yellow-500
+  green:  '#22c55e',
+  cyan:   '#06b6d4',
+  purple: '#a855f7',
+  red:    '#ef4444',
+  amber:  '#f59e0b',
+  blue:   '#3b82f6',
+  yellow: '#eab308',
 };
 
-// Deep dark backgrounds in the same palette — Tailwind 950 shades.
-// Applied as the modal panel background so the subscreen feels thematically
-// coloured without being garish.
 const BG_COLORS = {
-  green:  '#052e16',   // green-950
-  cyan:   '#083344',   // cyan-950
-  purple: '#2e1065',   // purple-950
-  red:    '#450a0a',   // red-950
-  amber:  '#451a03',   // amber-950
-  blue:   '#172554',   // blue-950
-  yellow: '#422006',   // yellow-950
+  green:  '#052e16',
+  cyan:   '#083344',
+  purple: '#2e1065',
+  red:    '#450a0a',
+  amber:  '#451a03',
+  blue:   '#172554',
+  yellow: '#422006',
 };
 
 const projects = [
   {
     slug: 'pet-filament-machine',
     title: 'PET Plastic Recycling to 3D Printer Filament System',
-    meta: 'Solo project · 2024 – Present',
-    preview: 'Turning plastic waste into usable filament through a custom extrusion system.',
-    description: 'Independently designing and building an Arduino-based extrusion control system using PID temperature regulation (targeting 245°C) via a thermistor and PWM-driven heater, combined with a microstepping stepper driver (1/2 to 1/16 step, up to 3200 steps/revolution) for controlled filament extrusion with acceleration ramping. Refined across multiple iterations over several years of solo development — currently on the 3rd version.',
-    role: null,
-    tech: ['Arduino', 'PID Control', 'Thermistor', 'PWM', 'Stepper Driver','Mechanical Design'],
+    tech: ['Arduino', 'PID Control', 'Thermistor', 'PWM', 'Stepper Driver', 'Mechanical Design'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/pet-recycling-filament-system',
     photos: [
       "/Projects/PET-Recycling-Filament-System/Capture%20d'%C3%A9cran%202026-09-28%20145437.png",
@@ -49,10 +39,6 @@ const projects = [
   {
     slug: 'neurofocus',
     title: 'NeuroFocus — Wearable Physiological Monitoring System for Children',
-    meta: '2026',
-    preview: 'A child-focused wearable that tracks physiological signals in real time.',
-    description: 'Wired sensor electronics and implemented I2C communication to interface a MAX30100 pulse oximeter and MPU6050 accelerometer/gyroscope with an ESP32, alongside a GSR sensor for skin conductance. Developed firmware to read heart rate, RR interval, motion, and skin conductance data and transmit it via Wi-Fi to Firebase Realtime Database every second in JSON format for remote monitoring.',
-    role: null,
     tech: ['ESP32', 'I2C', 'MAX30100', 'MPU6050', 'Firebase'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/NeuroFocus.git',
     photos: ["/Projects/NeuroFocus/wiring-diagram.jpg"],
@@ -63,10 +49,6 @@ const projects = [
   {
     slug: 'carthago',
     title: 'Carthago — AI Waste Collection Robot',
-    meta: '2024',
-    preview: 'An autonomous waste-collection concept built around smart robotics and design.',
-    description: 'Designed and fabricated the mechanical prototype body and assembled structural components for an autonomous waste-detection-and-collection robot concept, working within a 4-person team — two teammates handled computer vision and Raspberry Pi–based control integration.',
-    role: 'My role: mechanical design & fabrication',
     tech: ['Mechanical Design', 'Prototyping', 'Team Project'],
     githubUrl: '',
     photos: [],
@@ -77,10 +59,6 @@ const projects = [
   {
     slug: 'fighter-robot',
     title: 'Fighter Robot',
-    meta: 2022,
-    preview: 'A competitive combat robot built for performance and control.',
-    description: 'Robotics competition combat robot.',
-    role: null,
     tech: [],
     githubUrl: '',
     photos: [],
@@ -91,10 +69,6 @@ const projects = [
   {
     slug: 'all-terrain-robot',
     title: 'All-Terrain Robot',
-    meta: 2023,
-    preview: 'A rugged robot designed to navigate tough and uneven ground.',
-    description: 'A rugged 4-motor robot built for uneven ground, with two independent BTS7960 (IBT_2) high-current motor drivers (one per side) for stronger torque than a standard L298N setup. Available in three control variants: ESP32 with built-in Bluetooth, Arduino with an HC-05 Bluetooth module, and Arduino with a wired PS2 controller for direct tank-style control.',
-    role: null,
     tech: ['RC Robot', 'Competition Build', 'Arduino', 'ESP32', 'Bluetooth', 'PS2 Controller'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/All-Terrain-Robot.git',
     photos: [
@@ -111,10 +85,6 @@ const projects = [
   {
     slug: 'line-follower-robot',
     title: 'Line-Follower Robot',
-    meta: 2024,
-    preview: 'An autonomous robot that follows a guided path with precision.',
-    description: 'An Arduino UNO line following robot using five analog IR sensors and a PID controller for smooth, non-oscillating tracking. Includes an automatic sensor calibration routine and line-recovery behaviour when the track is lost.',
-    role: null,
     tech: ['Arduino', 'PID Control', 'IR Sensors', 'Competition Build'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/Line-Folower-Robot.git',
     photos: [
@@ -128,10 +98,6 @@ const projects = [
   {
     slug: 'junior-robot',
     title: 'Junior Robot',
-    meta: '2022',
-    preview: 'A compact RC robot built for the junior track challenge at FSB SmarTech.',
-    description: 'A 4-wheel drive RC car controlled over Bluetooth, built in two hardware variants: an Arduino Uno + HC-05 version, and a standalone ESP32 version using its built-in Bluetooth — no external Bluetooth module required.',
-    role: 'Junior Challenge robot',
     tech: ['RC Robot', 'Mechanical Design', 'Competition Build'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/Junior-Robot.git',
     photos: [
@@ -147,13 +113,17 @@ const projects = [
 ];
 
 function ProjectModal({ project, onClose }) {
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
   const modalRef = useRef(null);
   const closeButtonRef = useRef(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const lastUserActionRef = useRef(0);
   const hasPhotos = Array.isArray(project.photos) && project.photos.length > 0;
   const hasGithubUrl = typeof project.githubUrl === 'string' && project.githubUrl.trim().length > 0;
+
+  const projectMeta = t(`projects.items.${project.slug}.meta`, '');
+  const projectDescription = t(`projects.items.${project.slug}.description`, '');
+  const projectRole = t(`projects.items.${project.slug}.role`, null);
 
   const activateManualSelection = (nextIndex) => {
     lastUserActionRef.current = Date.now();
@@ -235,8 +205,6 @@ function ProjectModal({ project, onClose }) {
     };
   }, [onClose]);
 
-  // Override --accent AND set the panel background to the project's deep
-  // palette colour so the subscreen feels thematically coloured.
   const accentStyle = {
     ...(project.accent ? { '--accent': project.accent } : {}),
     ...(project.bg    ? { background: project.bg }      : {}),
@@ -265,7 +233,7 @@ function ProjectModal({ project, onClose }) {
 
         <div className="project-modal__content">
           <div className="project-modal__details">
-            <p className="project-card__meta">{project.meta || t('common.dateTbd')}</p>
+            <p className="project-card__meta">{projectMeta || t('common.dateTbd')}</p>
             {project.logo && (
               <div className="project-modal__logo-icon" aria-hidden="true">
                 <img src={project.logo} alt="" />
@@ -275,9 +243,15 @@ function ProjectModal({ project, onClose }) {
               {project.title}
             </h3>
 
-            {project.role && <p className="project-modal__role">{project.role}</p>}
+            {projectRole && (
+              <p className="project-modal__role">
+                <MixedText text={projectRole} isRtl={isRtl} />
+              </p>
+            )}
 
-            <p className="project-modal__description">{project.description}</p>
+            <p className="project-modal__description">
+              <MixedText text={projectDescription} isRtl={isRtl} />
+            </p>
 
             {project.tech.length > 0 && (
               <ul className="project-modal__tags" aria-label={`${project.title} technology stack`}>
@@ -312,7 +286,7 @@ function ProjectModal({ project, onClose }) {
                   <button
                     type="button"
                     className="project-modal__nav project-modal__nav--prev"
-                    aria-label={`Previous photo for ${project.title}`}
+                    aria-label={`${t('common.previousPhoto')} - ${project.title}`}
                     onClick={() => {
                       activateManualSelection((selectedPhotoIndex - 1 + project.photos.length) % project.photos.length);
                     }}
@@ -322,13 +296,13 @@ function ProjectModal({ project, onClose }) {
 
                   <img
                     src={project.photos[selectedPhotoIndex]}
-                    alt={`${project.title} photo ${selectedPhotoIndex + 1}`}
+                    alt={`${project.title} - ${t('common.photo')} ${selectedPhotoIndex + 1}`}
                   />
 
                   <button
                     type="button"
                     className="project-modal__nav project-modal__nav--next"
-                    aria-label={`Next photo for ${project.title}`}
+                    aria-label={`${t('common.nextPhoto')} - ${project.title}`}
                     onClick={() => {
                       activateManualSelection((selectedPhotoIndex + 1) % project.photos.length);
                     }}
@@ -343,10 +317,10 @@ function ProjectModal({ project, onClose }) {
                       key={`${project.slug}-${index}`}
                       type="button"
                       className={`project-modal__thumb ${index === selectedPhotoIndex ? 'is-active' : ''}`}
-                      aria-label={`View photo ${index + 1} for ${project.title}`}
+                      aria-label={`${t('common.photo')} ${index + 1} - ${project.title}`}
                       onClick={() => activateManualSelection(index)}
                     >
-                      <img src={photo} alt={`${project.title} thumbnail ${index + 1}`} />
+                      <img src={photo} alt={`${project.title} ${t('common.photo')} ${index + 1}`} />
                     </button>
                   ))}
                 </div>
@@ -364,7 +338,7 @@ function ProjectModal({ project, onClose }) {
 }
 
 export default function Projects() {
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
   const [activeProject, setActiveProject] = useState(null);
 
   useEffect(() => {
@@ -394,28 +368,36 @@ export default function Projects() {
       <h2 className="section__title">{t('sections.projects')}</h2>
 
       <div className="projects__grid">
-        {projects.map((project) => (
-          <button
-            type="button"
-            key={project.slug}
-            className="project-card"
-            aria-haspopup="dialog"
-            aria-expanded={activeProject?.slug === project.slug}
-            onClick={() => setActiveProject(project)}
-          >
-            {project.logo && (
-              <img
-                className="project-card__logo"
-                src={project.logo}
-                alt={`${project.title} logo`}
-                loading="lazy"
-              />
-            )}
-            <span className="project-card__meta">{project.meta || t('common.dateTbd')}</span>
-            <h3 className="project-card__title" style={project.accent ? { color: project.accent } : {}}>{project.title}</h3>
-            <p className="project-card__description">{project.preview || project.description}</p>
-          </button>
-        ))}
+        {projects.map((project) => {
+          const meta = t(`projects.items.${project.slug}.meta`, '');
+          const preview = t(`projects.items.${project.slug}.preview`, '');
+          const description = t(`projects.items.${project.slug}.description`, '');
+
+          return (
+            <button
+              type="button"
+              key={project.slug}
+              className="project-card"
+              aria-haspopup="dialog"
+              aria-expanded={activeProject?.slug === project.slug}
+              onClick={() => setActiveProject(project)}
+            >
+              {project.logo && (
+                <img
+                  className="project-card__logo"
+                  src={project.logo}
+                  alt={`${project.title} ${t('common.logo')}`}
+                  loading="lazy"
+                />
+              )}
+              <span className="project-card__meta">{meta || t('common.dateTbd')}</span>
+              <h3 className="project-card__title" style={project.accent ? { color: project.accent } : {}}>{project.title}</h3>
+              <p className="project-card__description">
+                <MixedText text={preview || description} isRtl={isRtl} />
+              </p>
+            </button>
+          );
+        })}
       </div>
 
       {activeProject && <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />}

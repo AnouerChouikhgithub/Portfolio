@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
+import MixedText from './MixedText';
 
 const communityImageList = (folder, files) => files.map((file) => `/Communities/${folder}/${file}`);
 
@@ -8,31 +9,26 @@ const ieeeChapterLogos = [
     name: 'CS',
     label: 'IEEE ESSTHS SB CS Chapter',
     path: '/Communities/Logos/IEEE Chapters/IEEE-ESSTHS-CS.jpg',
-    description: 'The Computer Society chapter promotes computing excellence through technical learning, software innovation, and collaborative projects that strengthen students’ practical skills in the digital era.',
   },
   {
     name: 'IIP',
     label: 'IEEE ESSTHS SB IIP Joint Chapter',
     path: '/Communities/Logos/IEEE Chapters/IEEE-ESSTHS-IIP.jpg',
-    description: 'The IIP Joint Chapter unites three specialized IEEE societies: IES (Industrial Electronics Society), IAS (Industry Applications Society), and PES (Power & Energy Society). By merging industrial automation, electrical equipment applications, and sustainable power systems into a single joint chapter, it provides members with a comprehensive, multi-disciplinary engineering framework.',
   },
   {
     name: 'RAS',
     label: 'IEEE ESSTHS SB RAS Chapter',
     path: '/Communities/Logos/IEEE Chapters/IEEE-ESSTHS-RAS.jpg',
-    description: 'The IEEE Robotics and Automation Society (RAS) Chapter focuses on robotics, autonomous navigation, and intelligent control systems. It provides members with hands-on experience in hardware prototyping, embedded development, and real-world engineering challenges.',
   },
   {
     name: 'SIGHT',
     label: 'ESSTHS SB SIGHT Group',
     path: '/Communities/Logos/IEEE Chapters/IEEE-ESSTHS-SIGHT.jpg',
-    description: 'The IEEE Special Interest Group on Humanitarian Technology (SIGHT) Chapter leverages technology to drive social impact, empowering members to design and deploy practical, sustainable engineering solutions for real-world community challenges.',
   },
   {
     name: 'WIE',
     label: 'IEEE ESSTHS SB WIE Chapter',
     path: '/Communities/Logos/IEEE Chapters/IEEE-ESSTHS-WIE.jpg',
-    description: 'The IEEE Women in Engineering (WIE) Chapter supports and advances women in technical fields, empowering members through leadership development, professional networking, mentorship, and inclusive STEM innovation initiatives.',
   },
 ];
 
@@ -61,10 +57,6 @@ export const clubs = [
     slug: 'ieee-essths-sb',
     name: 'IEEE ESSTHS SB',
     fullName: 'IEEE ESSTHS Student Branch',
-    title: 'IEEE ESSTHS Student Branch',
-    since: 'since 2024',
-    location: 'ESSTHS, Sousse',
-    description: 'An international student network under IEEE (Institute of Electrical and Electronics Engineers), composed of specialized technical chapters that empower future engineers through robotics, research, hands-on projects, and professional development.',
     logo: '/Communities/Logos/IEEE-ESSTHS-SB.jpg',
     chapterLogos: ieeeChapterLogos,
     icon: '⚙️',
@@ -89,10 +81,6 @@ export const clubs = [
     slug: 'ajst',
     name: 'AJST',
     fullName: 'Tunisian Youth Science Association, El Alia',
-    title: 'Tunisian Youth Science Association, El Alia',
-    since: 'since 2020',
-    location: 'El Alia, Bizerte',
-    description: 'A youth science and innovation community encouraging STEM participation, creative problem solving, and collaborative learning through community-driven initiatives.',
     logo: '/Communities/Logos/AJST.png',
     icon: '🚀',
     photos: communityImageList('AJST', [
@@ -117,10 +105,6 @@ export const clubs = [
     slug: 'tunisian-red-crescent',
     name: 'Tunisian Red Crescent, El Alia',
     fullName: 'Tunisian Red Crescent, El Alia',
-    title: 'Humanitarian outreach & volunteer coordination',
-    since: 'since 2023',
-    location: 'El Alia, Bizerte',
-    description: 'A humanitarian community involved in volunteering, community support, and mobilizing aid efforts to help people in need with practical action and solidarity.',
     logo: '/Communities/Logos/CRT.jpg',
     icon: '🤝',
     photos: communityImageList('CRT', [
@@ -141,10 +125,6 @@ export const clubs = [
     slug: 'otddph',
     name: 'OTDDPH',
     fullName: 'Organisation Tunisienne de Défence des Droits des Personnes Handicapées',
-    title: 'Community for sustainable development and human protection',
-    since: 'since 2017',
-    location: 'Beb Saadoun, Tunisia',
-    description: 'independent non-profit organization in Tunisia founded by young citizens with disabilities following the January 14, 2011 revolution. The organization promotes a human rights-based approach to disability, advocates for full social, economic, and political inclusion, and monitors the implementation of the UN Convention on the Rights of Persons with Disabilities (CRDPH).',
     logo: '/Communities/Logos/OTDDPH.jpg',
     icon: '🌍',
     photos: communityImageList('OTDDPH', [
@@ -152,32 +132,32 @@ export const clubs = [
       '486967885_1078552070982061_2228468187657722284_n.jpg',
       'Messenger_creation_331002237966963.jpeg',
     ]),
-    relatedEvents: [{ slug: 'caux-forum-2017', title: 'Caux Forum 2017' }],
-  },,
+    relatedEvents: [{ slug: 'caux-forum', title: 'Caux Forum' }],
+  },
   {
     slug: 'igc',
     name: 'IGC',
     fullName: 'ISITCom Google Club',
-    title: 'ISITCom Google Club',
-    since: 'since 2025',
-    location: 'ISITCom, Hammam Sousse',
-    description: 'A student-driven tech community focused on Google technologies, developer learning, and practical projects that strengthen technical confidence and collaboration.',
     logo: '/Communities/Logos/IGC.jpg',
     icon: '💡',
     photos: [],
     relatedEvents: [
       { slug: 'nuit-info-2025', title: 'Nuit d’Info 2025' },
     ],
-  }
+  },
 ];
 
 function CommunityModal({ community, onClose, initialChapter = null }) {
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
   const modalRef = useRef(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [activeChapter, setActiveChapter] = useState(initialChapter);
   const lastUserActionRef = useRef(0);
   const hasPhotos = Array.isArray(community.photos) && community.photos.length > 0;
+
+  const since = t(`community.items.${community.slug}.since`);
+  const location = t(`community.items.${community.slug}.location`);
+  const description = t(`community.items.${community.slug}.description`);
 
   const activateManualSelection = (nextIndex) => {
     lastUserActionRef.current = Date.now();
@@ -278,12 +258,18 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
 
         <div className="event-modal__content">
           <div className="event-modal__details">
-            <p className="event-card__meta">{community.since}</p>
-            <h3 id="community-modal-title" className="event-modal__title">{community.fullName || community.name}</h3>
+            <p className="event-card__meta">
+              <MixedText text={since} isRtl={isRtl} />
+            </p>
+            <h3 id="community-modal-title" className="event-modal__title">
+              <MixedText text={community.fullName || community.name} isRtl={isRtl} />
+            </h3>
 
             <div className="event-modal__text-group">
               <h4 className="event-modal__section-label">{t('common.description')}</h4>
-              <p className="event-modal__description">{community.description}</p>
+              <p className="event-modal__description">
+                <MixedText text={description} isRtl={isRtl} />
+              </p>
             </div>
 
             {community.chapterLogos?.length ? (
@@ -308,7 +294,9 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
 
             <div className="event-modal__text-group">
               <h4 className="event-modal__section-label">{t('common.location')}</h4>
-              <p className="event-modal__description">{community.location || 'Location coming soon'}</p>
+              <p className="event-modal__description">
+                <MixedText text={location || 'Location coming soon'} isRtl={isRtl} />
+              </p>
             </div>
 
             <div className="event-modal__text-group">
@@ -355,7 +343,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
                   <button
                     type="button"
                     className="event-modal__nav event-modal__nav--prev"
-                    aria-label={`Previous photo for ${community.name}`}
+                    aria-label={t('common.prevPhoto')}
                     onClick={() => {
                       activateManualSelection((selectedPhotoIndex - 1 + community.photos.length) % community.photos.length);
                     }}
@@ -363,12 +351,12 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
                     ‹
                   </button>
 
-                  <img src={community.photos[selectedPhotoIndex]} alt={`${community.name} community photo ${selectedPhotoIndex + 1}`} />
+                  <img src={community.photos[selectedPhotoIndex]} alt={`${community.name} ${selectedPhotoIndex + 1}`} />
 
                   <button
                     type="button"
                     className="event-modal__nav event-modal__nav--next"
-                    aria-label={`Next photo for ${community.name}`}
+                    aria-label={t('common.nextPhoto')}
                     onClick={() => {
                       activateManualSelection((selectedPhotoIndex + 1) % community.photos.length);
                     }}
@@ -383,10 +371,10 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
                       key={`${community.slug}-photo-${index}`}
                       type="button"
                       className={`event-modal__thumb ${index === selectedPhotoIndex ? 'is-active' : ''}`}
-                      aria-label={`Open ${community.name} photo ${index + 1}`}
+                      aria-label={`${t('common.viewPhoto')} ${index + 1}`}
                       onClick={() => activateManualSelection(index)}
                     >
-                      <img src={photo} alt={`${community.name} photo ${index + 1}`} />
+                      <img src={photo} alt={`${community.name} ${index + 1}`} />
                     </button>
                   ))}
                 </div>
@@ -406,7 +394,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
 }
 
 function ChapterDetailModal({ chapter, onClose }) {
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
 
   if (!chapter) {
     return null;
@@ -416,6 +404,8 @@ function ChapterDetailModal({ chapter, onClose }) {
     event?.stopPropagation();
     onClose();
   };
+
+  const chapterDesc = t(`community.chapters.${chapter.name.toLowerCase()}`);
 
   return (
     <div className="community-chapter-modal" onClick={handleClose}>
@@ -437,14 +427,16 @@ function ChapterDetailModal({ chapter, onClose }) {
 
         <div className="community-chapter-modal__content">
           <div className="community-chapter-modal__logo-wrap">
-            <img src={chapter.path} alt={`${chapter.label || chapter.name} chapter logo`} />
+            <img src={chapter.path} alt={`${chapter.label || chapter.name} logo`} />
           </div>
 
           <div className="community-chapter-modal__text">
             <h4 id="chapter-modal-title" className="community-modal__section-label community-modal__section-label--chapter">
-              {chapter.label || chapter.name}
+              <MixedText text={chapter.label || chapter.name} isRtl={isRtl} />
             </h4>
-            <p className="community-modal__description">{chapter.description}</p>
+            <p className="community-modal__description">
+              <MixedText text={chapterDesc} isRtl={isRtl} />
+            </p>
           </div>
         </div>
       </div>
@@ -486,7 +478,7 @@ if (typeof window !== 'undefined') {
 }
 
 export default function Community() {
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
   const [activeCommunity, setActiveCommunity] = useState(null);
   const [activeChapter, setActiveChapter] = useState(null);
 
@@ -558,26 +550,37 @@ export default function Community() {
     <div id="community" className="container">
       <h2 className="section__title">{t('sections.community')}</h2>
       <div className="community__grid">
-        {clubs.map((club) => (
-          <button
-            key={club.slug}
-            type="button"
-            className="community-card"
-            aria-haspopup="dialog"
-            aria-expanded={activeCommunity?.slug === club.slug}
-            onClick={() => {
-              setActiveCommunity(club);
-              setActiveChapter(null);
-            }}
-          >
-            <div className="community-card__logo community-card__logo--image" aria-label={`${club.name} logo`}>
-              <img src={club.logo} alt={`${club.name} logo`} className="community-card__image" />
-            </div>
-            <div className="community-card__name">{club.name}</div>
-            <div className="community-card__detail">{club.title}</div>
-            <div className="community-card__since">{club.since}</div>
-          </button>
-        ))}
+        {clubs.map((club) => {
+          const title = t(`community.items.${club.slug}.title`);
+          const since = t(`community.items.${club.slug}.since`);
+
+          return (
+            <button
+              key={club.slug}
+              type="button"
+              className="community-card"
+              aria-haspopup="dialog"
+              aria-expanded={activeCommunity?.slug === club.slug}
+              onClick={() => {
+                setActiveCommunity(club);
+                setActiveChapter(null);
+              }}
+            >
+              <div className="community-card__logo community-card__logo--image" aria-label={`${club.name} logo`}>
+                <img src={club.logo} alt={`${club.name} logo`} className="community-card__image" />
+              </div>
+              <div className="community-card__name">
+                <MixedText text={club.name} isRtl={isRtl} />
+              </div>
+              <div className="community-card__detail">
+                <MixedText text={title} isRtl={isRtl} />
+              </div>
+              <div className="community-card__since">
+                <MixedText text={since} isRtl={isRtl} />
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       {activeCommunity && (

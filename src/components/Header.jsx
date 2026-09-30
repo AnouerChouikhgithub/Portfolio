@@ -74,8 +74,8 @@ export default function Header() {
     <header className="header">
       <nav className="nav__container container" aria-label={t('nav.primary')}>
         <a href="#home" className="nav__logo" aria-label={t('nav.home')}>
-          <img src="/me2.jpg" alt="Anouer Chouikh" className="nav__logo-image" />
-          <span className="nav__logo-name" aria-hidden="true">Anouer</span>
+          <img src="/me2.jpg" alt={t('common.name')} className="nav__logo-image" />
+          <span className="nav__logo-name" aria-hidden="true">{t('common.firstName')}</span>
         </a>
         <ul className="nav__list">
           {navigation.map(([key, href]) => (

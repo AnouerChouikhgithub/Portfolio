@@ -2,108 +2,80 @@ import { useRef, useState } from 'react';
 import { Eye } from 'lucide-react';
 import { useI18n } from '../i18n/I18nProvider';
 import PdfModal from './PdfModal';
+import MixedText from './MixedText';
 
-const experiences = [
+const staticExperiences = [
   {
-    title: 'Software Engineering Intern',
+    id: 'andalusoft',
     company: 'AndaluSoft Engineering',
-    dates: 'June 2026 – August 2026',
-    bullets: [
-      'Designed and implemented an end-to-end product rating feature for a mobile app across UI, backend, and frontend.',
-      'Built account management and UI features for a full-stack ERP system using React and React Native.',
-      'Developed and tested Symfony REST APIs with Doctrine ORM using Docker and Postman.',
-    ],
     tags: ['React', 'React Native', 'Symfony', 'Doctrine', 'Docker', 'Postman'],
-    subtext: 'Collaborated within a 5-person team (1 senior developer/team lead, 3 interns) using Git, Yarn, Composer, and Expo.',
   },
 ];
 
 const techSkillGroups = [
   {
-    title: 'Embedded/IoT',
+    key: 'Embedded/IoT',
     skills: ['Arduino', 'ESP32', 'Raspberry Pi', 'Sensors', 'Relays', 'I2C', 'BLE (HC-05/HC-06)'],
   },
   {
-    title: 'Hardware',
+    key: 'Hardware',
     skills: ['3D Printing', 'SolidWorks', 'CNC Machine', 'Fritzing'],
   },
   {
-    title: 'Web/Mobile',
+    key: 'Web/Mobile',
     skills: ['React', 'React Native', 'PHP', 'Symfony', 'Doctrine', 'REST APIs', 'HTML', 'CSS', 'JS'],
   },
   {
-    title: 'Programming',
+    key: 'Programming',
     skills: ['Python', 'Java', 'C/C++', 'SQL'],
   },
   {
-    title: 'Tools/DevOps',
+    key: 'Tools/DevOps',
     skills: ['Git', 'GitHub', 'Docker', 'Postman'],
   },
   {
-    title: 'Data/Cloud',
+    key: 'Data/Cloud',
     skills: ['NumPy', 'Pandas', 'Firebase', 'Cloud'],
   },
-]
+];
 
 const allTechSkills = techSkillGroups.flatMap((group) => group.skills);
 
-
-const softSkills = [
-  'Teamwork',
-  'problem-solving',
-  'project management',
-  'adaptability',
-  'communication',
-  "leadership",
-  "time management",
-  "critical thinking",
-  "analytical thinking",
-  "initiative",
-  "creativity",
-  "self-learning",
-  "decision-making",
-  "resilience",
-  "autonomy",
-  "attention to detail"
-]
-
-const languages = [
-  'Arabic (Native)',
-  'English (Fluent)',
-  'French (Fluent)'
-]
-
-
 export default function Skills() {
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
   const [activeTechnicalCategory, setActiveTechnicalCategory] = useState('All');
   const [isCertOpen, setIsCertOpen] = useState(false);
   const certTriggerRef = useRef(null);
+
   const activeSkills = activeTechnicalCategory === 'All'
     ? allTechSkills
-    : techSkillGroups.find((group) => group.title === activeTechnicalCategory)?.skills || [];
+    : techSkillGroups.find((group) => group.key === activeTechnicalCategory)?.skills || [];
 
-  const technicalTabs = ['All', ...techSkillGroups.map((group) => group.title)];
+  const technicalTabKeys = ['All', ...techSkillGroups.map((group) => group.key)];
 
   const handleTechnicalTabKeyDown = (event, tabIndex) => {
     let nextTabIndex = tabIndex;
 
     if (event.key === 'ArrowRight') {
-      nextTabIndex = (tabIndex + 1) % technicalTabs.length;
+      nextTabIndex = (tabIndex + 1) % technicalTabKeys.length;
     } else if (event.key === 'ArrowLeft') {
-      nextTabIndex = (tabIndex - 1 + technicalTabs.length) % technicalTabs.length;
+      nextTabIndex = (tabIndex - 1 + technicalTabKeys.length) % technicalTabKeys.length;
     } else if (event.key === 'Home') {
       nextTabIndex = 0;
     } else if (event.key === 'End') {
-      nextTabIndex = technicalTabs.length - 1;
+      nextTabIndex = technicalTabKeys.length - 1;
     } else {
       return;
     }
 
     event.preventDefault();
-    setActiveTechnicalCategory(technicalTabs[nextTabIndex]);
+    setActiveTechnicalCategory(technicalTabKeys[nextTabIndex]);
     event.currentTarget.parentElement?.children[nextTabIndex]?.focus();
   };
+
+  const translatedExperiences = t('skills.experience') || [];
+  const softSkillsList = t('skills.soft') || [];
+  const languagesList = t('skills.languages') || [];
 
   return (
     <>
@@ -113,56 +85,68 @@ export default function Skills() {
         <div className="skills__section">
           <h3 className="skills__subtitle">{t('sections.experience')}</h3>
           <div className="skills__experience-grid">
-            {experiences.map((experience) => (
-              <article key={`${experience.company}-${experience.dates}`} className="events-card skills__experience-card">
-                <span className="events-card__meta">{experience.dates}</span>
-                <h4 className="events-card__title">{experience.title}</h4>
-                <p className="skills__experience-company">{experience.company}</p>
-                <ul className="skills__experience-bullets">
-                  {experience.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
-                <div className="skills__tags skills__experience-tags" aria-label={`${experience.title} technologies`}>
-                  {experience.tags.map((tag) => (
-                    <span key={tag} className="skill-tag">{tag}</span>
-                  ))}
-                </div>
-                <p className="skills__experience-subtext">{experience.subtext}</p>
-                <div className="skills__experience-actions">
-                  <button
-                    ref={certTriggerRef}
-                    type="button"
-                    className="btn btn--outline-pill certificate-btn"
-                    onClick={() => setIsCertOpen(true)}
-                    aria-label={t('certificate.dialogTitle')}
-                  >
-                    <Eye size={15} aria-hidden="true" />
-                    {t('certificate.viewButton')}
-                  </button>
-                </div>
-              </article>
-            ))}
+            {staticExperiences.map((experience, idx) => {
+              const trans = translatedExperiences[idx] || {};
+              const expTitle = trans.title || 'Software Engineering Intern';
+              const expDates = trans.dates || 'June 2026 – August 2026';
+              const expBullets = trans.bullets || [];
+              const expSubtext = trans.subtext || '';
+
+              return (
+                <article key={experience.id} className="events-card skills__experience-card">
+                  <span className="events-card__meta">{expDates}</span>
+                  <h4 className="events-card__title">{expTitle}</h4>
+                  <p className="skills__experience-company">{experience.company}</p>
+                  <ul className="skills__experience-bullets">
+                    {expBullets.map((bullet, bIdx) => (
+                      <li key={bIdx}>
+                        <MixedText text={bullet} isRtl={isRtl} />
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="skills__tags skills__experience-tags" aria-label={`${expTitle} technologies`}>
+                    {experience.tags.map((tag) => (
+                      <span key={tag} className="skill-tag">{tag}</span>
+                    ))}
+                  </div>
+                  <p className="skills__experience-subtext">
+                    <MixedText text={expSubtext} isRtl={isRtl} />
+                  </p>
+                  <div className="skills__experience-actions">
+                    <button
+                      ref={certTriggerRef}
+                      type="button"
+                      className="btn btn--outline-pill certificate-btn"
+                      onClick={() => setIsCertOpen(true)}
+                      aria-label={t('certificate.dialogTitle')}
+                    >
+                      <Eye size={15} aria-hidden="true" />
+                      {t('certificate.viewButton')}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
 
         <div className="skills__section">
           <h3 className="skills__subtitle">{t('sections.technical')}</h3>
           <div className="skills__tabs" role="tablist" aria-label="Technical skill categories">
-            {technicalTabs.map((tab, index) => (
+            {technicalTabKeys.map((key, index) => (
               <button
-                key={tab}
+                key={key}
                 type="button"
                 role="tab"
                 id={`skills-tab-${index}`}
-                aria-selected={activeTechnicalCategory === tab}
+                aria-selected={activeTechnicalCategory === key}
                 aria-controls="technical-skills-panel"
-                tabIndex={activeTechnicalCategory === tab ? 0 : -1}
-                className={`skills__tab ${activeTechnicalCategory === tab ? 'is-active' : ''}`}
-                onClick={() => setActiveTechnicalCategory(tab)}
+                tabIndex={activeTechnicalCategory === key ? 0 : -1}
+                className={`skills__tab ${activeTechnicalCategory === key ? 'is-active' : ''}`}
+                onClick={() => setActiveTechnicalCategory(key)}
                 onKeyDown={(event) => handleTechnicalTabKeyDown(event, index)}
               >
-                {tab}
+                {t(`skills.categories.${key}`, key)}
               </button>
             ))}
           </div>
@@ -170,7 +154,7 @@ export default function Skills() {
             key={activeTechnicalCategory}
             id="technical-skills-panel"
             role="tabpanel"
-            aria-labelledby={`skills-tab-${technicalTabs.indexOf(activeTechnicalCategory)}`}
+            aria-labelledby={`skills-tab-${technicalTabKeys.indexOf(activeTechnicalCategory)}`}
             className="skills__tags skills__tags--filtered"
           >
             {activeSkills.map((skill) => (
@@ -182,8 +166,8 @@ export default function Skills() {
         <div className="skills__section">
           <h3 className="skills__subtitle">{t('sections.soft')}</h3>
           <div className="skills__tags">
-            {softSkills.map((s) => (
-              <span key={s} className="skill-tag">{s}</span>
+            {softSkillsList.map((s, idx) => (
+              <span key={idx} className="skill-tag">{s}</span>
             ))}
           </div>
         </div>
@@ -191,8 +175,8 @@ export default function Skills() {
         <div className="skills__section">
           <h3 className="skills__subtitle">{t('sections.languages')}</h3>
           <ul className="skills__tags">
-            {languages.map((l) => (
-              <li key={l} className="skills__item"><i>•</i> {l}</li>
+            {languagesList.map((l, idx) => (
+              <li key={idx} className="skills__item"><i>•</i> {l}</li>
             ))}
           </ul>
         </div>

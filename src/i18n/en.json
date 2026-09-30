@@ -1,12 +1,370 @@
 {
-  "nav": {"home":"Home","about":"About","skills":"Skills","projects":"Projects","community":"Community","events":"Events","contact":"Contact","primary":"Primary navigation","footer":"Footer navigation","language":"Language","lightMode":"Switch to light mode","darkMode":"Switch to dark mode"},
-  "hero": {"title":"3rd year student in Computer Engineering & Internet of Things (ISITCom)","tagline":"Robotics • IoT","projects":"View Projects","contact":"Contact","resume":"View Résumé","resumePreview":"Résumé preview","closeResume":"Close résumé","downloadResume":"Download résumé","resumeTitle":"Anouer Chouikh résumé"},
-  "sections": {"about":"About Me","mission":"Mission & Vision","skills":"Skills & Expertise","experience":"Professional Experience","technical":"Technical Skills","soft":"Soft Skills","languages":"Languages","projects":"Projects","community":"Community & Leadership","events":"Events I'm involved in","alsoParticipated":"Also participated in","contact":"Contact"},
-  "about": {"intro":"I am Anouer, a passionate Computer Engineering student at ISITCom, specializing in Robotics, and IoT. I design intelligent machines and innovative solutions that solve real-world problems, with a strong focus on sustainable technology and automation.","missionText":"To build intelligent systems that create environmental and social impact, and to evolve into a tech startup founder in eco-innovation and robotics."},
-  "contact": {"nameLabel":"Enter your name","emailLabel":"Enter your email","phoneLabel":"Enter your phone number","messageLabel":"Write your message here","name":"Name","email":"Email","phone":"Phone","message":"Message","send":"Send","sending":"Sending...","sent":"Message sent — thank you!","failed":"Send failed: please check your connection and try again.","nameRequired":"Name is required.","nameLetters":"Name must contain only alphabetic characters.","emailRequired":"Email is required.","emailValid":"Valid email must contain an \"@\" and a domain.","phoneValid":"Phone number must contain exactly 8 digits.","messageRequired":"Message cannot be empty."},
-  "common": {"close":"Close","description":"Description","chapters":"Chapters","location":"Location","eventsRelated":"Events related","eventOverview":"Event overview","myRole":"My role","detailsSoon":"Details coming soon","overviewSoon":"Event overview coming soon","roleSoon":"My role coming soon","relatedSoon":"Related events coming soon","noPhotos":"No photos added yet","dateTbd":"Date TBD","moreDetails":"More details","viewGithub":"View on GitHub","githubUnavailable":"GitHub link not available yet","previousPhoto":"Previous photo","nextPhoto":"Next photo","photo":"photo","communityPhoto":"community photo","logo":"logo","closeCommunity":"Close community details","closeChapter":"Close chapter details","closeEvent":"Close event details"},
-  "footer": {"copyright":"© 2025 Anouer Chouikh. All rights reserved."},
-  "languages": {"en":"EN","fr":"FR","ar":"AR"},
-  "certificate": {"viewButton":"View certificate","dialogTitle":"Internship certificate","loading":"Loading certificate...","loadError":"Could not load the certificate."},
-  "pdf": {"zoomIn":"Zoom in","zoomOut":"Zoom out","resetZoom":"Reset zoom","zoomLevel":"Zoom level"}
+  "common": {
+    "name": "Anouer Chouikh",
+    "firstName": "Anouer",
+    "portraitAlt": "Portrait of Anouer Chouikh",
+    "close": "Close",
+    "description": "Description",
+    "chapters": "Chapters",
+    "location": "Location",
+    "eventsRelated": "Events related",
+    "eventOverview": "Event overview",
+    "myRole": "My role",
+    "detailsSoon": "Details coming soon",
+    "overviewSoon": "Event overview coming soon",
+    "roleSoon": "My role coming soon",
+    "relatedSoon": "Related events coming soon",
+    "noPhotos": "No photos added yet",
+    "dateTbd": "Date TBD",
+    "moreDetails": "More details",
+    "viewGithub": "View on GitHub",
+    "githubUnavailable": "GitHub link not available yet",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "photo": "photo",
+    "communityPhoto": "community photo",
+    "logo": "logo",
+    "closeCommunity": "Close community details",
+    "closeChapter": "Close chapter details",
+    "closeEvent": "Close event details",
+    "social": {
+      "email": "Email",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "instagram": "Instagram"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "skills": "Skills",
+    "projects": "Projects",
+    "community": "Community",
+    "events": "Events",
+    "contact": "Contact",
+    "primary": "Primary navigation",
+    "footer": "Footer navigation",
+    "language": "Language",
+    "lightMode": "Switch to light mode",
+    "darkMode": "Switch to dark mode"
+  },
+  "hero": {
+    "title": "3rd year student in Computer Engineering & Internet of Things (ISITCom)",
+    "tagline": "Robotics • IoT",
+    "projects": "View Projects",
+    "contact": "Contact",
+    "resume": "View Résumé",
+    "resumePreview": "Résumé preview",
+    "closeResume": "Close résumé",
+    "downloadResume": "Download résumé",
+    "resumeTitle": "Anouer Chouikh résumé",
+    "arabicCvNotice": "English version of résumé displayed."
+  },
+  "sections": {
+    "about": "About Me",
+    "mission": "Mission & Vision",
+    "skills": "Skills & Expertise",
+    "experience": "Professional Experience",
+    "technical": "Technical Skills",
+    "soft": "Soft Skills",
+    "languages": "Languages",
+    "projects": "Projects",
+    "community": "Community & Leadership",
+    "events": "Events I'm involved in",
+    "alsoParticipated": "Also participated in",
+    "contact": "Contact"
+  },
+  "about": {
+    "intro": "I am Anouer, a passionate Computer Engineering student at ISITCom, specializing in Robotics, and IoT. I design intelligent machines and innovative solutions that solve real-world problems, with a strong focus on sustainable technology and automation.",
+    "missionText": "To build intelligent systems that create environmental and social impact, and to evolve into a tech startup founder in eco-innovation and robotics."
+  },
+  "skills": {
+    "categories": {
+      "All": "All",
+      "Embedded/IoT": "Embedded/IoT",
+      "Hardware": "Hardware",
+      "Web/Mobile": "Web/Mobile",
+      "Programming": "Programming",
+      "Tools/DevOps": "Tools/DevOps",
+      "Data/Cloud": "Data/Cloud"
+    },
+    "experience": [
+      {
+        "id": "andalusoft",
+        "title": "Software Engineering Intern",
+        "dates": "June 2026 – August 2026",
+        "bullets": [
+          "Designed and implemented an end-to-end product rating feature for a mobile app across UI, backend, and frontend.",
+          "Built account management and UI features for a full-stack ERP system using React and React Native.",
+          "Developed and tested Symfony REST APIs with Doctrine ORM using Docker and Postman."
+        ],
+        "subtext": "Collaborated within a 5-person team (1 senior developer/team lead, 3 interns) using Git, Yarn, Composer, and Expo."
+      }
+    ],
+    "soft": [
+      "Teamwork",
+      "Problem-solving",
+      "Project management",
+      "Adaptability",
+      "Communication",
+      "Leadership",
+      "Time management",
+      "Critical thinking",
+      "Analytical thinking",
+      "Initiative",
+      "Creativity",
+      "Self-learning",
+      "Decision-making",
+      "Resilience",
+      "Autonomy",
+      "Attention to detail"
+    ],
+    "languages": [
+      "Arabic (Native)",
+      "English (Fluent)",
+      "French (Fluent)"
+    ]
+  },
+  "projects": {
+    "items": {
+      "pet-filament-machine": {
+        "meta": "Solo project · 2024 – Present",
+        "preview": "Turning plastic waste into usable filament through a custom extrusion system.",
+        "description": "Independently designing and building an Arduino-based extrusion control system using PID temperature regulation (targeting 245°C) via a thermistor and PWM-driven heater, combined with a microstepping stepper driver (1/2 to 1/16 step, up to 3200 steps/revolution) for controlled filament extrusion with acceleration ramping. Refined across multiple iterations over several years of solo development — currently on the 3rd version.",
+        "role": null
+      },
+      "neurofocus": {
+        "meta": "2026",
+        "preview": "A child-focused wearable that tracks physiological signals in real time.",
+        "description": "Wired sensor electronics and implemented I2C communication to interface a MAX30100 pulse oximeter and MPU6050 accelerometer/gyroscope with an ESP32, alongside a GSR sensor for skin conductance. Developed firmware to read heart rate, RR interval, motion, and skin conductance data and transmit it via Wi-Fi to Firebase Realtime Database every second in JSON format for remote monitoring.",
+        "role": null
+      },
+      "carthago": {
+        "meta": "2024",
+        "preview": "An autonomous waste-collection concept built around smart robotics and design.",
+        "description": "Designed and fabricated the mechanical prototype body and assembled structural components for an autonomous waste-detection-and-collection robot concept, working within a 4-person team — two teammates handled computer vision and Raspberry Pi–based control integration.",
+        "role": "My role: mechanical design & fabrication"
+      },
+      "fighter-robot": {
+        "meta": "2022",
+        "preview": "A competitive combat robot built for performance and control.",
+        "description": "Robotics competition combat robot.",
+        "role": null
+      },
+      "all-terrain-robot": {
+        "meta": "2023",
+        "preview": "A rugged robot designed to navigate tough and uneven ground.",
+        "description": "A rugged 4-motor robot built for uneven ground, with two independent BTS7960 (IBT_2) high-current motor drivers (one per side) for stronger torque than a standard L298N setup. Available in three control variants: ESP32 with built-in Bluetooth, Arduino with an HC-05 Bluetooth module, and Arduino with a wired PS2 controller for direct tank-style control.",
+        "role": null
+      },
+      "line-follower-robot": {
+        "meta": "2024",
+        "preview": "An autonomous robot that follows a guided path with precision.",
+        "description": "An Arduino UNO line following robot using five analog IR sensors and a PID controller for smooth, non-oscillating tracking. Includes an automatic sensor calibration routine and line-recovery behaviour when the track is lost.",
+        "role": null
+      },
+      "junior-robot": {
+        "meta": "2022",
+        "preview": "A compact RC robot built for the junior track challenge at FSB SmarTech.",
+        "description": "A 4-wheel drive RC car controlled over Bluetooth, built in two hardware variants: an Arduino Uno + HC-05 version, and a standalone ESP32 version using its built-in Bluetooth — no external Bluetooth module required.",
+        "role": "Junior Challenge robot"
+      }
+    }
+  },
+  "events": {
+    "items": {
+      "robokids-2026": {
+        "meta": "Robotics Instructor & Organizer · July – August 2026",
+        "preview": "A hands-on robotics workshop where kids built and debugged smart projects with real hardware.",
+        "description": "Organized by Tunisian Youth Science Association, El Alia, in El Alia Bizerte, this immersive, hands-on robotics workshop was designed for 25 young students aged 7–14, delivering structured instruction in C++/Arduino programming, circuit design, and sensor integration. The event guided participants through building functional hardware projects—such as remote-controlled cars—while providing technical mentorship in debugging embedded code, resolving wiring faults, and mastering core STEM concepts to foster high engagement and impactful educational outcomes.",
+        "role": "Co-organized and led the event, delivering structured instruction in C++/Arduino programming, circuit design, and sensor integration to guide 25 students aged 7–14 through building functional hardware projects like remote-controlled cars. Provided direct technical mentorship to help participants debug embedded code, resolve wiring faults, and master fundamental STEM principles, driving high student engagement and earning enthusiastic parent feedback."
+      },
+      "smc-3": {
+        "meta": "Organizing Team · 2026",
+        "preview": "A fast-paced challenge where I helped shape the event flow and judging experience.",
+        "description": "Organized by IEEE ESSTHS SB RAS chapter, in Pristini School of AI, the Speed Modeling Challenge is an intense, head-to-head CAD competition where participants race in pairs to rapidly model designated 3D parts under strict time constraints. The winning model is selected based on speed, design accuracy, correct material selection, and precise part weight.",
+        "role": "Served as an official jury member, evaluating participants' completed parametric models, verifying precise material properties and mass specs, and declaring final contest winners."
+      },
+      "algo-arena-4": {
+        "meta": "Problems Manager · 2025",
+        "preview": "I managed the challenge structure and kept problem delivery smooth and competitive.",
+        "description": "Organized by the Tunisian Youth Science Association, El Alia, in El Alia, Algo Arena is an intensive, day-long (~8h) competitive programming contest hosted on HackerRank, challenging participant teams across multiple difficulty tiers: Easy, Medium, Hard, and Advanced. Teams compete to accumulate points by writing optimized code that accurately solves problems and passes all automated validation test cases.",
+        "role": "Served as the Technical Problem Setter, responsible for designing, authoring, and managing approximately 40 competitive programming problems across all difficulty levels. Built and configured comprehensive automated test cases on HackerRank—including edge cases, hidden inputs, and expected outputs—to ensure rigorous evaluation, accurate scoring, and precise solution verification throughout the event."
+      },
+      "robots-league-3": {
+        "meta": "Organizing Team · 2025",
+        "preview": "I supported the robotics event logistics and helped keep the competition running cleanly.",
+        "description": "Organized by the IEEE ESSTHS SB RAS Chapter, in ESSTHS, this multi-tier robotics competition features three distinct technical challenges: the Junior Challenge, where participants under 18 race remote-controlled cars through a timed track over multiple rounds; the Line Follower Challenge, focused on autonomous navigation; and the All Terrain Challenge, designed for participants over 18 using advanced robots to navigate larger, highly complex obstacles.",
+        "role": "Served as an official jury member for the Junior Challenge, responsible for coordinating participant match brackets, running competition rounds, and determining winning teams based on course completion times and rules compliance."
+      },
+      "robotsleague-2": {
+        "meta": "Model Chief · 2024",
+        "preview": "Led key model operations and helped steer the competition with strong coordination.",
+        "description": "Organized by the IEEE ESSTHS SB RAS Chapter, this multi-tier robotics competition features three distinct technical challenges: the Junior Challenge, where participants under 18 race remote-controlled cars through a timed track over multiple rounds; the Line Follower Challenge, focused on autonomous navigation; and the All Terrain Challenge, designed for participants over 18 using advanced robots to navigate larger, highly complex obstacles.",
+        "role": "Served as the Chief of the Junior Model Track, leading the design, planning, and hands-on construction of the competition track. Oversee model mechanics, track layout, and physical construction while managing the official homologation process to inspect, measure, weigh, and verify the electronics of each robot to authorize competition entry."
+      },
+      "algo-arena-2": {
+        "meta": "Treasurer and Logistics Manager · 2023",
+        "preview": "I handled the event logistics and financial coordination behind the challenge experience.",
+        "description": "Organized by the Tunisian Youth Science Association, El Alia, in El Alia, Algo Arena is an intensive, day-long (~8h) competitive programming contest hosted on HackerRank, challenging participant teams across multiple difficulty tiers: Easy, Medium, Hard, and Advanced. Teams compete to accumulate points by writing optimized code that accurately solves problems and passes all automated validation test cases.",
+        "role": "Served as Event Logistics Lead and Treasurer, overseeing technical infrastructure, physical setup, and financial operations. Managed on-site logistics—including power distribution, network connectivity, and equipment setup—while directing budget planning, trackable income and expenditure logging, and overall financial administration for the event."
+      },
+      "eniso-smart-challenge": {
+        "meta": "Participant · 2022",
+        "preview": "A robotics challenge that pushed strategy, build quality, and performance.",
+        "description": "Organized by ENISo Team at the École Nationale d'Ingénieurs de Sousse (ENISo), this multi-tier robotics competition brings together junior and senior builders to test autonomous navigation, structural durability, and hardware resilience across specialized arenas. The event features multiple technical tracks, including the Junior Challenge for remote-controlled track racing, the autonomous Line Follower Challenge, the All-Terrain Challenge, and the high-impact Fighter Challenge.",
+        "role": "Representing Tunisian Youth Science Association, El Alia as a core hardware developer in a four-person team for the Fighter Robot challenge. Contributed to the assembly, mechanical alignment, and drive systems calibration of a combat robot, while managing real-time strategy, rapid repairs, and power-system troubleshooting between intense elimination matches."
+      },
+      "fsb-smartech": {
+        "meta": "Junior Challenge Participant · 2022",
+        "preview": "A challenge-driven experience focused on hands-on technical creativity.",
+        "description": "Organized by SmarTech FSB at the Faculté des Sciences de Bizerte (FSB), this multi-tier robotics competition brings together junior and senior builders to test autonomous navigation and hardware resilience across specialized arenas. The event features three distinct technical tracks: the Junior Challenge for remote-controlled track racing, the autonomous Line Follower Challenge, and the All-Terrain Challenge, where advanced custom robots navigate large, complex obstacle courses.",
+        "role": "Representing Tunisian Youth Science Association, El Alia as an active team member in the Junior Robot challenge, collaborating on robot design, hardware assembly, and real-time performance optimization. Participated in technical testing, drive calibration, and field troubleshooting during competitive heats to maximize navigation accuracy and course completion speed."
+      },
+      "esprit-ras-robots-2025": {
+        "meta": "Participant · 2025",
+        "preview": "I competed in the All Terrain Challenge and tested navigation, stability, and endurance under real race conditions.",
+        "description": "Participated in the All Terrain Challenge at ESPRIT RAS Robots 2025, where competitors tested robot mobility, control precision, and obstacle-handling performance across rough, uneven terrain. The challenge emphasized robust design, reliable traction, and real-time tuning under pressure.",
+        "role": "Representing IEEE ESSTHS RAS Chapter and competed in the All Terrain Challenge as an active team member. Contributed directly to robot setup, systematic testing, and rapid on-site adjustments, optimizing control responsiveness and mechanical stability throughout the dynamic runs."
+      },
+      "tsyp12": {
+        "meta": "Participant · 2024",
+        "preview": "A student-focused professional event bringing engineering and networking together.",
+        "description": "The 12th IEEE Tunisian Student and Young Professional Congress (TSYP 12) brought together over 1,200 engineering students, young professionals, and industry experts at the El Medina Congress Center in Yasmine Hammamet. Centered on the theme \"TUNISIA 2056,\" the congress examined technological advancement across health tech, agritech, and creative industries through the TN2056 Forum, technical sessions, chapter challenges, and startup pitch competitions.",
+        "role": "Representing the IEEE ESSTHS Student Branch at TSYP 12, competing in both the SIGHT group and RAS chapter technical challenges with the Carthago project. Co-engineered and presented the technical solution before evaluation juries, demonstrating system functionality, hardware-software integration, and humanitarian impact under strict competition guidelines."
+      },
+      "nrw": {
+        "meta": "Junior Startup Participant · 2023",
+        "preview": "A robotics weekend that blended startup thinking with practical technical exploration.",
+        "description": "Organized by the IEEE RAS INSAT Student Branch, National Robotics Weekend (NRW) 5.0 is a flagship 3-day national robotics congress and hackathon held in Tunis. Bringing together engineering, tech, and business students from top universities across Tunisia, the event bridges autonomous robotics engineering with startup innovation through competitive track challenges, 24-to-36-hour makeathons, technical workshops, and panels on AI, automation, and Industry 4.0 applications.",
+        "role": "Representing Tunisian Youth Science Association, El Alia, leading a team of four young innovators to design, build, and pitch the initial functional prototype of an automated plastic bottle PET recycling machine. Directed project planning, hardware iteration, and system integration while guiding team members through pitch development, business model refinement, and live technical demonstrations."
+      },
+      "crt-palestine-campaign": {
+        "meta": "Participant · 2023",
+        "preview": "A meaningful participation during a period of crisis and collective solidarity.",
+        "description": "Led by the Tunisian Red Crescent (Croissant Rouge Tunisien), this nationwide relief operation mobilized humanitarian aid and medical supplies for the Gaza Strip during the 2023 crisis. The initiative coordinated large-scale public donation drives, managed sorting and packing at central logistics hubs, deployed military cargo airlifts to Al-Arish airport for delivery via the Rafah crossing, and facilitated medical evacuation logistics for injured individuals receiving treatment in Tunisia.",
+        "role": "Served as an active volunteer and logistics coordinator, managing the collection, sorting, and packaging of essential humanitarian aid—including medical supplies, food, and emergency relief goods—at local collection depots. Supported community outreach initiatives to mobilize public donations and assisted in streamlining warehouse operations for shipment preparation."
+      },
+      "algo-arena-1": {
+        "meta": "Problem Solving Challenge Participant · 2023",
+        "preview": "A competitive challenge that rewarded creative thinking under pressure.",
+        "description": "Organized by the Tunisian Youth Science Association, El Alia, in El Alia, Algo Arena is an intensive, day-long (~8h) competitive programming contest hosted on HackerRank, challenging participant teams across multiple difficulty tiers: Easy, Medium, Hard, and Advanced. Teams compete to accumulate points by writing optimized code that accurately solves problems and passes all automated validation test cases.",
+        "role": "Competed as part of a three-person team in the multi-tiered algorithmic challenge, driving problem analysis, mathematical modeling, and optimized code implementation under strict time constraints. Successfully solved complex algorithmic problems on HackerRank to claim 3rd place in the competition."
+      },
+      "nettawaa-mall": {
+        "meta": "Participant · 2025",
+        "preview": "An event experience centered on engagement, technology, and community interaction.",
+        "description": "Organized by Future Visions (رؤى المستقبل) in Messadine, Sousse, this non-profit initiative focuses on empowering youth through targeted training, civic engagement, and hands-on technological projects. The event brings together students and young professionals across the Sahel region for interactive workshops, leadership development, and collaborative innovation labs.",
+        "role": "Representing Tunisian Youth Science Association, El Alia as an active participant. Engaged in hands-on technological workshops, civic leadership sessions, and collaborative innovation labs, contributing to regional youth empowerment and inter-association technical exchange."
+      },
+      "nuit-info-2025": {
+        "meta": "Participant · 2025",
+        "preview": "A memorable information and tech event with a strong collaborative atmosphere.",
+        "description": "Organized at ISITCom (Institut Supérieur d'Informatique et des Techniques de Communication) in Hammam Sousse as part of the nationwide French-Tunisian hackathon La Nuit de l'Info, this overnight competition brings together students, faculty, and industry professionals. Teams work from sunset to sunrise to design, build, and deploy a functional web application addressing a national prompt alongside targeted technical and design challenges sponsored by corporate partners.",
+        "role": "Participant"
+      },
+      "ieeextreme": {
+        "meta": "Participant · 2025",
+        "preview": "A high-pressure programming challenge that pushed problem-solving and teamwork.",
+        "description": "IEEEXtreme is a global 24-hour virtual competitive programming marathon organized by IEEE, bringing together thousands of student members worldwide. Teams compete continuously against strict time constraints to solve a set of complex algorithmic, mathematical, and logical challenges proctored locally across university hubs.",
+        "role": "Represented the IEEE ESSTHS SB CS Chapter as part of a three-member competitive team alongside fellow student programmers. Collaborated continuously over 24 hours to analyze complex problem statements, design optimized algorithmic solutions, and debug code under tight time constraints against international peer teams."
+      },
+      "sdc-4": {
+        "meta": "Participant · 2026",
+        "preview": "Represented the team in the technical challenge with NeuroFocus, pitching and demonstrating engineering solutions for educational accessibility.",
+        "description": "Organized by the IEEE SIGHT Tunisia Section, the IEEE SIGHT Day Congress (SDC) is an annual flagship gathering uniting students, engineers, and humanitarian technology advocates across Tunisia. The congress focuses on leveraging engineering and technological innovation to address pressing social, educational, and healthcare challenges through technical competitions, keynote addresses, interactive workshops, and cross-branch collaboration.",
+        "role": "Representing IEEE ESSTHS SB SIGHT Group in the SDC technical challenge with the NeuroFocus project, presenting engineering innovations designed to address core accessibility and educational challenges."
+      },
+      "el-alia-robots-1": {
+        "meta": "Participant · 2026",
+        "preview": "A robotics event experience focused on creativity, teamwork, and hands-on technical challenge.",
+        "description": "Organized by the CODING4EVER Club in El Alia, El Alia Robots is a two-day robotics competition for both junior (under 15) and senior (above 15) participants. The event features an initial day dedicated to assembling and fine-tuning remote-controlled cars, followed by a competitive match day evaluating performance and navigation precision across age-based divisions.",
+        "role": "Representing Tunisian Youth Science Association, El Alia, serving as Team Lead and Technical Mentor. Managed two junior teams and one senior team throughout the build, optimization, and competition phases, directing hardware setup, strategic drive adjustments, and real-time troubleshooting to lead the senior team to secure a 3rd place podium finish."
+      },
+      "caux-forum": {
+        "meta": "Representative · 2017",
+        "preview": "A representative role connecting youth leadership with inclusive social impact.",
+        "description": "Hosted at the historic Caux Palace overlooking Montreux, Switzerland, the Caux Forum 2017 brought together global leaders, policymakers, researchers, and grass-roots advocates to examine the root causes of global inequalities and the rise of extremism. Organized by the Initiatives of Change (IofC) Foundation, the forum featured dedicated conference tracks on inclusive governance, land restoration, ethical business leadership, and European peace-building, combining high-level policy dialogue with personal storytelling to foster human-centered solutions to global conflict.",
+        "role": "Representing Tunisia as an 11-year-old youth delegate in collaboration with the OTDDPH organization at the Caux Forum. Engaged with international leaders, policymakers, and global peers on peace-building, youth civic engagement, and addressing global inequalities through cross-cultural dialogues, specialized workshops on ethical leadership, and community resilience discussions."
+      }
+    }
+  },
+  "community": {
+    "items": {
+      "ieee-essths-sb": {
+        "since": "since 2024",
+        "location": "ESSTHS, Sousse",
+        "description": "An international student network under IEEE (Institute of Electrical and Electronics Engineers), composed of specialized technical chapters that empower future engineers through robotics, research, hands-on projects, and professional development."
+      },
+      "ajst": {
+        "since": "since 2020",
+        "location": "El Alia, Bizerte",
+        "description": "A youth science and innovation community encouraging STEM participation, creative problem solving, and collaborative learning through community-driven initiatives."
+      },
+      "tunisian-red-crescent": {
+        "since": "since 2023",
+        "location": "El Alia, Bizerte",
+        "title": "Humanitarian outreach & volunteer coordination",
+        "description": "A humanitarian community involved in volunteering, community support, and mobilizing aid efforts to help people in need with practical action and solidarity."
+      },
+      "otddph": {
+        "since": "since 2017",
+        "location": "Beb Saadoun, Tunisia",
+        "title": "Community for sustainable development and human protection",
+        "description": "An independent non-profit organization in Tunisia founded by young citizens with disabilities following the January 14, 2011 revolution. The organization promotes a human rights-based approach to disability, advocates for full social, economic, and political inclusion, and monitors the implementation of the UN Convention on the Rights of Persons with Disabilities (CRDPH)."
+      },
+      "igc": {
+        "since": "since 2025",
+        "location": "ISITCom, Hammam Sousse",
+        "description": "A student-driven tech community focused on Google technologies, developer learning, and practical projects that strengthen technical confidence and collaboration."
+      }
+    },
+    "chapters": {
+      "cs": "The Computer Society chapter promotes computing excellence through technical learning, software innovation, and collaborative projects that strengthen students’ practical skills in the digital era.",
+      "iip": "The IIP Joint Chapter unites three specialized IEEE societies: IES (Industrial Electronics Society), IAS (Industry Applications Society), and PES (Power & Energy Society). By merging industrial automation, electrical equipment applications, and sustainable power systems into a single joint chapter, it provides members with a comprehensive, multi-disciplinary engineering framework.",
+      "ras": "The IEEE Robotics and Automation Society (RAS) Chapter focuses on robotics, autonomous navigation, and intelligent control systems. It provides members with hands-on experience in hardware prototyping, embedded development, and real-world engineering challenges.",
+      "sight": "The IEEE Special Interest Group on Humanitarian Technology (SIGHT) Chapter leverages technology to drive social impact, empowering members to design and deploy practical, sustainable engineering solutions for real-world community challenges.",
+      "wie": "The IEEE Women in Engineering (WIE) Chapter supports and advances women in technical fields, empowering members through leadership development, professional networking, mentorship, and inclusive STEM innovation initiatives."
+    }
+  },
+  "contact": {
+    "nameLabel": "Enter your name",
+    "emailLabel": "Enter your email",
+    "phoneLabel": "Enter your phone number",
+    "messageLabel": "Write your message here",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message",
+    "send": "Send",
+    "sending": "Sending...",
+    "sent": "Message sent — thank you!",
+    "failed": "Send failed: please check your connection and try again.",
+    "nameRequired": "Name is required.",
+    "nameLetters": "Name must contain only alphabetic characters.",
+    "emailRequired": "Email is required.",
+    "emailValid": "Valid email must contain an \"@\" and a domain.",
+    "phoneValid": "Phone number must contain exactly 8 digits.",
+    "messageRequired": "Message cannot be empty."
+  },
+  "footer": {
+    "copyright": "© 2026 Anouer Chouikh. All rights reserved."
+  },
+  "languages": {
+    "en": "EN",
+    "fr": "FR",
+    "ar": "AR"
+  },
+  "certificate": {
+    "viewButton": "View certificate",
+    "dialogTitle": "Internship certificate",
+    "loading": "Loading certificate...",
+    "loadError": "Could not load the certificate."
+  },
+  "pdf": {
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetZoom": "Reset zoom",
+    "zoomLevel": "Zoom level"
+  }
 }

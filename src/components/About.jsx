@@ -5,7 +5,7 @@ export default function About() {
   return (
     <div className="container about__content">
       <div className="about__image-wrapper">
-        <img className="about__image" src="/me.jpg" alt="Portrait of Anouer Chouikh" />
+        <img className="about__image" src="/me.jpg" alt={t('common.portraitAlt')} />
       </div>
       <div>
         <h2 className="section__title">{t('sections.about')}</h2>
