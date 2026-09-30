@@ -1,6 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 
+// Accent colours follow the Tailwind 500-shade palette so they stay consistent
+// with the design system. They override --accent on the modal panel element so
+// every existing var(--accent) token inside the modal picks up the right colour
+// automatically.
+const ACCENT_COLORS = {
+  green:  '#22c55e',   // Tailwind green-500
+  cyan:   '#06b6d4',   // Tailwind cyan-500
+  purple: '#a855f7',   // Tailwind purple-500
+  red:    '#ef4444',   // Tailwind red-500
+  amber:  '#f59e0b',   // Tailwind amber-500
+  blue:   '#3b82f6',   // Tailwind blue-500
+  yellow: '#eab308',   // Tailwind yellow-500
+};
+
+// Deep dark backgrounds in the same palette — Tailwind 950 shades.
+// Applied as the modal panel background so the subscreen feels thematically
+// coloured without being garish.
+const BG_COLORS = {
+  green:  '#052e16',   // green-950
+  cyan:   '#083344',   // cyan-950
+  purple: '#2e1065',   // purple-950
+  red:    '#450a0a',   // red-950
+  amber:  '#451a03',   // amber-950
+  blue:   '#172554',   // blue-950
+  yellow: '#422006',   // yellow-950
+};
+
 const projects = [
   {
     slug: 'pet-filament-machine',
@@ -11,7 +38,13 @@ const projects = [
     role: null,
     tech: ['Arduino', 'PID Control', 'Thermistor', 'PWM', 'Stepper Driver','Mechanical Design'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/pet-recycling-filament-system',
-    photos: [],
+    photos: [
+      "/Projects/PET-Recycling-Filament-System/Capture%20d'%C3%A9cran%202026-09-28%20145437.png",
+      "/Projects/PET-Recycling-Filament-System/Schematic%20Diagram.jpg",
+    ],
+    logo: '/Projects/logos/PET Plastic Recycling.svg',
+    accent: ACCENT_COLORS.green,
+    bg: BG_COLORS.green,
   },
   {
     slug: 'neurofocus',
@@ -22,7 +55,10 @@ const projects = [
     role: null,
     tech: ['ESP32', 'I2C', 'MAX30100', 'MPU6050', 'Firebase'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/NeuroFocus.git',
-    photos: [],
+    photos: ["/Projects/NeuroFocus/wiring-diagram.jpg"],
+    logo: '/Projects/logos/NeuroFocus.svg',
+    accent: ACCENT_COLORS.cyan,
+    bg: BG_COLORS.cyan,
   },
   {
     slug: 'carthago',
@@ -34,6 +70,9 @@ const projects = [
     tech: ['Mechanical Design', 'Prototyping', 'Team Project'],
     githubUrl: '',
     photos: [],
+    logo: '/Projects/logos/Carthago.svg',
+    accent: ACCENT_COLORS.purple,
+    bg: BG_COLORS.purple,
   },
   {
     slug: 'fighter-robot',
@@ -45,6 +84,9 @@ const projects = [
     tech: [],
     githubUrl: '',
     photos: [],
+    logo: '/Projects/logos/Fighter Robot.svg',
+    accent: ACCENT_COLORS.red,
+    bg: BG_COLORS.red,
   },
   {
     slug: 'all-terrain-robot',
@@ -55,7 +97,16 @@ const projects = [
     role: null,
     tech: ['RC Robot', 'Competition Build', 'Arduino', 'ESP32', 'Bluetooth', 'PS2 Controller'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/All-Terrain-Robot.git',
-    photos: [],
+    photos: [
+      "/Projects/All%20Terrain/app-screenshot.jfif",
+      "/Projects/All%20Terrain/off-road-military-robot-action-camera-mount-main-450x500.jpg",
+      "/Projects/All%20Terrain/Schematic-Diagram-Arduino-Bluetooth-Version.jpg",
+      "/Projects/All%20Terrain/Schematic-Diagram-Arduino-PS2-Controller-Version.jpg",
+      "/Projects/All%20Terrain/Schematic-Diagram-ESP32Version.jpg",
+    ],
+    logo: '/Projects/logos/All-Terrain-Robot.svg',
+    accent: ACCENT_COLORS.amber,
+    bg: BG_COLORS.amber,
   },
   {
     slug: 'line-follower-robot',
@@ -66,8 +117,14 @@ const projects = [
     role: null,
     tech: ['Arduino', 'PID Control', 'IR Sensors', 'Competition Build'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/Line-Folower-Robot.git',
-    photos: [],
-  },  
+    photos: [
+      "/Projects/Line%20Follower/images%20(1).jfif",
+      "/Projects/Line%20Follower/Schematic-Diagram-Arduino.jpg",
+    ],
+    logo: '/Projects/logos/Line-Follower Robot.svg',
+    accent: ACCENT_COLORS.blue,
+    bg: BG_COLORS.blue,
+  },
   {
     slug: 'junior-robot',
     title: 'Junior Robot',
@@ -77,7 +134,15 @@ const projects = [
     role: 'Junior Challenge robot',
     tech: ['RC Robot', 'Mechanical Design', 'Competition Build'],
     githubUrl: 'https://github.com/AnouerChouikhgithub/Junior-Robot.git',
-    photos: [],
+    photos: [
+      "/Projects/Junior/app-screenshot.jfif",
+      "/Projects/Junior/images.jfif",
+      "/Projects/Junior/Schematic-Diagram-ArduinoVersion.jpg",
+      "/Projects/Junior/Schematic-Diagram-ESP32Version.jpg",
+    ],
+    logo: '/Projects/logos/Junior Robot.svg',
+    accent: ACCENT_COLORS.yellow,
+    bg: BG_COLORS.yellow,
   }
 ];
 
@@ -170,6 +235,13 @@ function ProjectModal({ project, onClose }) {
     };
   }, [onClose]);
 
+  // Override --accent AND set the panel background to the project's deep
+  // palette colour so the subscreen feels thematically coloured.
+  const accentStyle = {
+    ...(project.accent ? { '--accent': project.accent } : {}),
+    ...(project.bg    ? { background: project.bg }      : {}),
+  };
+
   return (
     <div className="project-modal" onClick={onClose}>
       <div
@@ -179,6 +251,7 @@ function ProjectModal({ project, onClose }) {
         aria-labelledby="project-modal-title"
         onClick={(event) => event.stopPropagation()}
         ref={modalRef}
+        style={accentStyle}
       >
         <button
           ref={closeButtonRef}
@@ -193,6 +266,11 @@ function ProjectModal({ project, onClose }) {
         <div className="project-modal__content">
           <div className="project-modal__details">
             <p className="project-card__meta">{project.meta || t('common.dateTbd')}</p>
+            {project.logo && (
+              <div className="project-modal__logo-icon" aria-hidden="true">
+                <img src={project.logo} alt="" />
+              </div>
+            )}
             <h3 id="project-modal-title" className="project-modal__title">
               {project.title}
             </h3>
@@ -230,11 +308,7 @@ function ProjectModal({ project, onClose }) {
           <div className="project-modal__gallery">
             {hasPhotos ? (
               <>
-                <div
-                  className="project-modal__gallery-main"
-                  onMouseEnter={() => setIsAutoPlaying(false)}
-                  onMouseLeave={() => setIsAutoPlaying(true)}
-                >
+                <div className="project-modal__gallery-main">
                   <button
                     type="button"
                     className="project-modal__nav project-modal__nav--prev"
@@ -329,8 +403,16 @@ export default function Projects() {
             aria-expanded={activeProject?.slug === project.slug}
             onClick={() => setActiveProject(project)}
           >
+            {project.logo && (
+              <img
+                className="project-card__logo"
+                src={project.logo}
+                alt={`${project.title} logo`}
+                loading="lazy"
+              />
+            )}
             <span className="project-card__meta">{project.meta || t('common.dateTbd')}</span>
-            <h3 className="project-card__title">{project.title}</h3>
+            <h3 className="project-card__title" style={project.accent ? { color: project.accent } : {}}>{project.title}</h3>
             <p className="project-card__description">{project.preview || project.description}</p>
           </button>
         ))}
