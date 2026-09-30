@@ -294,11 +294,13 @@
       "ieee-essths-sb": {
         "since": "depuis 2024",
         "location": "ESSTHS, Sousse",
+        "title": "Réseau mondial de professionnels de la technologie faisant progresser l'innovation pour l'humanité.",
         "description": "Un réseau étudiant international sous l'égide de l'IEEE (Institute of Electrical and Electronics Engineers), composé de chapitres techniques spécialisés formant les futurs ingénieurs à travers la robotique, la recherche, les projets pratiques et le développement professionnel."
       },
       "ajst": {
         "since": "depuis 2020",
         "location": "El Alia, Bizerte",
+        "title": "Réseau local de clubs de jeunes promouvant la culture scientifique et l'innovation technologique en Tunisie.",
         "description": "Une communauté de sciences et d'innovation pour les jeunes encourageant la pratique des STEM, la résolution créative de problèmes et l'apprentissage collaboratif à travers des initiatives citoyennes."
       },
       "tunisian-red-crescent": {
@@ -310,12 +312,13 @@
       "otddph": {
         "since": "depuis 2017",
         "location": "Beb Saadoun, Tunisie",
-        "title": "Organisation pour le développement durable et la protection des droits humains",
+        "title": "Organisation tunisienne dédiée à la défense des droits et à la promotion de l'inclusion sociale des personnes handicapées.",
         "description": "Organisation non gouvernementale indépendante en Tunisie fondée par des jeunes en situation de handicap après la révolution du 14 janvier 2011. Elle défend une approche inclusive fondée sur les droits humains et veille à l'application de la convention de l'ONU (CRDPH)."
       },
       "igc": {
         "since": "depuis 2025",
         "location": "ISITCom, Hammam Sousse",
+        "title": "Réseau d'étudiants passionnés de technologie promouvant les compétences en développement et les technologies Google à Hammam Sousse.",
         "description": "Une communauté technologique étudiante axée sur les technologies Google, l'apprentissage développeur et les projets pratiques renforçant l'autonomie technique et la collaboration."
       }
     },

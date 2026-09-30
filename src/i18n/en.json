@@ -294,11 +294,13 @@
       "ieee-essths-sb": {
         "since": "since 2024",
         "location": "ESSTHS, Sousse",
+        "title": "Global network of tech professionals advancing innovation for humanity.",
         "description": "An international student network under IEEE (Institute of Electrical and Electronics Engineers), composed of specialized technical chapters that empower future engineers through robotics, research, hands-on projects, and professional development."
       },
       "ajst": {
         "since": "since 2020",
         "location": "El Alia, Bizerte",
+        "title": "Local network of youth clubs promoting scientific culture and technology innovation in Tunisia.",
         "description": "A youth science and innovation community encouraging STEM participation, creative problem solving, and collaborative learning through community-driven initiatives."
       },
       "tunisian-red-crescent": {
@@ -310,12 +312,13 @@
       "otddph": {
         "since": "since 2017",
         "location": "Beb Saadoun, Tunisia",
-        "title": "Community for sustainable development and human protection",
+        "title": "Tunisian organization dedicated to defending rights and promoting social inclusion for people with disabilities.",
         "description": "An independent non-profit organization in Tunisia founded by young citizens with disabilities following the January 14, 2011 revolution. The organization promotes a human rights-based approach to disability, advocates for full social, economic, and political inclusion, and monitors the implementation of the UN Convention on the Rights of Persons with Disabilities (CRDPH)."
       },
       "igc": {
         "since": "since 2025",
         "location": "ISITCom, Hammam Sousse",
+        "title": "Student network of tech enthusiasts promoting development skills and Google technologies at Hammam Sousse",
         "description": "A student-driven tech community focused on Google technologies, developer learning, and practical projects that strengthen technical confidence and collaboration."
       }
     },
