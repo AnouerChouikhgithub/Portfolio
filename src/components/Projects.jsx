@@ -77,7 +77,7 @@ const projects = [
   {
     slug: 'fighter-robot',
     title: 'Fighter Robot',
-    meta: null,
+    meta: 2022,
     preview: 'A competitive combat robot built for performance and control.',
     description: 'Robotics competition combat robot.',
     role: null,
@@ -91,7 +91,7 @@ const projects = [
   {
     slug: 'all-terrain-robot',
     title: 'All-Terrain Robot',
-    meta: null,
+    meta: 2023,
     preview: 'A rugged robot designed to navigate tough and uneven ground.',
     description: 'A rugged 4-motor robot built for uneven ground, with two independent BTS7960 (IBT_2) high-current motor drivers (one per side) for stronger torque than a standard L298N setup. Available in three control variants: ESP32 with built-in Bluetooth, Arduino with an HC-05 Bluetooth module, and Arduino with a wired PS2 controller for direct tank-style control.',
     role: null,
@@ -111,7 +111,7 @@ const projects = [
   {
     slug: 'line-follower-robot',
     title: 'Line-Follower Robot',
-    meta: null,
+    meta: 2024,
     preview: 'An autonomous robot that follows a guided path with precision.',
     description: 'An Arduino UNO line following robot using five analog IR sensors and a PID controller for smooth, non-oscillating tracking. Includes an automatic sensor calibration routine and line-recovery behaviour when the track is lost.',
     role: null,
