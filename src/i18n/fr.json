@@ -81,8 +81,13 @@
     "missionText": "Créer des systèmes intelligents ayant un impact environnemental et social, puis devenir fondateur d'une startup technologique dédiée à l'éco-innovation et à la robotique."
   },
   "skills": {
+    "backToSkills": "Retour aux compétences techniques",
+    "relatedProjects": "Projets associés",
+    "viewMore": "En savoir plus",
+    "projectsUsingSkill": "Projets utilisant",
+    "allGroupProjects": "Tous les projets de ce groupe",
+    "noProjectsYet": "Aucun projet pour le moment",
     "categories": {
-      "All": "Tous",
       "Embedded/IoT": "Embarqué / IoT",
       "Hardware": "Matériel",
       "Web/Mobile": "Web / Mobile",
@@ -128,6 +133,9 @@
     ]
   },
   "projects": {
+    "skillsUsed": "Compétences utilisées",
+    "technicalSkills": "Compétences techniques",
+    "softSkills": "Compétences relationnelles",
     "items": {
       "pet-filament-machine": {
         "meta": "Projet solo · 2024 – Présent",

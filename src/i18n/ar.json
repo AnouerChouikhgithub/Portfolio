@@ -81,8 +81,13 @@
     "missionText": "بناء أنظمة ذكية تُحدث أثراً بيئياً واجتماعياً، والتطور لأصبح مؤسس شركة ناشئة في الابتكار البيئي والروبوتات."
   },
   "skills": {
+    "backToSkills": "العودة إلى المهارات التقنية",
+    "relatedProjects": "المشاريع المرتبطة",
+    "viewMore": "عرض المزيد",
+    "projectsUsingSkill": "المشاريع التي تستخدم",
+    "allGroupProjects": "جميع المشاريع في هذا المجال",
+    "noProjectsYet": "لا توجد مشاريع حتى الآن",
     "categories": {
-      "All": "الكل",
       "Embedded/IoT": "الأنظمة المدمجة / إنترنت الأشياء",
       "Hardware": "العتاد الصلب",
       "Web/Mobile": "الويب / الهاتف المحمول",
@@ -128,6 +133,9 @@
     ]
   },
   "projects": {
+    "skillsUsed": "المهارات المستخدمة",
+    "technicalSkills": "المهارات التقنية",
+    "softSkills": "المهارات الشخصية",
     "items": {
       "pet-filament-machine": {
         "meta": "مشروع فردي · 2024 – الآن",
