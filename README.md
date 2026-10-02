@@ -6,7 +6,7 @@
 ![Responsive](https://img.shields.io/badge/responsive-mobile%20%7C%20tablet%20%7C%20desktop-10b981)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-🔗 **Live site:** [chouikh-anouer.netlify.app](https://chouikh-anouer.netlify.app)
+🔗 **Live site:** [anouer-chouikh.netlify.app](https://anouer-chouikh.netlify.app)
 
 A single-page portfolio for **Anouer Chouikh** — Computer Engineering & IoT student — showcasing robotics projects, community leadership, and a multilingual, fully responsive experience with a built-in PDF résumé viewer.
 
@@ -306,7 +306,7 @@ MIT © Anouer Chouikh. See [LICENSE](LICENSE).
 
 **Anouer Chouikh** — Computer Engineering & IoT student (ISITCom)
 
-- 🌐 Portfolio: [chouikh-anouer.netlify.app](https://chouikh-anouer.netlify.app)
+- 🌐 Portfolio: [anouer-chouikh.netlify.app](https://anouer-chouikh.netlify.app)
 - ✉️ Email: [anouer.chouikh2005@gmail.com](mailto:anouer.chouikh2005@gmail.com)
 - 💼 LinkedIn: [anouer-chouikh-303306220](https://www.linkedin.com/in/anouer-chouikh-303306220)
 - 🐙 GitHub: [AnouerChouikhgithub](https://github.com/AnouerChouikhgithub)

@@ -1,3 +1,5 @@
+import { PET_HUB_URL } from './pet-repos';
+
 export const ACCENT_COLORS = {
   green:  '#22c55e',
   cyan:   '#06b6d4',
@@ -109,7 +111,7 @@ export const PROJECTS = [
       'Project management',
       'Attention to detail',
     ],
-    githubUrl: 'https://github.com/AnouerChouikhgithub/pet-recycling-filament-system',
+    githubUrl: PET_HUB_URL,
     photos: [
       "/Projects/PET-Recycling-Filament-System/Capture%20d'%C3%A9cran%202026-09-28%20145437.png",
       "/Projects/PET-Recycling-Filament-System/Schematic%20Diagram.jpg",

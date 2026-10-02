@@ -133,14 +133,119 @@
     ]
   },
   "projects": {
+    "modalScrollLabel": "Détails du projet et galerie média",
     "skillsUsed": "Compétences utilisées",
     "technicalSkills": "Compétences techniques",
     "softSkills": "Compétences relationnelles",
+    "pet": {
+      "eyebrow": "Projet solo · 2024 – Présent",
+      "hook": "Une machine de recyclage de bouteilles PET en filament avec sa propre plateforme logicielle, conçue et construite en solo.",
+      "status": {
+        "machine": {
+          "title": "Machine",
+          "label": "Fonctionnelle · 3e itération"
+        },
+        "software": {
+          "title": "Plateforme logicielle",
+          "label": "Développée · données simulées"
+        },
+        "link": {
+          "title": "Liaison ESP32 + MQTT",
+          "label": "Prévue"
+        }
+      },
+      "chips": {
+        "temp": "Cible PID 245 °C",
+        "micro": "Micropas 1/16, 3200 pas/tour",
+        "iters": "3 itérations matérielles",
+        "endpoints": "13 points de terminaison REST",
+        "repos": "4 dépôts de code"
+      },
+      "summary": "Une machine automatisée transformant les bouteilles en plastique en filament pour imprimante 3D grâce à une régulation thermique PID (cible 245 °C) et une extrusion à micropas avec rampes d'accélération, conçue sous SolidWorks et imprimée en 3D. Elle s'appuie sur une plateforme logicielle complète comprenant une API REST Symfony 7.4 (PHP 8.3, 13 endpoints, JWT, télémétrie), un tableau de bord web React et une application mobile Expo fonctionnant sur des données simulées. Une passerelle ESP32 avec télémétrie MQTT et commandes de la machine constitue la prochaine phase.",
+      "stack": {
+        "title": "Technologies par couche",
+        "mechanical": {
+          "label": "Mécanique",
+          "value": "SolidWorks, Impression 3D"
+        },
+        "firmware": {
+          "label": "Firmware",
+          "value": "Arduino, C/C++, PID, pilotes de moteur pas à pas"
+        },
+        "backend": {
+          "label": "Backend",
+          "value": "PHP, Symfony, PostgreSQL, JWT"
+        },
+        "apps": {
+          "label": "Applications",
+          "value": "React, Vite, React Native, Expo, TypeScript"
+        }
+      },
+      "repos": {
+        "title": "Dépôts GitHub",
+        "hardware": {
+          "label": "Matériel & Firmware",
+          "desc": "Firmware Arduino, modèles CAO SolidWorks & impression 3D"
+        },
+        "backend": {
+          "label": "API Backend",
+          "desc": "API REST Symfony 7.4, PostgreSQL, JWT"
+        },
+        "web": {
+          "label": "Tableau de bord Web",
+          "desc": "Interface de gestion React, Vite, TypeScript"
+        },
+        "mobile": {
+          "label": "Application Mobile",
+          "desc": "Application de télémétrie React Native, Expo, TypeScript"
+        },
+        "viewRepo": "Voir le dépôt"
+      },
+      "cta": "Voir le projet sur GitHub",
+      "arch": {
+        "title": "Architecture du système",
+        "badge": "Schéma interactif",
+        "legend": {
+          "built": "Développé",
+          "planned": "Prévu"
+        },
+        "nodes": {
+          "machine": "Machine Arduino",
+          "machineSub": "PID & Moteur pas à pas (V3)",
+          "esp32": "Passerelle ESP32",
+          "esp32Sub": "Matériel passerelle",
+          "mqtt": "Courtier MQTT",
+          "mqttSub": "Flux télémétrie",
+          "api": "API Symfony 7.4",
+          "apiSub": "PostgreSQL · JWT · 13 EPs",
+          "web": "Tableau de bord Web",
+          "webSub": "React · Vite · TS",
+          "mobile": "Application Mobile",
+          "mobileSub": "React Native · Expo"
+        },
+        "plannedBadge": "Prévu",
+        "note": "* Les nœuds interactifs mènent à leurs dépôts respectifs. Les applications Web et Mobile interrogent l'API toutes les 10 s."
+      },
+      "gallery": {
+        "machine": {
+          "alt": "Prototype de la machine de recyclage PET",
+          "caption": "Machine de recyclage PET — 3e itération matérielle avec régulation PID et micropas"
+        },
+        "arch": {
+          "alt": "Schéma d'architecture du système",
+          "caption": "Architecture du système : machine matérielle, passerelle ESP32 MQTT prévue, API Symfony et clients web & mobile"
+        },
+        "wiring": {
+          "alt": "Schéma de câblage de la machine PET",
+          "caption": "Schéma de câblage — Arduino, thermistance, cartouche chauffante PWM et pilote pas à pas"
+        }
+      }
+    },
     "items": {
       "pet-filament-machine": {
         "meta": "Projet solo · 2024 – Présent",
         "preview": "Transformation des déchets plastiques en filament réutilisable grâce à un système d'extrusion sur mesure.",
-        "description": "Conception et fabrication autonome d'un système de contrôle d'extrusion basé sur Arduino utilisant une régulation thermique PID (cible 245 °C) via thermistance et cartouche chauffante pilotée par PWM, couplé à un pilote pas-à-pas microstepping (1/2 à 1/16 de pas, jusqu'à 3200 pas/tour) pour une extrusion maîtrisée avec rampes d'accélération. Perfectionné au fil de multiples itérations sur plusieurs années de développement solo — actuellement en 3ème version.",
+        "description": "Conception et fabrication autonome d'un système de contrôle d'extrusion basé sur Arduino utilisant une régulation thermique PID (cible 245 °C) via thermistance et cartouche chauffante pilotée par PWM, couplé à un pilote de moteur pas à pas à micropas (1/2 à 1/16 de pas, jusqu'à 3200 pas/tour) avec rampes d'accélération. Accompagné d'une API REST Symfony 7.4, d'un tableau de bord React et d'une application mobile Expo. Actuellement à sa 3e itération matérielle.",
         "role": null
       },
       "neurofocus": {

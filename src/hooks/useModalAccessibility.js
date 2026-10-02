@@ -51,11 +51,17 @@ export function useModalAccessibility({
       }
     }
 
+    const handleHashChange = () => {
+      onClose()
+    }
+
     document.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('hashchange', handleHashChange)
 
     return () => {
       document.body.style.overflow = ''
       document.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('hashchange', handleHashChange)
       const restoreTarget = triggerRef?.current ?? previousActiveElement
       restoreTarget?.focus?.()
     }

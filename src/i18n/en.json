@@ -133,14 +133,119 @@
     ]
   },
   "projects": {
+    "modalScrollLabel": "Project details and media gallery",
     "skillsUsed": "Skills Used",
     "technicalSkills": "Technical skills",
     "softSkills": "Soft skills",
+    "pet": {
+      "eyebrow": "Solo project · 2024 – Present",
+      "hook": "A PET-bottle-to-filament machine with its own software platform, designed and built solo.",
+      "status": {
+        "machine": {
+          "title": "Machine",
+          "label": "Working · 3rd iteration"
+        },
+        "software": {
+          "title": "Software platform",
+          "label": "Built · runs on sample data"
+        },
+        "link": {
+          "title": "ESP32 + MQTT link",
+          "label": "Planned"
+        }
+      },
+      "chips": {
+        "temp": "245 °C PID target",
+        "micro": "1/16 microstepping, 3200 steps/rev",
+        "iters": "3 hardware iterations",
+        "endpoints": "13 REST endpoints",
+        "repos": "4 repositories"
+      },
+      "summary": "An automated machine converting plastic bottles into 3D printer filament using PID-regulated heating (245 °C target) and microstepped extrusion with acceleration ramping, built with custom SolidWorks CAD and 3D-printed parts. Backed by a full software platform comprising a Symfony 7.4 (PHP 8.3) REST API with 13 endpoints and JWT authentication, alongside a React web dashboard and an Expo mobile app running on fixture data. An ESP32 bridge with MQTT telemetry and machine control is planned for the next development phase.",
+      "stack": {
+        "title": "Tech Stack",
+        "mechanical": {
+          "label": "Mechanical",
+          "value": "SolidWorks, 3D printing"
+        },
+        "firmware": {
+          "label": "Firmware",
+          "value": "Arduino, C/C++, PID, stepper drivers"
+        },
+        "backend": {
+          "label": "Backend",
+          "value": "PHP, Symfony, PostgreSQL, JWT"
+        },
+        "apps": {
+          "label": "Apps",
+          "value": "React, Vite, React Native, Expo, TypeScript"
+        }
+      },
+      "repos": {
+        "title": "Repositories",
+        "hardware": {
+          "label": "Hardware & Firmware",
+          "desc": "Arduino firmware, SolidWorks CAD & 3D models"
+        },
+        "backend": {
+          "label": "Backend API",
+          "desc": "Symfony 7.4 REST API, PostgreSQL, JWT"
+        },
+        "web": {
+          "label": "Web Dashboard",
+          "desc": "React, Vite, TypeScript management UI"
+        },
+        "mobile": {
+          "label": "Mobile App",
+          "desc": "React Native, Expo, TypeScript telemetry app"
+        },
+        "viewRepo": "View repository"
+      },
+      "cta": "View project on GitHub",
+      "arch": {
+        "title": "System Architecture",
+        "badge": "Interactive diagram",
+        "legend": {
+          "built": "Built",
+          "planned": "Planned"
+        },
+        "nodes": {
+          "machine": "Arduino Machine",
+          "machineSub": "PID & Stepper (V3)",
+          "esp32": "ESP32 Bridge",
+          "esp32Sub": "Bridge Hardware",
+          "mqtt": "MQTT Broker",
+          "mqttSub": "Telemetry Stream",
+          "api": "Symfony 7.4 API",
+          "apiSub": "PostgreSQL · JWT · 13 EPs",
+          "web": "Web Dashboard",
+          "webSub": "React · Vite · TS",
+          "mobile": "Mobile App",
+          "mobileSub": "React Native · Expo"
+        },
+        "plannedBadge": "Planned",
+        "note": "* Interactive nodes link to their respective repositories. Web and Mobile apps currently poll the API every 10 s."
+      },
+      "gallery": {
+        "machine": {
+          "alt": "PET recycling machine prototype",
+          "caption": "PET recycling machine — 3rd hardware iteration with PID heating & microstepping"
+        },
+        "arch": {
+          "alt": "System architecture diagram",
+          "caption": "System architecture: hardware machine, planned ESP32 MQTT bridge, Symfony API, and web & mobile clients"
+        },
+        "wiring": {
+          "alt": "PET recycling machine schematic wiring diagram",
+          "caption": "Schematic wiring diagram — Arduino, thermistor, PWM heater, and stepper driver"
+        }
+      }
+    },
     "items": {
       "pet-filament-machine": {
         "meta": "Solo project · 2024 – Present",
         "preview": "Turning plastic waste into usable filament through a custom extrusion system.",
-        "description": "Independently designing and building an Arduino-based extrusion control system using PID temperature regulation (targeting 245°C) via a thermistor and PWM-driven heater, combined with a microstepping stepper driver (1/2 to 1/16 step, up to 3200 steps/revolution) for controlled filament extrusion with acceleration ramping. Refined across multiple iterations over several years of solo development — currently on the 3rd version.",
+        "description": "Independently designing and building an Arduino-based extrusion control system using PID temperature regulation (targeting 245 °C) via a thermistor and PWM-driven heater, combined with a microstepping stepper driver (1/2 to 1/16 step, up to 3200 steps/rev) for controlled filament extrusion with acceleration ramping. Supported by a Symfony 7.4 REST API, a React web dashboard, and an Expo mobile app. Currently in its 3rd hardware iteration.",
         "role": null
       },
       "neurofocus": {
