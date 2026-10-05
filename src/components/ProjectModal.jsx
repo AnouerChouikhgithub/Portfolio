@@ -54,6 +54,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
       },
       {
         id: 'pet-wiring',
+        // TODO(owner): replace after the schematic update
         type: 'image',
         src: '/Projects/PET-Recycling-Filament-System/Schematic%20Diagram.jpg',
         caption: t('projects.pet.gallery.wiring.caption'),
@@ -234,20 +235,25 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                       <span>{t('projects.pet.status.software.title', 'Software platform')}</span>
                     </div>
                     <span className="pet-modal__status-val">
-                      {t('projects.pet.status.software.label', 'Built · runs on sample data')}
+                      {t('projects.pet.status.software.label', 'Built · MQTT tested locally')}
                     </span>
                   </div>
 
                   <div className="pet-modal__status-card pet-modal__status-card--planned">
                     <div className="pet-modal__status-header">
                       <Radio size={15} className="pet-modal__status-icon" aria-hidden="true" />
-                      <span>{t('projects.pet.status.link.title', 'ESP32 + MQTT link')}</span>
+                      <span>{t('projects.pet.status.link.title', 'ESP32 GATEWAY')}</span>
                     </div>
                     <span className="pet-modal__status-val">
-                      {t('projects.pet.status.link.label', 'Planned')}
+                      {t('projects.pet.status.link.label', 'In progress · bench wiring')}
                     </span>
                   </div>
                 </div>
+
+                {/* Status recency note */}
+                <p className="project-card__meta pet-modal__eyebrow">
+                  {t('projects.pet.statusAsOf', 'Status as of October 2026')}
+                </p>
 
                 {/* 5. Stat Chips */}
                 <div className="pet-modal__chips" aria-label="Key specifications">
@@ -255,13 +261,13 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                     <bdi>{t('projects.pet.chips.temp', '245 °C PID target')}</bdi>
                   </span>
                   <span className="pet-modal__chip">
-                    <bdi>{t('projects.pet.chips.micro', '1/16 microstepping, 3200 steps/rev')}</bdi>
+                    <bdi>{t('projects.pet.chips.micro', 'Microstepping up to 1/16')}</bdi>
                   </span>
                   <span className="pet-modal__chip">
                     {t('projects.pet.chips.iters', '3 hardware iterations')}
                   </span>
                   <span className="pet-modal__chip">
-                    <bdi>{t('projects.pet.chips.endpoints', '13 REST endpoints')}</bdi>
+                    <bdi>{t('projects.pet.chips.endpoints', '15 REST endpoints')}</bdi>
                   </span>
                   <span className="pet-modal__chip">
                     {t('projects.pet.chips.repos', '4 repositories')}
@@ -273,7 +279,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                   <MixedText
                     text={t(
                       'projects.pet.summary',
-                      'An automated machine converting plastic bottles into 3D printer filament using PID-regulated heating (245 °C target) and microstepped extrusion with acceleration ramping, built with custom SolidWorks CAD and 3D-printed parts. Backed by a full software platform comprising a Symfony 7.4 (PHP 8.3) REST API with 13 endpoints and JWT authentication, alongside a React web dashboard and an Expo mobile app running on fixture data. An ESP32 bridge with MQTT telemetry and machine control is planned for the next development phase.'
+                      'An automated machine that turns PET bottles into 3D printer filament: PID-regulated heating (245 °C target), microstepped extrusion with acceleration ramping, custom SolidWorks CAD and 3D-printed parts. A software platform backs it: a Symfony 7.4 (PHP 8.3) REST API with JWT and refresh-token authentication, per-user machine ownership, per-machine device tokens and a command audit trail, plus a React web dashboard and an Expo mobile app on seeded demo data. The backend\u2019s MQTT integration (Mosquitto broker, telemetry consumer, expiring QoS 1 commands, per-device ACLs) is verified on a local broker with manual test messages. Next: an ESP32 gateway, wired on the bench, to connect the machine itself.'
                     )}
                     isRtl={isRtl}
                   />
@@ -300,7 +306,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                       </span>
                       <span className="pet-modal__stack-layer-val">
                         <bdi>
-                          {t('projects.pet.stack.firmware.value', 'Arduino, C/C++, PID, stepper drivers')}
+                          {t('projects.pet.stack.firmware.value', 'Arduino Mega, C/C++, PID, stepper drivers, ESP32 (in development)')}
                         </bdi>
                       </span>
                     </div>
@@ -311,7 +317,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                       </span>
                       <span className="pet-modal__stack-layer-val">
                         <bdi>
-                          {t('projects.pet.stack.backend.value', 'PHP, Symfony, PostgreSQL, JWT')}
+                          {t('projects.pet.stack.backend.value', 'PHP, Symfony, PostgreSQL, JWT, MQTT (Mosquitto), Docker')}
                         </bdi>
                       </span>
                     </div>

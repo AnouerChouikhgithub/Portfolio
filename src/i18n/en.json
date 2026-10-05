@@ -147,21 +147,22 @@
         },
         "software": {
           "title": "Software platform",
-          "label": "Built · runs on sample data"
+          "label": "Built · MQTT tested locally"
         },
         "link": {
-          "title": "ESP32 + MQTT link",
-          "label": "Planned"
+          "title": "ESP32 GATEWAY",
+          "label": "In progress · bench wiring"
         }
       },
+      "statusAsOf": "Status as of October 2026",
       "chips": {
         "temp": "245 °C PID target",
-        "micro": "1/16 microstepping, 3200 steps/rev",
+        "micro": "Microstepping up to 1/16",
         "iters": "3 hardware iterations",
-        "endpoints": "13 REST endpoints",
+        "endpoints": "15 REST endpoints",
         "repos": "4 repositories"
       },
-      "summary": "An automated machine converting plastic bottles into 3D printer filament using PID-regulated heating (245 °C target) and microstepped extrusion with acceleration ramping, built with custom SolidWorks CAD and 3D-printed parts. Backed by a full software platform comprising a Symfony 7.4 (PHP 8.3) REST API with 13 endpoints and JWT authentication, alongside a React web dashboard and an Expo mobile app running on fixture data. An ESP32 bridge with MQTT telemetry and machine control is planned for the next development phase.",
+      "summary": "An automated machine that turns PET bottles into 3D printer filament: PID-regulated heating (245 °C target), microstepped extrusion with acceleration ramping, custom SolidWorks CAD and 3D-printed parts. A software platform backs it: a Symfony 7.4 (PHP 8.3) REST API with JWT and refresh-token authentication, per-user machine ownership, per-machine device tokens and a command audit trail, plus a React web dashboard and an Expo mobile app on seeded demo data. The backend's MQTT integration (Mosquitto broker, telemetry consumer, expiring QoS 1 commands, per-device ACLs) is verified on a local broker with manual test messages. Next: an ESP32 gateway, wired on the bench, to connect the machine itself.",
       "stack": {
         "title": "Tech Stack",
         "mechanical": {
@@ -170,11 +171,11 @@
         },
         "firmware": {
           "label": "Firmware",
-          "value": "Arduino, C/C++, PID, stepper drivers"
+          "value": "Arduino Mega, C/C++, PID, stepper drivers, ESP32 (in development)"
         },
         "backend": {
           "label": "Backend",
-          "value": "PHP, Symfony, PostgreSQL, JWT"
+          "value": "PHP, Symfony, PostgreSQL, JWT, MQTT (Mosquitto), Docker"
         },
         "apps": {
           "label": "Apps",
@@ -206,25 +207,37 @@
         "title": "System Architecture",
         "badge": "Interactive diagram",
         "legend": {
-          "built": "Built",
-          "planned": "Planned"
+          "built": "Built / Working",
+          "verified": "Verified locally",
+          "planned": "In progress or planned"
+        },
+        "status": {
+          "working": "Working",
+          "benchWired": "Bench wired",
+          "inProgress": "In progress",
+          "verified": "Verified locally",
+          "built": "Built"
         },
         "nodes": {
-          "machine": "Arduino Machine",
-          "machineSub": "PID & Stepper (V3)",
-          "esp32": "ESP32 Bridge",
-          "esp32Sub": "Bridge Hardware",
+          "machine": "Machine",
+          "machineSub": "Extruder · V3",
+          "arduino": "Arduino Mega",
+          "arduinoSub": "PID · steppers v1",
+          "uart": "UART + shifter",
+          "uartSub": "TXS0108E · Serial1",
+          "esp32": "ESP32 Gateway",
+          "esp32Sub": "DevKit V1",
           "mqtt": "MQTT Broker",
-          "mqttSub": "Telemetry Stream",
-          "api": "Symfony 7.4 API",
-          "apiSub": "PostgreSQL · JWT · 13 EPs",
+          "mqttSub": "Mosquitto · QoS 1",
+          "api": "Symfony API",
+          "apiSub": "PostgreSQL · JWT",
           "web": "Web Dashboard",
-          "webSub": "React · Vite · TS",
+          "webSub": "React · polls 10 s",
           "mobile": "Mobile App",
-          "mobileSub": "React Native · Expo"
+          "mobileSub": "Expo · polls 10 s"
         },
-        "plannedBadge": "Planned",
-        "note": "* Interactive nodes link to their respective repositories. Web and Mobile apps currently poll the API every 10 s."
+        "commandPath": "Command path: apps → API → machine",
+        "note": "* Nodes link to their repositories. MQTT is verified on a local broker only — the machine is not connected to the API. Apps poll every 10 s."
       },
       "gallery": {
         "machine": {
@@ -232,8 +245,8 @@
           "caption": "PET recycling machine — 3rd hardware iteration with PID heating & microstepping"
         },
         "arch": {
-          "alt": "System architecture diagram",
-          "caption": "System architecture: hardware machine, planned ESP32 MQTT bridge, Symfony API, and web & mobile clients"
+          "alt": "System architecture diagram: machine, Arduino Mega, UART link, ESP32 gateway, MQTT broker, Symfony API, and web and mobile clients with their build statuses",
+          "caption": "System architecture: machine, Arduino Mega, ESP32 gateway (in development), MQTT broker (verified locally), Symfony API, and web & mobile clients polling every 10 s"
         },
         "wiring": {
           "alt": "PET recycling machine schematic wiring diagram",
