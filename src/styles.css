@@ -17,6 +17,7 @@
     --glow: rgba(34, 211, 238, 0.35);
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
     --max-width: 1200px;
+    --scroll-offset: 84px;
     --transition: 180ms ease;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
@@ -50,6 +51,7 @@ html[data-theme="light"] {
 html {
     scroll-behavior: smooth;
     background: var(--bg);
+    scroll-padding-top: var(--scroll-offset);
 }
 
 body {
@@ -59,6 +61,41 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     transition: background-color var(--transition), color var(--transition);
+}
+
+section,
+#projects,
+#community,
+#events,
+#skills,
+#contact {
+    scroll-margin-top: var(--scroll-offset);
+}
+
+.magnet {
+    display: inline-block;
+    will-change: transform;
+}
+
+.scroll-progress {
+    position: fixed;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 1200;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transform-origin: left center;
+    pointer-events: none;
+    box-shadow: 0 0 18px rgba(34, 211, 238, 0.5);
+}
+
+html[dir="rtl"] .scroll-progress {
+    transform-origin: right center;
+}
+
+.is-animating {
+    transition: none !important;
 }
 
 html[lang="ar"],
@@ -148,6 +185,7 @@ a:focus-visible {
     margin-bottom: 3rem;
     color: var(--text);
     position: relative;
+    --line: 1;
 }
 
 .section__title::after {
@@ -158,6 +196,9 @@ a:focus-visible {
     background: linear-gradient(90deg, var(--accent), var(--accent-2));
     margin: 1rem auto 0;
     border-radius: 2px;
+    transform: scaleX(var(--line, 1));
+    transform-origin: center;
+    transition: transform 0.3s ease;
 }
 
 /* ========================================
@@ -430,23 +471,29 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
     box-shadow: 0 0 24px var(--glow);
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.hero__content {
+    position: relative;
+    will-change: transform, opacity;
 }
 
 .hero__name {
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent), var(--accent-2));
+    background-size: 220% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    color: transparent;
+    animation: heroShimmer 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroShimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
 }
 
 .hero__title {
@@ -469,6 +516,22 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
     gap: 1.5rem;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+.hero__title .split-char,
+.hero__title .split-word,
+.hero__tagline .split-char,
+.hero__tagline .split-word,
+.hero__title .split-line,
+.hero__tagline .split-line {
+    display: inline-block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__name {
+        animation: none;
+        background-size: 100% 100%;
+    }
 }
 
 /* ========================================
@@ -743,6 +806,16 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
+}
+
+.project-card,
+.events-card,
+.community-card,
+.skills-group-card {
+    --mx: 50%;
+    --my: 50%;
+    background-image: radial-gradient(320px circle at var(--mx, -999px) var(--my, -999px), var(--glow), transparent 70%);
+    background-repeat: no-repeat;
 }
 
 .project-card {

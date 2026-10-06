@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import useModalAccessibility from '../hooks/useModalAccessibility';
+import { scrollToId } from '../motion/lenisStore';
 
 const communityImageList = (folder, files) => files.map((file) => `/Communities/${folder}/${file}`);
 
@@ -458,7 +459,7 @@ export default function Community() {
         });
 
         setActiveChapter(matchedChapter ?? null);
-        document.getElementById('community')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToId('community');
       }
     };
 
@@ -484,7 +485,7 @@ export default function Community() {
 
       setActiveCommunity(matchedCommunity);
       setActiveChapter(matchedChapter ?? null);
-      document.getElementById('community')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToId('community');
     };
 
     syncCommunityFromHash();

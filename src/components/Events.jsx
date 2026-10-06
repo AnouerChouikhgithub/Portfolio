@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import useModalAccessibility from '../hooks/useModalAccessibility';
+import { scrollToId } from '../motion/lenisStore';
 
 const imageList = (folder, files) => files.map((file) => `/Events/${folder}/${file}`);
 
@@ -473,7 +474,7 @@ export default function Events() {
 
       if (matchedEvent) {
         setActiveEvent(matchedEvent);
-        document.getElementById('events')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToId('events');
       }
     };
 

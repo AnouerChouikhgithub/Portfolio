@@ -7,10 +7,12 @@ import Community from './components/Community'
 import Events from './components/Events'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import ScrollProgress from './motion/ScrollProgress'
 
 export default function App() {
   return (
     <>
+      <ScrollProgress />
       <Header />
       <main>
         <section id="home"><Hero /></section>
