@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
+import CrossfadeImage from './CrossfadeImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
+import useAutoCarousel from '../hooks/useAutoCarousel';
 import { scrollToId } from '../motion/lenisStore';
 
 const communityImageList = (folder, files) => files.map((file) => `/Communities/${folder}/${file}`);
@@ -152,10 +154,12 @@ export const clubs = [
 function CommunityModal({ community, onClose, initialChapter = null }) {
   const { t, isRtl } = useI18n();
   const modalRef = useRef(null);
-  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [activeChapter, setActiveChapter] = useState(initialChapter);
-  const lastUserActionRef = useRef(0);
   const hasPhotos = Array.isArray(community.photos) && community.photos.length > 0;
+  const carousel = useAutoCarousel(community.photos, 1500);
+  const selectedPhotoIndex = carousel.index;
+  const activateManualSelection = carousel.selectIndex;
+  const closeChapter = useCallback(() => setActiveChapter(null), []);
 
   useModalAccessibility({ panelRef: modalRef, onClose });
 
@@ -163,31 +167,9 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
   const location = t(`community.items.${community.slug}.location`);
   const description = t(`community.items.${community.slug}.description`);
 
-  const activateManualSelection = (nextIndex) => {
-    lastUserActionRef.current = Date.now();
-    setSelectedPhotoIndex(nextIndex);
-  };
-
   useEffect(() => {
-    setSelectedPhotoIndex(0);
     setActiveChapter(initialChapter ?? null);
-    lastUserActionRef.current = 0;
   }, [community.slug, initialChapter]);
-
-  useEffect(() => {
-    if (!hasPhotos || community.photos.length <= 1) {
-      return undefined;
-    }
-
-    const timerId = window.setTimeout(() => {
-      const now = Date.now();
-      if (now - lastUserActionRef.current >= 1000) {
-        setSelectedPhotoIndex((currentIndex) => (currentIndex + 1) % community.photos.length);
-      }
-    }, 1000);
-
-    return () => window.clearTimeout(timerId);
-  }, [community.photos, hasPhotos, selectedPhotoIndex]);
 
   return (
     <div className="event-modal" onClick={onClose}>
@@ -209,7 +191,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
         </button>
 
         <div className="event-modal__content">
-          <div className="event-modal__details">
+          <div className="event-modal__details modal-scroll-region">
             <p className="event-card__meta">
               <MixedText text={since} isRtl={isRtl} />
             </p>
@@ -288,7 +270,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
             </div>
           </div>
 
-          <div className="event-modal__gallery">
+          <div className="event-modal__gallery modal-scroll-region" {...carousel.carouselProps}>
             {community.photos?.length ? (
               <>
                 <div className="event-modal__gallery-main">
@@ -303,7 +285,10 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
                     ‹
                   </button>
 
-                  <img src={community.photos[selectedPhotoIndex]} alt={`${community.name} ${selectedPhotoIndex + 1}`} />
+                  <CrossfadeImage
+                    src={community.photos[selectedPhotoIndex]}
+                    alt={`${community.name} ${selectedPhotoIndex + 1}`}
+                  />
 
                   <button
                     type="button"
@@ -340,13 +325,15 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
         </div>
       </div>
 
-      {activeChapter && <ChapterDetailModal chapter={activeChapter} onClose={() => setActiveChapter(null)} />}
+      {activeChapter && <ChapterDetailModal chapter={activeChapter} onClose={closeChapter} />}
     </div>
   );
 }
 
 function ChapterDetailModal({ chapter, onClose }) {
   const { t, isRtl } = useI18n();
+  const modalRef = useRef(null);
+  useModalAccessibility({ panelRef: modalRef, onClose });
 
   if (!chapter) {
     return null;
@@ -367,6 +354,7 @@ function ChapterDetailModal({ chapter, onClose }) {
         aria-modal="true"
         aria-labelledby="chapter-modal-title"
         onClick={(event) => event.stopPropagation()}
+        ref={modalRef}
       >
         <button
           type="button"
@@ -377,7 +365,7 @@ function ChapterDetailModal({ chapter, onClose }) {
           ×
         </button>
 
-        <div className="community-chapter-modal__content">
+        <div className="community-chapter-modal__content modal-scroll-region">
           <div className="community-chapter-modal__logo-wrap">
             <img src={chapter.path} alt={`${chapter.label || chapter.name} logo`} />
           </div>

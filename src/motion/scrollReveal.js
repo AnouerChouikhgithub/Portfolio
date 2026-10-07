@@ -22,7 +22,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            once: true,
+            toggleActions: 'play none play reverse',
           },
         },
       );
@@ -34,7 +34,7 @@ export function initScrollReveal() {
         scrollTrigger: {
           trigger: element,
           start: 'top 88%',
-          once: true,
+          toggleActions: 'play none play reverse',
         },
       });
     });
@@ -51,7 +51,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            once: true,
+            toggleActions: 'play none play reverse',
           },
         },
       );
@@ -70,7 +70,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            once: true,
+            toggleActions: 'play none play reverse',
           },
         },
       );
@@ -88,7 +88,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            once: true,
+            toggleActions: 'play none play reverse',
           },
         },
       );
@@ -97,11 +97,10 @@ export function initScrollReveal() {
     const revealCards = gsap.utils.toArray('.skills__experience-card, .skills-group-card, .project-card, .community-card, .events-card');
 
     const revealCard = (element) => {
-      if (!element || element.dataset.revealed === 'true') {
+      if (!element) {
         return;
       }
 
-      element.dataset.revealed = 'true';
       element.classList.add('is-animating');
       gsap.fromTo(
         element,
@@ -123,7 +122,6 @@ export function initScrollReveal() {
     ScrollTrigger.batch(revealCards, {
       interval: 0.1,
       batchMax: 6,
-      once: true,
       onEnter: (elements) => {
         elements.forEach(revealCard);
       },
@@ -144,7 +142,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            once: true,
+            toggleActions: 'play none play reverse',
           },
         },
       );

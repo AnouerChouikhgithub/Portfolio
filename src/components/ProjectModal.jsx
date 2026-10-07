@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
   Wrench,
   Server,
@@ -11,7 +11,12 @@ import { useI18n } from '../i18n/I18nProvider';
 import { useTheme } from '../theme/ThemeProvider';
 import MixedText from './MixedText';
 import PetArchDiagram from './PetArchDiagram';
+import CrossfadeImage from './CrossfadeImage';
+import AnimatedCountText from './AnimatedCountText';
+import ModalWordReveal from './ModalWordReveal';
 import useModalAccessibility from '../hooks/useModalAccessibility';
+import useAutoCarousel from '../hooks/useAutoCarousel';
+import useModalReveals from '../hooks/useModalReveals';
 import { getSkillById, getGroupForSkill } from '../data/portfolio-data';
 import { PET_REPOS, PET_HUB_URL } from '../data/pet-repos';
 
@@ -19,10 +24,6 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
   const { t, isRtl, language } = useI18n();
   const { theme } = useTheme();
   const modalRef = useRef(null);
-  const scrollBodyRef = useRef(null);
-  const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(0);
-  const [canScrollMore, setCanScrollMore] = useState(false);
-  const lastUserActionRef = useRef(0);
 
   const isPet = project.slug === 'pet-filament-machine';
 
@@ -66,23 +67,23 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
   }, [isPet, t, isRtl]);
 
   const genericPhotos = Array.isArray(project.photos) ? project.photos : [];
-  const galleryCount = isPet ? petGalleryItems.length : genericPhotos.length;
+  const carouselItems = isPet ? petGalleryItems : genericPhotos;
+  const carousel = useAutoCarousel(carouselItems, 1500);
+  const selectedGalleryIndex = carousel.index;
+  const galleryCount = carouselItems.length;
   const hasPhotos = galleryCount > 0;
   const hasGithubUrl = typeof project.githubUrl === 'string' && project.githubUrl.trim().length > 0;
 
-  const activateManualSelection = (nextIndex) => {
-    lastUserActionRef.current = Date.now();
-    setSelectedGalleryIndex(nextIndex);
-  };
+  const activateManualSelection = carousel.selectIndex;
 
   // Reset scroll and selection on project or language change
   useEffect(() => {
-    setSelectedGalleryIndex(0);
-    lastUserActionRef.current = 0;
-    if (scrollBodyRef.current) {
-      scrollBodyRef.current.scrollTop = 0;
-    }
+    modalRef.current?.querySelectorAll('.modal-scroll-region').forEach((region) => {
+      region.scrollTop = 0;
+    });
   }, [project.slug, language]);
+
+  useModalReveals(modalRef, project.slug);
 
   // Gallery keyboard navigation (ArrowLeft / ArrowRight)
   useEffect(() => {
@@ -99,25 +100,6 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [hasPhotos, galleryCount, selectedGalleryIndex]);
-
-  // Bottom scroll fade indicator calculation
-  const updateScrollFade = useCallback(() => {
-    const el = scrollBodyRef.current;
-    if (!el) return;
-    const hasMore = el.scrollHeight - el.scrollTop - el.clientHeight > 15;
-    setCanScrollMore(hasMore);
-  }, []);
-
-  useEffect(() => {
-    updateScrollFade();
-    const el = scrollBodyRef.current;
-    if (!el) return undefined;
-    const resizeObserver = new ResizeObserver(() => {
-      updateScrollFade();
-    });
-    resizeObserver.observe(el);
-    return () => resizeObserver.disconnect();
-  }, [project.slug, language, updateScrollFade]);
 
   const isLight = theme === 'light';
   const bgDark = project.bgDark || (typeof project.bg === 'object' ? project.bg?.dark : project.bg);
@@ -175,24 +157,22 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
           ×
         </button>
 
-        {/* Body: the single scroll container */}
+        {/* Desktop columns scroll independently; mobile uses this shared scroll area. */}
         <div
-          ref={scrollBodyRef}
           className="project-modal__content"
           tabIndex={0}
           role="region"
           aria-label={t('projects.modalScrollLabel', 'Project details and media gallery')}
-          onScroll={updateScrollFade}
         >
           {/* =========================================================
               TEXT COLUMN
              ========================================================= */}
-          <div className="project-modal__details">
+          <div className="project-modal__details modal-scroll-region">
             {isPet ? (
               /* --- PET-SPECIFIC MODAL CONTENT --- */
               <div className="pet-modal">
                 {/* 1. Eyebrow */}
-                <p className="project-card__meta pet-modal__eyebrow">
+                <p className="project-card__meta pet-modal__eyebrow modal-reveal">
                   {t('projects.pet.eyebrow', 'Solo project · 2024 – Present')}
                 </p>
 
@@ -202,12 +182,12 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                     <img src={project.logo} alt="" />
                   </div>
                 )}
-                <h3 id="project-modal-title" className="project-modal__title pet-modal__title">
-                  {projectTitle}
+                <h3 id="project-modal-title" className="project-modal__title pet-modal__title modal-reveal modal-reveal--word-title" aria-label={projectTitle}>
+                  <ModalWordReveal text={projectTitle} />
                 </h3>
 
                 {/* 3. Hook */}
-                <p className="pet-modal__hook">
+                <p className="pet-modal__hook modal-reveal">
                   <MixedText
                     text={t(
                       'projects.pet.hook',
@@ -219,7 +199,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
 
                 {/* 4. Status Row */}
                 <div className="pet-modal__status-row" aria-label="Project Status">
-                  <div className="pet-modal__status-card">
+                  <div className="pet-modal__status-card modal-reveal modal-reveal--scale">
                     <div className="pet-modal__status-header">
                       <Wrench size={15} className="pet-modal__status-icon" aria-hidden="true" />
                       <span>{t('projects.pet.status.machine.title', 'Machine')}</span>
@@ -229,7 +209,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                     </span>
                   </div>
 
-                  <div className="pet-modal__status-card">
+                  <div className="pet-modal__status-card modal-reveal modal-reveal--scale">
                     <div className="pet-modal__status-header">
                       <Server size={15} className="pet-modal__status-icon" aria-hidden="true" />
                       <span>{t('projects.pet.status.software.title', 'Software platform')}</span>
@@ -239,7 +219,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                     </span>
                   </div>
 
-                  <div className="pet-modal__status-card pet-modal__status-card--planned">
+                  <div className="pet-modal__status-card pet-modal__status-card--planned modal-reveal modal-reveal--scale">
                     <div className="pet-modal__status-header">
                       <Radio size={15} className="pet-modal__status-icon" aria-hidden="true" />
                       <span>{t('projects.pet.status.link.title', 'ESP32 GATEWAY')}</span>
@@ -251,31 +231,31 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                 </div>
 
                 {/* Status recency note */}
-                <p className="project-card__meta pet-modal__eyebrow">
+                <p className="project-card__meta pet-modal__eyebrow modal-reveal">
                   {t('projects.pet.statusAsOf', 'Status as of October 2026')}
                 </p>
 
                 {/* 5. Stat Chips */}
                 <div className="pet-modal__chips" aria-label="Key specifications">
-                  <span className="pet-modal__chip">
-                    <bdi>{t('projects.pet.chips.temp', '245 °C PID target')}</bdi>
+                  <span className="pet-modal__chip modal-reveal modal-reveal--scale">
+                    <bdi><AnimatedCountText text={t('projects.pet.chips.temp', '245 °C PID target')} /></bdi>
                   </span>
-                  <span className="pet-modal__chip">
-                    <bdi>{t('projects.pet.chips.micro', 'Microstepping up to 1/16')}</bdi>
+                  <span className="pet-modal__chip modal-reveal modal-reveal--scale">
+                    <bdi><AnimatedCountText text={t('projects.pet.chips.micro', 'Microstepping up to 1/16')} /></bdi>
                   </span>
-                  <span className="pet-modal__chip">
-                    {t('projects.pet.chips.iters', '3 hardware iterations')}
+                  <span className="pet-modal__chip modal-reveal modal-reveal--scale">
+                    <AnimatedCountText text={t('projects.pet.chips.iters', '3 hardware iterations')} />
                   </span>
-                  <span className="pet-modal__chip">
-                    <bdi>{t('projects.pet.chips.endpoints', '15 REST endpoints')}</bdi>
+                  <span className="pet-modal__chip modal-reveal modal-reveal--scale">
+                    <bdi><AnimatedCountText text={t('projects.pet.chips.endpoints', '15 REST endpoints')} /></bdi>
                   </span>
-                  <span className="pet-modal__chip">
-                    {t('projects.pet.chips.repos', '4 repositories')}
+                  <span className="pet-modal__chip modal-reveal modal-reveal--scale">
+                    <AnimatedCountText text={t('projects.pet.chips.repos', '4 repositories')} />
                   </span>
                 </div>
 
                 {/* 6. Summary */}
-                <p className="pet-modal__summary">
+                <p className="pet-modal__summary modal-reveal">
                   <MixedText
                     text={t(
                       'projects.pet.summary',
@@ -286,7 +266,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                 </p>
 
                 {/* 7. Tech Stack Grouped by Layer */}
-                <div className="pet-modal__stack-box">
+                <div className="pet-modal__stack-box modal-reveal">
                   <h4 className="pet-modal__section-title">
                     {t('projects.pet.stack.title', 'Tech Stack')}
                   </h4>
@@ -336,7 +316,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                 </div>
 
                 {/* 8. Repositories Block */}
-                <div className="pet-modal__repos-box">
+                <div className="pet-modal__repos-box modal-reveal">
                   <h4 className="pet-modal__section-title">
                     {t('projects.pet.repos.title', 'Repositories')}
                   </h4>
@@ -425,29 +405,29 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
             ) : (
               /* --- GENERIC PROJECT CONTENT (UNCHANGED) --- */
               <>
-                <p className="project-card__meta">{projectMeta || t('common.dateTbd')}</p>
+                <p className="project-card__meta modal-reveal">{projectMeta || t('common.dateTbd')}</p>
                 {project.logo && (
                   <div className="project-modal__logo-icon" aria-hidden="true">
                     <img src={project.logo} alt="" />
                   </div>
                 )}
-                <h3 id="project-modal-title" className="project-modal__title">
-                  {projectTitle}
+                <h3 id="project-modal-title" className="project-modal__title modal-reveal modal-reveal--word-title" aria-label={projectTitle}>
+                  <ModalWordReveal text={projectTitle} />
                 </h3>
 
                 {projectRole && (
-                  <p className="project-modal__role">
+                  <p className="project-modal__role modal-reveal">
                     <MixedText text={projectRole} isRtl={isRtl} />
                   </p>
                 )}
 
-                <p className="project-modal__description">
+                <p className="project-modal__description modal-reveal">
                   <MixedText text={projectDescription} isRtl={isRtl} />
                 </p>
 
                 {/* Skills Used Block */}
                 {(technicalSkillsList.length > 0 || softSkillsList.length > 0) && (
-                  <div className="project-modal__skills-block">
+                  <div className="project-modal__skills-block modal-reveal">
                     <h4 className="project-modal__skills-title">
                       {t('projects.skillsUsed', 'Skills Used')}
                     </h4>
@@ -503,12 +483,12 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="project-modal__link"
+                    className="project-modal__link modal-reveal"
                   >
                     {t('common.viewGithub')}
                   </a>
                 ) : (
-                  <span className="project-modal__link project-modal__link--disabled" aria-disabled="true">
+                  <span className="project-modal__link project-modal__link--disabled modal-reveal" aria-disabled="true">
                     {t('common.githubUnavailable')}
                   </span>
                 )}
@@ -519,7 +499,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
           {/* =========================================================
               GALLERY COLUMN
              ========================================================= */}
-          <div className="project-modal__gallery">
+          <div className="project-modal__gallery modal-scroll-region" {...carousel.carouselProps}>
             {isPet ? (
               /* --- PET GALLERY COLUMN --- */
               <>
@@ -549,7 +529,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                           activePetItem?.isPaperCard ? 'pet-gallery__img-wrapper--paper' : ''
                         }`}
                       >
-                        <img
+                        <CrossfadeImage
                           src={activePetItem?.src}
                           alt={activePetItem?.alt || projectTitle}
                           loading="lazy"
@@ -623,7 +603,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                     ‹
                   </button>
 
-                  <img
+                  <CrossfadeImage
                     src={genericPhotos[selectedGalleryIndex]}
                     alt={`${projectTitle} - ${t('common.photo')} ${selectedGalleryIndex + 1}`}
                     loading="lazy"
@@ -667,11 +647,6 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
           </div>
         </div>
 
-        {/* Subtle bottom scroll fade indicator */}
-        <div
-          className={`project-modal__scroll-fade ${canScrollMore ? 'is-visible' : ''}`}
-          aria-hidden="true"
-        />
       </div>
     </div>
   );

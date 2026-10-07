@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import useScrollLock from './useScrollLock'
 
 /**
  * Shared modal accessibility: focus trap, Escape-to-close, body scroll lock,
@@ -17,15 +18,17 @@ export function useModalAccessibility({
   panelRef,
   onClose,
   triggerRef,
+  enabled = true,
   focusSelector = 'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
 }) {
+  useScrollLock(enabled, panelRef)
+
   useEffect(() => {
+    if (!enabled) return undefined
     const panel = panelRef.current
     if (!panel) return undefined
 
     const previousActiveElement = document.activeElement
-
-    document.body.style.overflow = 'hidden'
 
     const focusables = Array.from(panel.querySelectorAll(focusSelector))
     const focusFirst = () => focusables[0]?.focus()
@@ -59,13 +62,12 @@ export function useModalAccessibility({
     window.addEventListener('hashchange', handleHashChange)
 
     return () => {
-      document.body.style.overflow = ''
       document.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('hashchange', handleHashChange)
       const restoreTarget = triggerRef?.current ?? previousActiveElement
       restoreTarget?.focus?.()
     }
-  }, [panelRef, onClose, triggerRef, focusSelector])
+  }, [panelRef, onClose, triggerRef, enabled, focusSelector])
 
   return null
 }

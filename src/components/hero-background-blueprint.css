@@ -1,0 +1,129 @@
+.hero-background-blueprint {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: -1;
+    width: 100vw;
+    height: 100%;
+    overflow: hidden;
+    transform: translateX(-50%);
+    pointer-events: none;
+    background: linear-gradient(180deg, #f7fafb 0%, #e9f6f9 100%);
+    --blueprint-spot-x: 50vw;
+    --blueprint-spot-y: 42vh;
+}
+
+.hero-background-blueprint__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(to right, rgba(14, 116, 144, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(14, 116, 144, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    mask-image: radial-gradient(ellipse 82% 70% at 50% 38%, #000 12%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 82% 70% at 50% 38%, #000 12%, transparent 100%);
+}
+
+.hero-background-blueprint__grid::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background-image:
+        linear-gradient(to right, rgba(14, 116, 144, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(14, 116, 144, 0.08) 1px, transparent 1px);
+    background-size: 120px 120px;
+}
+
+.hero-background-blueprint__grid,
+.hero-background-blueprint__grid::after {
+    mask-image: radial-gradient(ellipse 82% 70% at 50% 38%, #000 12%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 82% 70% at 50% 38%, #000 12%, transparent 100%);
+}
+
+.hero-background-blueprint__drawing {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: #0e7490;
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.35;
+    mask-image: radial-gradient(ellipse 82% 74% at 50% 38%, #000 10%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 82% 74% at 50% 38%, #000 10%, transparent 100%);
+}
+
+.blueprint-draw path,
+.blueprint-draw circle {
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+}
+
+.hero-background-blueprint[data-active="true"] .blueprint-draw--one path {
+    animation: blueprintDraw 1.8s ease-out forwards;
+}
+
+.hero-background-blueprint[data-active="true"] .blueprint-draw--two path,
+.hero-background-blueprint[data-active="true"] .blueprint-draw--two circle {
+    animation: blueprintDraw 1.8s ease-out 0.35s forwards;
+}
+
+.hero-background-blueprint__labels {
+    fill: #0e7490;
+    stroke: none;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    opacity: 0;
+}
+
+.hero-background-blueprint[data-active="true"] .hero-background-blueprint__labels {
+    animation: blueprintLabelReveal 500ms ease-out 0.9s forwards;
+}
+
+.hero-background-blueprint__spotlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: min(780px, 90vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    opacity: 0.55;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.18), transparent 72%);
+    transform: translate3d(var(--blueprint-spot-x), var(--blueprint-spot-y), 0) translate(-50%, -50%);
+}
+
+.hero-background-blueprint__bottom {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 200px;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+}
+
+@keyframes blueprintDraw {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes blueprintLabelReveal {
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .blueprint-draw path,
+    .blueprint-draw circle {
+        stroke-dashoffset: 0;
+        animation: none !important;
+    }
+
+    .hero-background-blueprint__spotlight {
+        display: none;
+    }
+
+    .hero-background-blueprint__labels {
+        opacity: 1;
+        animation: none !important;
+    }
+}
