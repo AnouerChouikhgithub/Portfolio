@@ -129,17 +129,18 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
     : null;
 
   return (
-    <div className="project-modal" onClick={onClose}>
-      <div
-        className="project-modal__panel"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="project-modal-title"
-        onClick={(event) => event.stopPropagation()}
-        ref={modalRef}
-        style={accentStyle}
-        dir={isRtl ? 'rtl' : 'ltr'}
-      >
+    // The wrapper/backdrop/backdrop-click close now live in overlay/SubScreen;
+    // this component renders only the panel whose surface keeps per-project
+    // colors and current layout.
+    <div
+      className="project-modal__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="project-modal-title"
+      ref={modalRef}
+      style={accentStyle}
+      dir={isRtl ? 'rtl' : 'ltr'}
+    >
         {/* Close button attached to the shell */}
         <button
           type="button"
@@ -530,8 +531,6 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
             )}
           </div>
         </div>
-
-      </div>
     </div>
   );
 }
