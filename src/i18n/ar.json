@@ -33,7 +33,9 @@
       "github": "GitHub",
       "linkedin": "LinkedIn",
       "instagram": "Instagram"
-    }
+    },
+    "play": "تشغيل العرض",
+    "pause": "إيقاف العرض مؤقتًا"
   },
   "nav": {
     "home": "الرئيسية",

@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
-import CrossfadeImage from './CrossfadeImage';
 import WebpImage from './WebpImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
-import useAutoCarousel from '../hooks/useAutoCarousel';
+import CinematicGallery from './gallery/CinematicGallery';
 import ModalErrorBoundary from './ModalErrorBoundary';
 import { scrollToId } from '../motion/lenisStore';
 
@@ -135,6 +134,26 @@ const renderProjectLinksInText = (text, onClose, isRtl = false) => {
 
   return parts;
 };
+
+/** Director's-cut HUD: REC dot, per-slide timecode, frame counter, crop marks. */
+function EventHud({ index, count }) {
+  const seconds = (index + 1) * 1.5;
+  const timecode = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(Math.floor(seconds % 60)).padStart(2, '0')}:${String(Math.floor((seconds % 1) * 24)).padStart(2, '0')}`;
+  return (
+    <>
+      <span className="cine-cropmark cine-cropmark--tl" aria-hidden="true" />
+      <span className="cine-cropmark cine-cropmark--tr" aria-hidden="true" />
+      <span className="cine-cropmark cine-cropmark--bl" aria-hidden="true" />
+      <span className="cine-cropmark cine-cropmark--br" aria-hidden="true" />
+      <div className="cine-hud" aria-hidden="true">
+        <span className="cine-hud__rec">REC</span>
+        <span className="cine-hud__timecode">{timecode}</span>
+        <span className="cine-hud__spacer" />
+        <span className="cine-hud__frame">{String(index + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}</span>
+      </div>
+    </>
+  );
+}
 
 export const organizedEvents = [
   {
@@ -315,9 +334,6 @@ function EventModal({ event, onClose }) {
   const { t, isRtl } = useI18n();
   const modalRef = useRef(null);
   const hasPhotos = Array.isArray(event.photos) && event.photos.length > 0;
-  const carousel = useAutoCarousel(event.photos, 1500);
-  const selectedPhotoIndex = carousel.index;
-  const activateManualSelection = carousel.selectIndex;
 
   useModalAccessibility({ panelRef: modalRef, onClose });
 
@@ -380,57 +396,22 @@ function EventModal({ event, onClose }) {
             </div>
           </div>
 
-          <div className="event-modal__gallery modal-scroll-region" {...carousel.carouselProps}>
-            {hasPhotos ? (
-              <>
-                <div className="event-modal__gallery-main">
-                  <button
-                    type="button"
-                    className="event-modal__nav event-modal__nav--prev"
-                    aria-label={t('common.prevPhoto')}
-                    onClick={() => {
-                      activateManualSelection((selectedPhotoIndex - 1 + event.photos.length) % event.photos.length);
-                    }}
-                  >
-                    ‹
-                  </button>
-
-                  <CrossfadeImage
-                    src={event.photos[selectedPhotoIndex]}
-                    alt={`${event.title} - ${selectedPhotoIndex + 1}`}
-                  />
-
-                  <button
-                    type="button"
-                    className="event-modal__nav event-modal__nav--next"
-                    aria-label={t('common.nextPhoto')}
-                    onClick={() => {
-                      activateManualSelection((selectedPhotoIndex + 1) % event.photos.length);
-                    }}
-                  >
-                    ›
-                  </button>
-                </div>
-
-                <div className="event-modal__thumbs" aria-label={`${event.title} photo gallery`}>
-                  {event.photos.map((photo, index) => (
-                    <button
-                      key={`${event.slug}-${index}`}
-                      type="button"
-                      className={`event-modal__thumb ${index === selectedPhotoIndex ? 'is-active' : ''}`}
-                      aria-label={`${t('common.viewPhoto')} ${index + 1}`}
-                      onClick={() => activateManualSelection(index)}
-                    >
-                      <WebpImage src={photo} alt={`${event.title} ${index + 1}`} />
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="event-modal__empty">
-                <span>{t('common.noPhotos')}</span>
-              </div>
-            )}
+          <div className="event-modal__gallery modal-scroll-region">
+            <CinematicGallery
+              items={hasPhotos ? event.photos : []}
+              variant="event"
+              altBuilder={(photo, i) => `${event.title} - ${i + 1}`}
+              labels={{
+                play: t('common.play'),
+                pause: t('common.pause'),
+                prev: t('common.previousPhoto'),
+                next: t('common.nextPhoto'),
+                viewPhoto: t('common.viewPhoto'),
+                stage: `${event.title} — ${t('sections.events')}`,
+                thumbStrip: `${event.title} photo gallery`,
+              }}
+              renderSlideOverlay={(photo, i, layer) => (layer === 'in' ? <EventHud index={i} count={event.photos.length} /> : null)}
+            />
           </div>
         </div>
       </div>
