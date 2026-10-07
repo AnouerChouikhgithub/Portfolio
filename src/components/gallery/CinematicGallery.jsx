@@ -374,7 +374,7 @@ export default function CinematicGallery({
               {typeof item === 'object' && item?.type === 'component' ? (
                 <span className="cine-thumb__placeholder">{item.thumbLabel ?? '•'}</span>
               ) : (
-                <WebpImage src={getSource(item)} alt="" className={`cine-thumb__img ${thumbClass ? `${thumbClass}__img` : ''}`} />
+                <WebpImage src={getSource(item)} alt="" size="thumb" className={`cine-thumb__img ${thumbClass ? `${thumbClass}__img` : ''}`} />
               )}
             </button>
           ))}
@@ -391,6 +391,7 @@ function CineImg({ src, alt }) {
       className="cine-img"
       src={src}
       alt={alt}
+      size="main"
       loading={alt ? 'eager' : 'lazy'}
       decoding="async"
     />
