@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import WebpImage from './WebpImage';
-import useModalAccessibility from '../hooks/useModalAccessibility';
+import SubScreen from './overlay/SubScreen';
 import CinematicGallery from './gallery/CinematicGallery';
 import ChapterConstellation from './gallery/ChapterConstellation';
 import ModalErrorBoundary from './ModalErrorBoundary';
@@ -184,23 +184,22 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
   ) : null;
 
   return (
-    <div className="event-modal" onClick={onClose}>
-      <div
-        className="event-modal__panel"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="community-modal-title"
-        onClick={(event) => event.stopPropagation()}
-        ref={modalRef}
+    <>
+    <div
+      className="event-modal__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="community-modal-title"
+      ref={modalRef}
+    >
+      <button
+        type="button"
+        className="event-modal__close"
+        aria-label={t('common.closeCommunity')}
+        onClick={onClose}
       >
-        <button
-          type="button"
-          className="event-modal__close"
-          aria-label={t('common.closeCommunity')}
-          onClick={onClose}
-        >
-          ×
-        </button>
+        ×
+      </button>
 
         <div className="event-modal__content">
           <div className="event-modal__details modal-scroll-region">
@@ -305,18 +304,24 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
             />
           </div>
         </div>
-      </div>
-
-      {activeChapter && (
-        <ModalErrorBoundary
-          onClose={closeChapter}
-          message={t('common.viewLoadError')}
-          closeLabel={t('common.close')}
-        >
-          <ChapterDetailModal chapter={activeChapter} onClose={closeChapter} />
-        </ModalErrorBoundary>
-      )}
     </div>
+      {activeChapter && (
+        <SubScreen
+          open
+          onClose={closeChapter}
+          labelledBy="chapter-modal-title"
+          variant="community-chapter"
+        >
+          <ModalErrorBoundary
+            onClose={closeChapter}
+            message={t('common.viewLoadError')}
+            closeLabel={t('common.close')}
+          >
+            <ChapterDetailModal chapter={activeChapter} onClose={closeChapter} />
+          </ModalErrorBoundary>
+        </SubScreen>
+      )}
+    </>
   );
 }
 
@@ -337,15 +342,13 @@ function ChapterDetailModal({ chapter, onClose }) {
   const chapterDesc = t(`community.chapters.${chapter.name.toLowerCase()}`);
 
   return (
-    <div className="community-chapter-modal" onClick={handleClose}>
-      <div
-        className="community-chapter-modal__panel"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="chapter-modal-title"
-        onClick={(event) => event.stopPropagation()}
-        ref={modalRef}
-      >
+    <div
+      className="community-chapter-modal__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="chapter-modal-title"
+      ref={modalRef}
+    >
         <button
           type="button"
           className="community-chapter-modal__close"
@@ -369,7 +372,6 @@ function ChapterDetailModal({ chapter, onClose }) {
             </p>
           </div>
         </div>
-      </div>
     </div>
   );
 }

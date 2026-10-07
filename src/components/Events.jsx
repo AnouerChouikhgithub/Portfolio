@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import WebpImage from './WebpImage';
-import useModalAccessibility from '../hooks/useModalAccessibility';
+import SubScreen from './overlay/SubScreen';
 import CinematicGallery from './gallery/CinematicGallery';
 import ModalErrorBoundary from './ModalErrorBoundary';
 import { scrollToId } from '../motion/lenisStore';
@@ -342,23 +342,21 @@ function EventModal({ event, onClose }) {
   const role = t(`events.items.${event.slug}.role`);
 
   return (
-    <div className="event-modal" onClick={onClose}>
-      <div
-        className="event-modal__panel"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="event-modal-title"
-        onClick={(clickEvent) => clickEvent.stopPropagation()}
-        ref={modalRef}
+    <div
+      className="event-modal__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="event-modal-title"
+      ref={modalRef}
+    >
+      <button
+        type="button"
+        className="event-modal__close"
+        aria-label={t('common.closeEvent')}
+        onClick={onClose}
       >
-        <button
-          type="button"
-          className="event-modal__close"
-          aria-label={t('common.closeEvent')}
-          onClick={onClose}
-        >
-          ×
-        </button>
+        ×
+      </button>
 
         <div className="event-modal__content">
           <div className="event-modal__details modal-scroll-region">
@@ -415,7 +413,6 @@ function EventModal({ event, onClose }) {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 
@@ -505,15 +502,23 @@ export default function Events() {
         </ul>
       </div>
 
-      {activeEvent && (
-        <ModalErrorBoundary
-          onClose={() => setActiveEvent(null)}
-          message={t('common.viewLoadError')}
-          closeLabel={t('common.close')}
-        >
-          <EventModal event={activeEvent} onClose={() => setActiveEvent(null)} />
-        </ModalErrorBoundary>
-      )}
+      <SubScreen
+        open={Boolean(activeEvent)}
+        onClose={() => setActiveEvent(null)}
+        originEl={null}
+        labelledBy="event-modal-title"
+        variant="event"
+      >
+        {activeEvent && (
+          <ModalErrorBoundary
+            onClose={() => setActiveEvent(null)}
+            message={t('common.viewLoadError')}
+            closeLabel={t('common.close')}
+          >
+            <EventModal event={activeEvent} onClose={() => setActiveEvent(null)} />
+          </ModalErrorBoundary>
+        )}
+      </SubScreen>
     </div>
   );
 }
