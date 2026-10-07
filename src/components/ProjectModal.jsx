@@ -16,7 +16,7 @@ import CrossfadeImage from './CrossfadeImage';
 import AnimatedCountText from './AnimatedCountText';
 import ModalWordReveal from './ModalWordReveal';
 import useModalAccessibility from '../hooks/useModalAccessibility';
-import useAutoCarousel from '../hooks/useAutoCarousel';
+import CinematicGallery from './gallery/CinematicGallery';
 import useModalReveals from '../hooks/useModalReveals';
 import { getSkillById, getGroupForSkill } from '../data/portfolio-data';
 import { PET_REPOS, PET_HUB_URL } from '../data/pet-repos';
@@ -69,13 +69,12 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
 
   const genericPhotos = Array.isArray(project.photos) ? project.photos : [];
   const carouselItems = isPet ? petGalleryItems : genericPhotos;
-  const carousel = useAutoCarousel(carouselItems, 1500);
-  const selectedGalleryIndex = carousel.index;
+  const selectedGalleryIndexRef = useRef(0);
   const galleryCount = carouselItems.length;
   const hasPhotos = galleryCount > 0;
   const hasGithubUrl = typeof project.githubUrl === 'string' && project.githubUrl.trim().length > 0;
 
-  const activateManualSelection = carousel.selectIndex;
+  const handleGalleryIndexChange = (i) => { selectedGalleryIndexRef.current = i; };
 
   // Reset scroll and selection on project or language change
   useEffect(() => {
@@ -86,21 +85,9 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
 
   useModalReveals(modalRef, project.slug);
 
-  // Gallery keyboard navigation (ArrowLeft / ArrowRight)
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!hasPhotos || galleryCount <= 1) return;
-      if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        activateManualSelection((selectedGalleryIndex + 1) % galleryCount);
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        activateManualSelection((selectedGalleryIndex - 1 + galleryCount) % galleryCount);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [hasPhotos, galleryCount, selectedGalleryIndex]);
+  // (Keyboard arrows + Space for the gallery are handled inside CinematicGallery
+  // on the stage; window-level interception was removed to avoid double skips and
+  // to keep Escape/Tab trap semantics in useModalAccessibility intact.)
 
   const isLight = theme === 'light';
   const bgDark = project.bgDark || (typeof project.bg === 'object' ? project.bg?.dark : project.bg);
@@ -134,7 +121,11 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
     }
   };
 
-  const activePetItem = isPet ? petGalleryItems[selectedGalleryIndex] : null;
+  // PET captions flip with the active gallery item (kept via ref so the
+  // autoplay engine owns the index exclusively).
+  const activePetCaption = isPet && hasPhotos
+    ? petGalleryItems[selectedGalleryIndexRef.current]?.caption ?? null
+    : null;
 
   return (
     <div className="project-modal" onClick={onClose}>
@@ -498,148 +489,39 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
           </div>
 
           {/* =========================================================
-              GALLERY COLUMN
+              GALLERY COLUMN (shared CinematicGallery — Blueprint HUD)
              ========================================================= */}
-          <div className="project-modal__gallery modal-scroll-region" {...carousel.carouselProps}>
-            {isPet ? (
-              /* --- PET GALLERY COLUMN --- */
-              <>
-                <div className="project-modal__gallery-main pet-gallery__main">
-                  <button
-                    type="button"
-                    className="project-modal__nav project-modal__nav--prev"
-                    aria-label={`${t('common.previousPhoto')} - ${projectTitle}`}
-                    onClick={() => {
-                      activateManualSelection(
-                        (selectedGalleryIndex - 1 + petGalleryItems.length) % petGalleryItems.length
-                      );
-                    }}
-                  >
-                    ‹
-                  </button>
-
-                  {/* Active Gallery Preview */}
-                  <div className="pet-gallery__preview-area">
-                    {activePetItem?.type === 'component' ? (
+          <div className="project-modal__gallery modal-scroll-region">
+            {hasPhotos ? (
+              <CinematicGallery
+                items={carouselItems}
+                variant="project"
+                altBuilder={(item, i) => (
+                  typeof item === 'object' && item?.alt ? item.alt : `${projectTitle} - ${t('common.photo')} ${i + 1}`
+                )}
+                labels={{
+                  play: t('common.play'),
+                  pause: t('common.pause'),
+                  prev: t('common.previousPhoto'),
+                  next: t('common.nextPhoto'),
+                  viewPhoto: t('common.viewPhoto'),
+                  stage: `${projectTitle} — ${t('sections.projects')}`,
+                  thumbStrip: `${projectTitle} photo gallery`,
+                }}
+                onIndexChange={handleGalleryIndexChange}
+                className="project-cine"
+                renderSlideOverlay={(item, i, layer) => {
+                  if (layer !== 'in') return null;
+                  if (typeof item === 'object' && item?.type === 'component') {
+                    return (
                       <div className="pet-gallery__component-wrapper">
                         <PetArchDiagram isRtl={isRtl} t={t} />
                       </div>
-                    ) : (
-                      <div
-                        className={`pet-gallery__img-wrapper ${
-                          activePetItem?.isPaperCard ? 'pet-gallery__img-wrapper--paper' : ''
-                        }`}
-                      >
-                        <CrossfadeImage
-                          src={activePetItem?.src}
-                          alt={activePetItem?.alt || projectTitle}
-                          loading="lazy"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    className="project-modal__nav project-modal__nav--next"
-                    aria-label={`${t('common.nextPhoto')} - ${projectTitle}`}
-                    onClick={() => {
-                      activateManualSelection((selectedGalleryIndex + 1) % petGalleryItems.length);
-                    }}
-                  >
-                    ›
-                  </button>
-                </div>
-
-                {/* Caption */}
-                {activePetItem?.caption && (
-                  <p className="pet-gallery__caption">
-                    <MixedText text={activePetItem.caption} isRtl={isRtl} />
-                  </p>
-                )}
-
-                {/* Thumbnails Strip */}
-                <div className="project-modal__thumbs pet-gallery__thumbs" aria-label="PET project gallery preview items">
-                  {petGalleryItems.map((item, index) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      className={`project-modal__thumb pet-gallery__thumb ${
-                        index === selectedGalleryIndex ? 'is-active' : ''
-                      }`}
-                      aria-label={`${item.thumbLabel || item.alt} (${index + 1}/${petGalleryItems.length})`}
-                      onClick={() => activateManualSelection(index)}
-                    >
-                      {item.type === 'component' ? (
-                        <div className="pet-gallery__thumb-placeholder">
-                          <Cpu size={24} aria-hidden="true" />
-                          <span>{item.thumbLabel}</span>
-                        </div>
-                      ) : (
-                        <WebpImage
-                          src={item.src}
-                          alt={item.alt}
-                          loading="lazy"
-                          className={item.isPaperCard ? 'pet-gallery__thumb-img--paper' : ''}
-                        />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : hasPhotos ? (
-              /* --- GENERIC GALLERY (UNCHANGED) --- */
-              <>
-                <div className="project-modal__gallery-main">
-                  <button
-                    type="button"
-                    className="project-modal__nav project-modal__nav--prev"
-                    aria-label={`${t('common.previousPhoto')} - ${projectTitle}`}
-                    onClick={() => {
-                      activateManualSelection(
-                        (selectedGalleryIndex - 1 + genericPhotos.length) % genericPhotos.length
-                      );
-                    }}
-                  >
-                    ‹
-                  </button>
-
-                  <CrossfadeImage
-                    src={genericPhotos[selectedGalleryIndex]}
-                    alt={`${projectTitle} - ${t('common.photo')} ${selectedGalleryIndex + 1}`}
-                    loading="lazy"
-                  />
-
-                  <button
-                    type="button"
-                    className="project-modal__nav project-modal__nav--next"
-                    aria-label={`${t('common.nextPhoto')} - ${projectTitle}`}
-                    onClick={() => {
-                      activateManualSelection((selectedGalleryIndex + 1) % genericPhotos.length);
-                    }}
-                  >
-                    ›
-                  </button>
-                </div>
-
-                <div className="project-modal__thumbs" aria-label={`${projectTitle} photo gallery`}>
-                  {genericPhotos.map((photo, index) => (
-                    <button
-                      key={`${project.slug}-${index}`}
-                      type="button"
-                      className={`project-modal__thumb ${index === selectedGalleryIndex ? 'is-active' : ''}`}
-                      aria-label={`${t('common.photo')} ${index + 1} - ${projectTitle}`}
-                      onClick={() => activateManualSelection(index)}
-                    >
-                      <WebpImage
-                        src={photo}
-                        alt={`${projectTitle} ${t('common.photo')} ${index + 1}`}
-                        loading="lazy"
-                      />
-                    </button>
-                  ))}
-                </div>
-              </>
+                    );
+                  }
+                  return null;
+                }}
+              />
             ) : (
               <div className="project-modal__empty">
                 <span>{t('common.noPhotos')}</span>
