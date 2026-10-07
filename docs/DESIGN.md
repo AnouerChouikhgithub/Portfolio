@@ -133,6 +133,27 @@ rAF-throttled `pointermove` listener mounted once in `App.jsx`.
 through refs — no React state per animation frame — while keeping the
 `aria-label` full string on the wrapper for screen readers.
 
+## Reveals, contact & footer (Phase 3d)
+
+- Scroll reveals play **once** (`once: true` at all 7 reveal sites instead
+  of `toggleActions: 'play none play reverse'`): content no longer re-hides
+  when scrolling back up, and finished triggers `kill()` themselves — the
+  page runs with ~16 fewer live ScrollTriggers after a full scroll-through.
+- **Bug fixed:** `.footer__content`'s reveal start (`top 88%`) resolved past
+  the maximum scroll position (footer top sits at 960/1000px even at the
+  bottom), so the trigger could never fire and the footer stayed
+  `visibility: hidden`. It now reveals on `top bottom` — reachable by
+  definition, and it reveals the moment the footer peeks in.
+- Contact: `.contact__field` gives keyboard focus (`:focus-within`) the same
+  lift + accent bar as hover; input focus rings use an accent tint at 22%
+  instead of the near-invisible `--border` ring; the submit button gets an
+  explicit `:disabled` (sending) state; the status message is a styled chip
+  (`contact__status`, accent = success / red = failure, entrance keyframes,
+  still `role="status"`).
+- Footer: social links get `:focus-visible` parity with hover (accent fill,
+  lifted, icon scales 1.12) and an explicit transition list instead of
+  `transition: all`.
+
 ## Motion ownership
 
 See `src/motion/README.md` — GSAP owns scroll-linked work, Motion owns

@@ -3528,7 +3528,8 @@ html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
     display: grid;
     gap: 1.5rem;
     background: var(--bg);
-    border: 1px solid rgba(34, 211, 238, 0.06);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
     padding: 2rem;
     border-radius: 16px;
 }
@@ -3548,10 +3549,10 @@ html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
     background: var(--surface);
     padding: 1rem;
     border-radius: 12px;
-    border: 1px solid rgba(34, 211, 238, 0.06);
+    border: 1px solid var(--border);
     position: relative;
     overflow: hidden;
-    transition: all var(--transition);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 
 .contact__field::before {
@@ -3566,13 +3567,17 @@ html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
     transition: transform var(--transition);
 }
 
-.contact__field:hover {
+/* Hover and keyboard focus get the same lift + accent bar (focus-within so
+   tabbing through the form feels identical to mousing over it). */
+.contact__field:hover,
+.contact__field:focus-within {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
     border-color: var(--accent);
 }
 
-.contact__field:hover::before {
+.contact__field:hover::before,
+.contact__field:focus-within::before {
     transform: scaleX(1);
 }
 
@@ -3605,7 +3610,7 @@ html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
 .contact__field input:focus,
 .contact__field textarea:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px var(--border);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 /* Invalid fields (aria-invalid="true" set by the validation hook) */
@@ -3662,6 +3667,44 @@ html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
     color: var(--accent);
     box-shadow: 0 0 20px var(--glow);
     transform: translateY(-2px);
+}
+
+.contact__button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Success/failure chip — re-announced via role="status" and animated in
+   once (reduced-motion collapses the keyframes to ~0 via the global block). */
+.contact__status {
+    justify-self: start;
+    margin: 0;
+    padding: 0.7rem 1.1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    animation: contact-status-in 420ms var(--ease-out) both;
+}
+
+.contact__status--error {
+    border-color: color-mix(in srgb, #ff4d4f 55%, transparent);
+    background: color-mix(in srgb, #ff4d4f 12%, transparent);
+}
+
+@keyframes contact-status-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .contact__bottom {
@@ -3756,7 +3799,8 @@ html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
     transition: color var(--transition);
 }
 
-.footer__link:hover {
+.footer__link:hover,
+.footer__link:focus-visible {
     color: var(--accent);
 }
 
@@ -3774,14 +3818,30 @@ html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
     border-radius: 50%;
     border: 1px solid rgba(114, 209, 223, 0.3);
     color: var(--text);
-    transition: all var(--transition);
+    transition:
+        background-color var(--transition),
+        color var(--transition),
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
 }
 
-.footer__social-link:hover {
+.footer__social-link:hover,
+.footer__social-link:focus-visible {
     background: var(--accent);
-    color: var(--bg);
+    color: var(--accent-contrast);
     border-color: var(--accent);
     transform: translateY(-3px);
+    box-shadow: 0 8px 20px var(--glow);
+}
+
+.footer__social-link svg {
+    transition: transform var(--transition);
+}
+
+.footer__social-link:hover svg,
+.footer__social-link:focus-visible svg {
+    transform: scale(1.12);
 }
 
 .footer__social-link i {

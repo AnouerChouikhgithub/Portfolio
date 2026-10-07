@@ -6,7 +6,7 @@ import { useFormValidation } from '../hooks/useFormValidation';
 export default function Contact() {
   const { t } = useI18n();
   const { errors, validate, clearErrors } = useFormValidation();
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState(null); // { kind: 'ok' | 'error', text }
   const [isSending, setIsSending] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -23,7 +23,7 @@ export default function Contact() {
     clearErrors();
     if (!validate(values)) return;
 
-    setStatus('');
+    setStatus(null);
     setIsSending(true);
 
     try {
@@ -34,11 +34,11 @@ export default function Contact() {
         message: values.message,
         website: formElement.website.value,
       });
-      setStatus(t('contact.sent'));
+      setStatus({ kind: 'ok', text: t('contact.sent') });
       formElement.reset();
     } catch (err) {
       console.error('Contact form submission error:', err);
-      setStatus(t('contact.failed'));
+      setStatus({ kind: 'error', text: t('contact.failed') });
     } finally {
       setIsSending(false);
     }
@@ -89,7 +89,14 @@ export default function Contact() {
             {isSending ? t('contact.sending') : t('contact.send')}
           </button>
 
-          {status && <p className="contact__status" role="status">{status}</p>}
+          {status && (
+            <p
+              className={`contact__status${status.kind === 'error' ? ' contact__status--error' : ''}`}
+              role="status"
+            >
+              {status.text}
+            </p>
+          )}
         </form>
       </div>
     </section>

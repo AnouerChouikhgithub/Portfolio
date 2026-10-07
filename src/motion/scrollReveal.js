@@ -28,7 +28,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            toggleActions: 'play none play reverse',
+            once: true,
           },
         },
       );
@@ -40,7 +40,7 @@ export function initScrollReveal() {
         scrollTrigger: {
           trigger: element,
           start: 'top 88%',
-          toggleActions: 'play none play reverse',
+          once: true,
         },
       });
     });
@@ -57,7 +57,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            toggleActions: 'play none play reverse',
+            once: true,
           },
         },
       );
@@ -76,7 +76,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            toggleActions: 'play none play reverse',
+            once: true,
           },
         },
       );
@@ -94,7 +94,7 @@ export function initScrollReveal() {
           scrollTrigger: {
             trigger: element,
             start: 'top 88%',
-            toggleActions: 'play none play reverse',
+            once: true,
           },
         },
       );
@@ -147,8 +147,11 @@ export function initScrollReveal() {
           ease: 'power3.out',
           scrollTrigger: {
             trigger: element,
-            start: 'top 88%',
-            toggleActions: 'play none play reverse',
+            // The footer sits so low that 'top 88%' resolves past the maximum
+            // scroll position (unreachable start = footer never revealed).
+            // Reveal it as soon as it enters the viewport instead.
+            start: element.classList.contains('footer__content') ? 'top bottom' : 'top 88%',
+            once: true,
           },
         },
       );

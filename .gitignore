@@ -14,3 +14,4 @@ dist
 .shotstats.mjs
 .headercheck.mjs
 .herocha.mjs
+.oncecheck.mjs
