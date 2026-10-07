@@ -22,8 +22,36 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <!-- Preload the Arabic face up front when the visitor is Arabic-first,
+         so the Cairo swap does not cause a layout shift after hydration. -->
+    <script>
+      (() => {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const stored = localStorage.getItem('portfolio-language');
+          const browser = (navigator.language || 'en').slice(0, 2);
+          const lang = params.get('lang') || stored || browser;
+          if (lang === 'ar') {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.as = 'style';
+            link.href = 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap';
+            link.onload = () => { link.rel = 'stylesheet'; };
+            document.head.appendChild(link);
+          }
+        } catch {
+          /* storage / navigator access denied — nothing to preload */
+        }
+      })();
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    />
     <link rel="icon" href="/AnouerChouikhLogo.ico" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

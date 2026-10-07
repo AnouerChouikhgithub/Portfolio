@@ -15,11 +15,20 @@ export default defineConfig({
       output: {
         // Split stable vendor code so deployments only invalidate app chunks.
         manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('pdfjs-dist')) return 'pdfjs'
-            if (id.includes('react')) return 'react-vendor'
-            return 'vendor'
-          }
+          if (!id.includes('node_modules')) return undefined
+          if (id.includes('pdfjs-dist')) return 'pdfjs'
+          // Optional animation libraries must stay in their own async chunks:
+          // routing them into the eager `vendor` chunk would force ~160 kB of
+          // anime.js/Motion code into the initial payload (bundle budget).
+          if (
+            id.includes('animejs')
+            || id.includes('framer-motion')
+            || id.includes('motion-dom')
+            || id.includes('motion-utils')
+            || id.includes('node_modules/motion/')
+          ) return undefined
+          if (id.includes('react')) return 'react-vendor'
+          return 'vendor'
         },
       },
     },

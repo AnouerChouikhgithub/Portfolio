@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import { Menu, Moon, Sun, X } from 'lucide-react';
 import { useTheme } from '../theme/ThemeProvider';
+import { microAnimate } from '../motion/anime';
 
 const NAVIGATION_ITEMS = [
   ['about', '#about'], ['skills', '#skills'], ['projects', '#projects'],
@@ -16,6 +17,29 @@ export default function Header() {
   const languageSwitcherRef = useRef(null);
   const languageOptionRefs = useRef([]);
   const mobileMenuRef = useRef(null);
+  const themeIconRef = useRef(null);
+  const isFirstThemePaint = useRef(true);
+
+  // Sun <-> moon micro-morph (anime.js owns icon micro-motion; skipped for
+  // reduced motion and on the initial render where there is nothing to morph).
+  useEffect(() => {
+    if (isFirstThemePaint.current) {
+      isFirstThemePaint.current = false;
+      return undefined;
+    }
+    const icon = themeIconRef.current;
+    if (!icon) return undefined;
+    const animation = microAnimate(icon, {
+      rotate: ['-25deg', '0deg'],
+      scale: [0.6, 1],
+      opacity: [0, 1],
+      duration: 420,
+      ease: 'out(3)',
+    });
+    return () => {
+      animation?.then?.((a) => a?.pause?.());
+    };
+  }, [theme]);
 
   const navigation = useMemo(() => NAVIGATION_ITEMS, []);
   const availableLanguages = useMemo(
@@ -164,7 +188,9 @@ export default function Header() {
             title={theme === 'dark' ? t('nav.lightMode') : t('nav.darkMode')}
             onClick={toggleTheme}
           >
-            {theme === 'dark' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
+            <span ref={themeIconRef} className="theme-toggle__icon" key={theme}>
+              {theme === 'dark' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
+            </span>
           </button>
 
           <button

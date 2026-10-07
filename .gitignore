@@ -4,3 +4,8 @@ dist
 .env
 # Local Netlify folder
 .netlify
+# Local QA helpers (headless-Chrome scripts with machine-specific paths)
+.audit.mjs
+.shot.mjs
+.wide.mjs
+.overflow.mjs

@@ -29,7 +29,7 @@ const ProjectCard = memo(function ProjectCard({ project, meta, preview, descript
         />
       )}
       <span className="project-card__meta">{meta || dateTbdLabel}</span>
-      <h3 className="project-card__title" style={project.accent ? { color: project.accent } : undefined}>{project.title}</h3>
+      <h3 className="project-card__title" style={project.accent ? { '--project-accent': project.accent } : undefined}>{project.title}</h3>
       <p className="project-card__description">
         <MixedText text={preview || description} isRtl={isRtl} />
       </p>

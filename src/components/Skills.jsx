@@ -416,7 +416,7 @@ export default function Skills() {
                               </div>
                             </div>
 
-                            <span className="skills-project-item__title" style={{ color: accentColor }}>
+                            <span className="skills-project-item__title" style={{ '--project-accent': accentColor }}>
                               {projectTitle}
                             </span>
 
