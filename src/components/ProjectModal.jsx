@@ -12,7 +12,6 @@ import { useI18n } from '../i18n/I18nProvider';
 import { useTheme } from '../theme/ThemeProvider';
 import MixedText from './MixedText';
 import PetArchDiagram from './PetArchDiagram';
-import CrossfadeImage from './CrossfadeImage';
 import AnimatedCountText from './AnimatedCountText';
 import ModalWordReveal from './ModalWordReveal';
 import useModalAccessibility from '../hooks/useModalAccessibility';
@@ -50,6 +49,8 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
       {
         id: 'pet-arch',
         type: 'component',
+        // A dense diagram cannot be read in 1.5 s — 4.5 s dwell (documented decision).
+        dwellMs: 4500,
         caption: t('projects.pet.gallery.arch.caption'),
         alt: t('projects.pet.gallery.arch.alt'),
         thumbLabel: t('projects.pet.arch.title', 'Architecture'),
