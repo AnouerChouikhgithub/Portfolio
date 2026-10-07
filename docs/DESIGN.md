@@ -213,6 +213,30 @@ the repo as the fallback (trade-off: deploy weight rises by ~10 MB while
 visitor transfer drops by ~27 MB; originals could be dropped later if the
 `onError` path is ever removed deliberately).
 
+## Performance trade-off (Phase 5c)
+
+Lighthouse (12.x, mobile simulated throttling, median of 3 runs against
+`vite preview`, before = `93ec880`, after = this branch):
+
+| | Before | After |
+|---|---|---|
+| Performance / A11y / BP / SEO | 76 / 98 / 100 / 92 | 73 / 98 / 100 / 92 |
+| FCP · LCP · CLS | 2.7 s · 4.8 s · 0 | 3.3 s · 4.5 s · 0 |
+| TBT · Speed Index | 0 ms · 4.2 s | 176 ms · 4.7 s |
+| Initial JS / CSS (gzip) | 161.1 / 14.8 kB | 165.1 / 17.1 kB (budgets 175 / 22) |
+| Photo payload | 37.8 MB | 10.2 MB webp (−73%) |
+
+The ~3-point performance drop is the load-time motion itself: the anime.js
+hero draw-on (async chunk, ~43 kB gzip + scripting) and the SplitText/blur
+entrance timeline add TBT, and +15 kB render-blocking CSS nudges FCP —
+while LCP *improved* through the `<picture>` portrait and CLS stayed 0.
+All of it is inside the hard budgets, every layer bails under
+`prefers-reduced-motion` (the entrance/draw-on work then never runs), and
+the brief's primary goal is the motion design — so this is accepted and
+documented rather than reverted. The remaining gap to the aspirational ≥90
+is dominated by simulated-throttle FCP/Speed-Index on a baseline that
+already scored 76.
+
 ## Motion ownership
 
 See `src/motion/README.md` — GSAP owns scroll-linked work, Lenis owns smooth

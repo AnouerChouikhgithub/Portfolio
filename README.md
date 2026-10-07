@@ -248,9 +248,25 @@ Browser form ──POST /api/contact──▶ Netlify Function ──▶ EmailJS
 | Fonts | Inter loaded with `preconnect` + `display=swap`; Cairo fetched only when Arabic is active |
 | Images | WebP-first via `<WebpImage>` (`<picture>` + automatic jpg fallback) — `npm run images:convert` turns `public/` photos into WebP siblings (37.8 MB → 10.2 MB, −73%); plus `loading="lazy"` + `decoding="async"` below the fold |
 | Rendering | Debounced PDF re-render (150/200 ms), `matchMedia` instead of resize listeners, `prefers-reduced-motion` respected |
-| Build output | ~124 KB app JS (40 KB gzip) + 151 KB react-vendor (48 KB gzip); CSS 43 KB (8 KB gzip) |
+| Build output | Initial JS **165.1 kB gzip** (index 62.7 + vendor 52.4 + react 50.0) ≤ 175 kB budget; CSS **17.1 kB gzip** ≤ 22 kB budget; anime.js (43.2 kB gz) stays an async chunk |
 
 **Budgets & monitoring:** run Lighthouse (target ≥ 90 across the board) and check Core Web Vitals (LCP < 2.5 s, CLS < 0.1, INP < 200 ms). The biggest remaining lever is image weight — `public/` is ~56 MB, dominated by event photos (see roadmap in [docs/ROADMAP.md](docs/ROADMAP.md)).
+
+**Measured before/after the motion & design upgrade** (Lighthouse 12, mobile simulated throttling, median of 3 runs against `vite preview`, same machine):
+
+| Metric | Before (`93ec880`) | After | Notes |
+|---|---|---|---|
+| Performance | 76 | 73 | richer load-time motion (anime draw-on + SplitText entrance) costs ~176 ms TBT; deliberate trade-off documented in [docs/DESIGN.md](docs/DESIGN.md) |
+| Accessibility | 98 | 98 | |
+| Best Practices | 100 | 100 | |
+| SEO | 92 | 92 | |
+| FCP | 2.7 s | 3.3 s | +15 KB render-blocking CSS, throttled-run noise |
+| LCP | 4.8 s | 4.5 s | hero portrait through `<picture>` |
+| CLS | 0.000 | 0.000 | `display: contents` on `<picture>` is layout-neutral |
+| TBT | 0 ms | 176 ms | hero entrance timeline + anime.js draw-on (async chunk) |
+| Initial JS (gzip) | 161.1 kB | 165.1 kB | budget ≤ 175 kB |
+| CSS (gzip) | 14.8 kB | 17.1 kB | budget ≤ 22 kB |
+| Photo payload | 37.8 MB jpg | **10.2 MB webp** | −73%, `npm run images:convert` |
 
 ## 14. SEO & Accessibility
 
