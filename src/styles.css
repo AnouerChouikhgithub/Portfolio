@@ -215,6 +215,30 @@ section,
     will-change: transform;
 }
 
+/* ── SplitText utilities (reactbits/SplitText) ─────────────────
+   Segments are decorative for AT — the clean string ships in .sr-only
+   (also user-select:none so copy/paste never duplicates the text). */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+    user-select: none;
+}
+
+.split-word,
+.split-char,
+.split-line {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+}
+
 .scroll-progress {
     position: fixed;
     inset-inline-start: 0;
@@ -793,6 +817,13 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
     gap: 1.5rem;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+/* Each button sits in a Magnet wrapper (reactbits/Magnet.jsx): the wrapper
+   is the flex item, so keep the button's sizing behavior inside it. */
+.hero__buttons .magnet {
+    display: flex;
+    justify-content: center;
 }
 
 .btn {
@@ -3978,6 +4009,10 @@ html[data-theme="light"] .project-modal__link--disabled {
     .hero__buttons {
         flex-direction: column;
         align-items: center;
+    }
+
+    .hero__buttons .magnet {
+        width: 100%;
     }
 
     .hero__portrait {
