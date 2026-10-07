@@ -739,6 +739,7 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
    ======================================== */
 .hero {
     min-height: 100vh;
+    min-height: 100svh; /* mobile URL-bar safe */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1074,7 +1075,7 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
     border-radius: 25px;
     font-size: 0.9rem;
     border: 1px solid var(--border-strong);
-    transition: all var(--transition);
+    transition: background-color var(--transition), border-color var(--transition), transform var(--transition);
     font-weight: 500;
 }
 
@@ -1142,7 +1143,7 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
     border-radius: 12px;
     padding: 2rem;
     border: 1px solid var(--border);
-    transition: all var(--transition);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background-color var(--transition), color var(--transition);
     position: relative;
     overflow: hidden;
     width: 100%;
@@ -1439,7 +1440,7 @@ html[data-theme="light"] .project-modal__skills-block {
     font-family: inherit;
     font-weight: 500;
     line-height: 1.2;
-    transition: all 200ms ease;
+    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
 
 .project-modal__tag--tech {
@@ -1808,7 +1809,7 @@ html[data-theme="light"] .pet-modal__stack-box {
     border: 1px solid var(--border);
     color: var(--text);
     text-decoration: none;
-    transition: all 180ms ease;
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
 .pet-modal__repo-link:hover,
@@ -2123,7 +2124,7 @@ html[data-theme="light"] .pet-gallery__main {
     border-radius: 12px;
     text-align: center;
     border: 1px solid rgba(34, 211, 238, 0.1);
-    transition: all var(--transition);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background-color var(--transition), color var(--transition);
     cursor: pointer;
     color: inherit;
     font: inherit;
@@ -2488,7 +2489,7 @@ html[data-theme="light"] .pet-gallery__main {
     color: var(--accent);
     opacity: 0;
     transform: translateX(-6px);
-    transition: all var(--transition);
+    transition: opacity var(--transition), transform var(--transition), color var(--transition);
 }
 
 .community-modal__related-button:hover,
@@ -2606,7 +2607,7 @@ html[data-theme="light"] .pet-gallery__main {
     border-radius: 12px;
     padding: 2rem;
     border: 1px solid rgba(34, 211, 238, 0.1);
-    transition: all var(--transition);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background-color var(--transition), color var(--transition);
     position: relative;
     overflow: hidden;
     width: 100%;
@@ -3233,7 +3234,7 @@ html[data-theme="light"] .event-modal__project-link--project:focus-visible { col
     color: var(--text);
     font-size: 0.95rem;
     cursor: pointer;
-    transition: all var(--transition);
+    transition: background-color var(--transition), border-color var(--transition), color var(--transition), transform var(--transition), opacity var(--transition);
     text-decoration: none;
     padding: 0;
     box-sizing: border-box;
@@ -3475,7 +3476,7 @@ html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
     background: var(--bg);
     border-radius: 12px;
     border: 1px solid rgba(34, 211, 238, 0.1);
-    transition: all var(--transition);
+    transition: transform var(--transition), border-color var(--transition), background-color var(--transition), color var(--transition);
 }
 
 .contact__item:hover {
@@ -4068,6 +4069,7 @@ html[data-theme="light"] .project-modal__link--disabled {
     .hero {
         padding: 6rem 1rem 3rem;
         min-height: 100vh;
+        min-height: 100svh;
     }
 
     .hero__buttons {
@@ -4344,7 +4346,7 @@ section {
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 200ms ease;
+    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 200ms ease;
     align-self: flex-start;
 }
 
@@ -4386,7 +4388,7 @@ section {
     background: var(--surface-alt);
     border: 1px solid var(--border);
     color: var(--muted);
-    transition: all 200ms ease;
+    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
     user-select: none;
 }
 

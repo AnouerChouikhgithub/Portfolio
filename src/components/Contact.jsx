@@ -45,8 +45,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="contact">
-      <div className="container contact__content">
+    <div className="container contact__content">
         <h2 className="section__title">{t('sections.contact')}</h2>
 
         <form className="contact__form" noValidate onSubmit={handleSubmit}>
@@ -98,7 +97,6 @@ export default function Contact() {
             </p>
           )}
         </form>
-      </div>
-    </section>
+    </div>
   );
 }

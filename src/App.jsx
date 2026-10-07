@@ -25,7 +25,9 @@ export default function App() {
       <ScrollProgress />
       <Header />
       <main>
-        <section id="home"><Hero /></section>
+        {/* Home is a plain wrapper: Hero renders its own labelled <section>.
+            Wrapping it in another <section> made it a nested landmark. */}
+        <div id="home"><Hero /></div>
         <section id="about" className="about"><SectionBackground variant="about" /><About /></section>
         <section id="skills" className="skills"><SectionBackground variant="skills" /><Skills /></section>
         <section id="projects" className="projects"><SectionBackground variant="projects" /><Projects /></section>
