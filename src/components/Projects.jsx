@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import ProjectModal from './ProjectModal';
 import { PROJECTS } from '../data/portfolio-data';
+import { scrollToId } from '../motion/lenisStore';
 
 /**
  * Memoized project card — only re-renders when its project data, the active
@@ -52,7 +53,7 @@ export default function Projects() {
 
       if (matchedProject) {
         setActiveProject(matchedProject);
-        document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToId('projects');
       }
     };
 
@@ -66,11 +67,11 @@ export default function Projects() {
     closeProject();
     const hash = skillId ? `#skills/${groupId}?skill=${skillId}` : `#skills/${groupId}`;
     window.location.hash = hash;
-    document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToId('skills');
   };
 
   return (
-    <div id="projects" className="container projects">
+    <div className="container projects">
       <h2 className="section__title">{t('sections.projects')}</h2>
 
       <div className="projects__grid">

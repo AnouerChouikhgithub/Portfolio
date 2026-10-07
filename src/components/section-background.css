@@ -1,0 +1,123 @@
+:root {
+    --section-base: #060d13;
+    --section-tint: #0a1f27;
+    --section-line: #22d3ee;
+}
+
+html[data-theme="light"] {
+    --section-base: #f6fafc;
+    --section-tint: #e6f4f8;
+    --section-line: #0e7490;
+}
+
+main > section:not(#home),
+.footer {
+    position: relative;
+    isolation: isolate;
+}
+
+main > section#about,
+main > section#skills,
+main > section#projects,
+main > section#community,
+main > section#events,
+main > section#contact {
+    background: var(--section-base);
+}
+
+main > section:not(#home) > :not(.section-background),
+.footer > :not(.section-background) {
+    position: relative;
+    z-index: 1;
+}
+
+.section-background,
+.section-background__base,
+.section-background__grid,
+.section-background__glow,
+.section-background__fade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.section-background {
+    z-index: 0;
+}
+
+.section-background__base {
+    background: linear-gradient(180deg, var(--section-base), var(--section-tint));
+}
+
+.section-background__grid {
+    opacity: 0.045;
+    background-image:
+        linear-gradient(to right, var(--section-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--section-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse 88% 82% at 50% 45%, #000 22%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 88% 82% at 50% 45%, #000 22%, transparent 100%);
+}
+
+.section-background__glow--cyan {
+    background: radial-gradient(ellipse 58% 52% at 0% 0%, rgba(34, 211, 238, 0.1), transparent 100%);
+}
+
+.section-background__glow--teal {
+    background: radial-gradient(ellipse 58% 56% at 100% 100%, rgba(16, 185, 129, 0.09), transparent 100%);
+}
+
+.section-background--b .section-background__glow--cyan {
+    background-image: radial-gradient(ellipse 58% 52% at 100% 0%, rgba(34, 211, 238, 0.1), transparent 100%);
+}
+
+.section-background--b .section-background__glow--teal {
+    background-image: radial-gradient(ellipse 58% 56% at 0% 100%, rgba(16, 185, 129, 0.09), transparent 100%);
+}
+
+.section-background--emphasis .section-background__glow--cyan {
+    background-image: radial-gradient(ellipse 62% 58% at 0% 0%, rgba(34, 211, 238, 0.12), transparent 100%);
+}
+
+.section-background--emphasis .section-background__glow--teal {
+    background-image: radial-gradient(ellipse 62% 60% at 100% 100%, rgba(16, 185, 129, 0.11), transparent 100%);
+}
+
+.section-background--b.section-background--emphasis .section-background__glow--cyan {
+    background-image: radial-gradient(ellipse 62% 58% at 100% 0%, rgba(34, 211, 238, 0.12), transparent 100%);
+}
+
+.section-background--b.section-background--emphasis .section-background__glow--teal {
+    background-image: radial-gradient(ellipse 62% 60% at 0% 100%, rgba(16, 185, 129, 0.11), transparent 100%);
+}
+
+footer.footer {
+    background: var(--section-base);
+}
+
+.section-background__fade--top {
+    bottom: auto;
+    height: 120px;
+    background: linear-gradient(to bottom, var(--section-base), transparent);
+}
+
+.section-background__fade--bottom {
+    top: auto;
+    height: 120px;
+    background: linear-gradient(to top, var(--section-base), transparent);
+}
+
+main > section#contact .contact__form {
+    border: 1px solid color-mix(in srgb, var(--section-line) 15%, transparent);
+}
+
+footer.footer {
+    border-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .section-background__glow {
+        animation: none !important;
+        transform: none !important;
+    }
+}

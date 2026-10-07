@@ -154,14 +154,15 @@
           "label": "Prévue"
         }
       },
+      "statusAsOf": "Status as of October 2026",
       "chips": {
         "temp": "Cible PID 245 °C",
         "micro": "Micropas 1/16, 3200 pas/tour",
         "iters": "3 itérations matérielles",
-        "endpoints": "13 points de terminaison REST",
+        "endpoints": "15 points de terminaison REST",
         "repos": "4 dépôts de code"
       },
-      "summary": "Une machine automatisée transformant les bouteilles en plastique en filament pour imprimante 3D grâce à une régulation thermique PID (cible 245 °C) et une extrusion à micropas avec rampes d'accélération, conçue sous SolidWorks et imprimée en 3D. Elle s'appuie sur une plateforme logicielle complète comprenant une API REST Symfony 7.4 (PHP 8.3, 13 endpoints, JWT, télémétrie), un tableau de bord web React et une application mobile Expo fonctionnant sur des données simulées. Une passerelle ESP32 avec télémétrie MQTT et commandes de la machine constitue la prochaine phase.",
+      "summary": "Une machine automatisée transformant les bouteilles en plastique en filament pour imprimante 3D grâce à une régulation thermique PID (cible 245 °C) et une extrusion à micropas avec rampes d'accélération, conçue sous SolidWorks et imprimée en 3D. Elle s'appuie sur une plateforme logicielle complète comprenant une API REST Symfony 7.4 (PHP 8.3, 15 endpoints, JWT, télémétrie), un tableau de bord web React et une application mobile Expo fonctionnant sur des données simulées. Une passerelle ESP32 avec télémétrie MQTT et commandes de la machine constitue la prochaine phase.",
       "stack": {
         "title": "Technologies par couche",
         "mechanical": {
@@ -207,23 +208,35 @@
         "badge": "Schéma interactif",
         "legend": {
           "built": "Développé",
+          "verified": "Verified locally",
           "planned": "Prévu"
+        },
+        "status": {
+          "working": "Working",
+          "benchWired": "Bench wired",
+          "inProgress": "In progress",
+          "verified": "Verified locally",
+          "built": "Built"
         },
         "nodes": {
           "machine": "Machine Arduino",
           "machineSub": "PID & Moteur pas à pas (V3)",
+          "arduino": "Arduino Mega",
+          "arduinoSub": "PID · steppers v1",
+          "uart": "UART + shifter",
+          "uartSub": "TXS0108E · Serial1",
           "esp32": "Passerelle ESP32",
           "esp32Sub": "Matériel passerelle",
           "mqtt": "Courtier MQTT",
           "mqttSub": "Flux télémétrie",
           "api": "API Symfony 7.4",
-          "apiSub": "PostgreSQL · JWT · 13 EPs",
+          "apiSub": "PostgreSQL · JWT · 15 EPs",
           "web": "Tableau de bord Web",
           "webSub": "React · Vite · TS",
           "mobile": "Application Mobile",
           "mobileSub": "React Native · Expo"
         },
-        "plannedBadge": "Prévu",
+        "commandPath": "Command path: apps → API → machine",
         "note": "* Les nœuds interactifs mènent à leurs dépôts respectifs. Les applications Web et Mobile interrogent l'API toutes les 10 s."
       },
       "gallery": {

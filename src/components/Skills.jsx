@@ -13,6 +13,8 @@ import {
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import ProjectModal from './ProjectModal';
+import useScrollLock from '../hooks/useScrollLock';
+import useModalReveals from '../hooks/useModalReveals';
 import {
   GROUPS,
   getSkillsForGroup,
@@ -59,6 +61,8 @@ export default function Skills() {
     () => GROUPS.find((g) => g.id === activeGroupId) ?? null,
     [activeGroupId],
   );
+  useScrollLock(Boolean(activeGroup), subscreenRef);
+  useModalReveals(subscreenRef, activeGroupId);
 
   const groupSkills = useMemo(
     () => (activeGroupId ? getSkillsForGroup(activeGroupId) : []),
@@ -296,7 +300,7 @@ export default function Skills() {
       {/* ── Group Subscreen Overlay ─────────────────────────────────── */}
       {activeGroup && (
         <div
-          className="skills-subscreen"
+          className="skills-subscreen modal-scroll-region"
           role="dialog"
           aria-modal="true"
           aria-labelledby="skills-subscreen-title"
@@ -309,7 +313,7 @@ export default function Skills() {
         >
           <div className="skills-subscreen__container">
             {/* Header */}
-            <div className="skills-subscreen__header">
+            <div className="skills-subscreen__header modal-reveal">
               <button
                 type="button"
                 className="skills-subscreen__back-btn"
@@ -321,14 +325,14 @@ export default function Skills() {
               </button>
 
               <div className="skills-subscreen__title-wrapper">
-                <h3 id="skills-subscreen-title" className="skills-subscreen__title">
+                <h3 id="skills-subscreen-title" className="skills-subscreen__title modal-reveal">
                   {t(`skills.categories.${activeGroup.title}`, activeGroup.title)}
                 </h3>
               </div>
             </div>
 
             {/* Skills Filter Chips */}
-            <div className="skills-subscreen__skills-section">
+            <div className="skills-subscreen__skills-section modal-reveal">
               <div className="skills__tags" aria-label="Skills filter">
                 {groupSkills.map((skill) => {
                   const isSelected = selectedSkillId === skill.id;
@@ -349,7 +353,7 @@ export default function Skills() {
 
             {/* Related Projects Section (hidden entirely if whole group has zero projects) */}
             {totalGroupProjectsCount > 0 && (
-              <div className="skills-subscreen__projects-section">
+              <div className="skills-subscreen__projects-section modal-reveal">
                 <div className="skills-subscreen__projects-header">
                   <h4 className="skills-subscreen__subtitle">
                     {selectedSkillObj
@@ -365,7 +369,7 @@ export default function Skills() {
                       const accentColor = project.accent || 'var(--accent)';
 
                       return (
-                        <li key={project.id} role="listitem">
+                        <li key={project.id} role="listitem" className="modal-reveal modal-reveal--scale">
                           <button
                             type="button"
                             className="skills-project-item-btn"

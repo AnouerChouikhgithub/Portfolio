@@ -7,19 +7,22 @@ import Community from './components/Community'
 import Events from './components/Events'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import ScrollProgress from './motion/ScrollProgress'
+import SectionBackground from './components/SectionBackground'
 
 export default function App() {
   return (
     <>
+      <ScrollProgress />
       <Header />
       <main>
         <section id="home"><Hero /></section>
-        <section id="about" className="about"><About /></section>
-        <section id="skills" className="skills"><Skills /></section>
-        <section id="projects" className="projects"><Projects /></section>
-        <section id="community" className="community"><Community /></section>
-        <section id="events" className="events"><Events /></section>
-        <section id="contact" className="contact"><Contact /></section>
+        <section id="about" className="about"><SectionBackground variant="a" /><About /></section>
+        <section id="skills" className="skills"><SectionBackground variant="b" /><Skills /></section>
+        <section id="projects" className="projects"><SectionBackground variant="a" /><Projects /></section>
+        <section id="community" className="community"><SectionBackground variant="b" /><Community /></section>
+        <section id="events" className="events"><SectionBackground variant="a" /><Events /></section>
+        <section id="contact" className="contact"><SectionBackground variant="b" emphasis /><Contact /></section>
       </main>
       <Footer />
     </>

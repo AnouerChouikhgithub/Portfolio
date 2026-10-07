@@ -3,6 +3,7 @@ import { PiGithubLogoLight } from "react-icons/pi";
 import { SiGmail } from "react-icons/si";
 import { FaInstagram } from "react-icons/fa6";
 import { useI18n } from '../i18n/I18nProvider';
+import SectionBackground from './SectionBackground';
 
 
 export default function Footer() {
@@ -10,6 +11,7 @@ export default function Footer() {
   const links = ['home', 'about', 'skills', 'projects', 'community', 'events'];
   return (
     <footer className="footer">
+      <SectionBackground variant="a" emphasis />
       <div className="container footer__content">
         <div className="footer__copy">{t('footer.copyright')}</div>
         <nav className="footer__nav" aria-label={t('nav.footer')}>
@@ -27,5 +29,4 @@ export default function Footer() {
     </footer>
   )
 }
-
 

@@ -16,6 +16,7 @@ export default defineConfig({
         // Split stable vendor code so deployments only invalidate app chunks.
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            if (id.includes('pdfjs-dist')) return 'pdfjs'
             if (id.includes('react')) return 'react-vendor'
             return 'vendor'
           }

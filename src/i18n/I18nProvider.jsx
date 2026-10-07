@@ -60,6 +60,7 @@ export function I18nProvider({ children }) {
       }
     }
 
+    window.dispatchEvent(new Event('localechange'));
     writeStorage(LANGUAGE_STORAGE_KEY, language);
   }, [language, isRtl]);
 

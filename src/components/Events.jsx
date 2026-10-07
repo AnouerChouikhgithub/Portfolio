@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
+import CrossfadeImage from './CrossfadeImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
+import useAutoCarousel from '../hooks/useAutoCarousel';
+import { scrollToId } from '../motion/lenisStore';
 
 const imageList = (folder, files) => files.map((file) => `/Events/${folder}/${file}`);
 
@@ -309,40 +312,16 @@ export const orderedParticipatedEvents = [...otherEvents].sort((a, b) => b.year 
 function EventModal({ event, onClose }) {
   const { t, isRtl } = useI18n();
   const modalRef = useRef(null);
-  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
-  const lastUserActionRef = useRef(0);
   const hasPhotos = Array.isArray(event.photos) && event.photos.length > 0;
+  const carousel = useAutoCarousel(event.photos, 1500);
+  const selectedPhotoIndex = carousel.index;
+  const activateManualSelection = carousel.selectIndex;
 
   useModalAccessibility({ panelRef: modalRef, onClose });
 
   const meta = t(`events.items.${event.slug}.meta`);
   const description = t(`events.items.${event.slug}.description`);
   const role = t(`events.items.${event.slug}.role`);
-
-  const activateManualSelection = (nextIndex) => {
-    lastUserActionRef.current = Date.now();
-    setSelectedPhotoIndex(nextIndex);
-  };
-
-  useEffect(() => {
-    setSelectedPhotoIndex(0);
-    lastUserActionRef.current = 0;
-  }, [event.slug]);
-
-  useEffect(() => {
-    if (!hasPhotos || event.photos.length <= 1) {
-      return undefined;
-    }
-
-    const timerId = window.setTimeout(() => {
-      const now = Date.now();
-      if (now - lastUserActionRef.current >= 1000) {
-        setSelectedPhotoIndex((currentIndex) => (currentIndex + 1) % event.photos.length);
-      }
-    }, 1000);
-
-    return () => window.clearTimeout(timerId);
-  }, [event.photos, hasPhotos, selectedPhotoIndex]);
 
   return (
     <div className="event-modal" onClick={onClose}>
@@ -364,7 +343,7 @@ function EventModal({ event, onClose }) {
         </button>
 
         <div className="event-modal__content">
-          <div className="event-modal__details">
+          <div className="event-modal__details modal-scroll-region">
             <p className="event-card__meta">
               <MixedText text={meta} isRtl={isRtl} />
             </p>
@@ -399,7 +378,7 @@ function EventModal({ event, onClose }) {
             </div>
           </div>
 
-          <div className="event-modal__gallery">
+          <div className="event-modal__gallery modal-scroll-region" {...carousel.carouselProps}>
             {hasPhotos ? (
               <>
                 <div className="event-modal__gallery-main">
@@ -414,7 +393,7 @@ function EventModal({ event, onClose }) {
                     ‹
                   </button>
 
-                  <img
+                  <CrossfadeImage
                     src={event.photos[selectedPhotoIndex]}
                     alt={`${event.title} - ${selectedPhotoIndex + 1}`}
                   />
@@ -473,7 +452,7 @@ export default function Events() {
 
       if (matchedEvent) {
         setActiveEvent(matchedEvent);
-        document.getElementById('events')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToId('events');
       }
     };
 

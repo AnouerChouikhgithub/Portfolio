@@ -5,53 +5,102 @@ import { PET_REPOS } from '../data/pet-repos';
  * PetArchDiagram
  * Inline SVG system architecture diagram for PET Recycling Filament System.
  * - Colors exclusively use theme CSS custom properties.
- * - Solid lines indicate built components and links.
- * - Dashed lines indicate the planned ESP32 + MQTT bridge.
+ * - Three states only: Built/Working (solid accent), Verified locally (accent,
+ *   dimmed), In progress or planned (dashed, muted).
  * - Nodes with repos are focusable keyboard-accessible links.
+ * - Reverse (command) path is drawn below the chain.
  * - Supports RTL mirroring via isRtl prop.
  */
 export default function PetArchDiagram({ isRtl = false, t }) {
   const getText = (key, fallback) => (t ? t(key, fallback) : fallback);
 
-  // Labels
+  // Legend
   const titleText = getText('projects.pet.arch.title', 'System Architecture');
-  const legendBuilt = getText('projects.pet.arch.legend.built', 'Built');
-  const legendPlanned = getText('projects.pet.arch.legend.planned', 'Planned');
-  const plannedBadge = getText('projects.pet.arch.plannedBadge', 'Planned');
+  const legendBuilt = getText('projects.pet.arch.legend.built', 'Built / Working');
+  const legendVerified = getText('projects.pet.arch.legend.verified', 'Verified locally');
+  const legendPlanned = getText('projects.pet.arch.legend.planned', 'In progress or planned');
 
-  const machineTitle = getText('projects.pet.arch.nodes.machine', 'Arduino Machine');
-  const machineSub = getText('projects.pet.arch.nodes.machineSub', 'PID & Stepper (V3)');
+  // Node statuses
+  const statusWorking = getText('projects.pet.arch.status.working', 'Working');
+  const statusBenchWired = getText('projects.pet.arch.status.benchWired', 'Bench wired');
+  const statusInProgress = getText('projects.pet.arch.status.inProgress', 'In progress');
+  const statusVerified = getText('projects.pet.arch.status.verified', 'Verified locally');
+  const statusBuilt = getText('projects.pet.arch.status.built', 'Built');
 
-  const esp32Title = getText('projects.pet.arch.nodes.esp32', 'ESP32 Bridge');
-  const esp32Sub = getText('projects.pet.arch.nodes.esp32Sub', 'Bridge Hardware');
+  // Node labels
+  const machineTitle = getText('projects.pet.arch.nodes.machine', 'Machine');
+  const machineSub = getText('projects.pet.arch.nodes.machineSub', 'Extruder · V3');
+
+  const arduinoTitle = getText('projects.pet.arch.nodes.arduino', 'Arduino Mega');
+  const arduinoSub = getText('projects.pet.arch.nodes.arduinoSub', 'PID · steppers v1');
+
+  const uartTitle = getText('projects.pet.arch.nodes.uart', 'UART + shifter');
+  const uartSub = getText('projects.pet.arch.nodes.uartSub', 'TXS0108E · Serial1');
+
+  const esp32Title = getText('projects.pet.arch.nodes.esp32', 'ESP32 Gateway');
+  const esp32Sub = getText('projects.pet.arch.nodes.esp32Sub', 'DevKit V1');
 
   const mqttTitle = getText('projects.pet.arch.nodes.mqtt', 'MQTT Broker');
-  const mqttSub = getText('projects.pet.arch.nodes.mqttSub', 'Telemetry Stream');
+  const mqttSub = getText('projects.pet.arch.nodes.mqttSub', 'Mosquitto · QoS 1');
 
-  const apiTitle = getText('projects.pet.arch.nodes.api', 'Symfony 7.4 API');
-  const apiSub = getText('projects.pet.arch.nodes.apiSub', 'PostgreSQL · JWT · 13 EPs');
+  const apiTitle = getText('projects.pet.arch.nodes.api', 'Symfony API');
+  const apiSub = getText('projects.pet.arch.nodes.apiSub', 'PostgreSQL · JWT');
 
   const webTitle = getText('projects.pet.arch.nodes.web', 'Web Dashboard');
-  const webSub = getText('projects.pet.arch.nodes.webSub', 'React · Vite · TS');
+  const webSub = getText('projects.pet.arch.nodes.webSub', 'React · polls 10 s');
 
   const mobileTitle = getText('projects.pet.arch.nodes.mobile', 'Mobile App');
-  const mobileSub = getText('projects.pet.arch.nodes.mobileSub', 'React Native · Expo');
+  const mobileSub = getText('projects.pet.arch.nodes.mobileSub', 'Expo · polls 10 s');
+
+  const commandPathText = getText(
+    'projects.pet.arch.commandPath',
+    'Command path: apps → API → machine'
+  );
+  const noteText = getText(
+    'projects.pet.arch.note',
+    '* Nodes link to their repositories. MQTT is verified on a local broker only — the machine is not connected to the API. Apps poll every 10 s.'
+  );
 
   // Coordinates mapping (LTR coordinate system: x increases left to right)
-  // When isRtl is true, we can invert X coordinates relative to SVG width (800)
+  // When isRtl is true, we invert X coordinates relative to SVG width (800)
   const W = 800;
   const mapX = (x, width) => (isRtl ? W - x - width : x);
 
+  // state: 'built' | 'verified' | 'planned'
   const nodes = {
-    machine: { x: mapX(30, 130), y: 125, w: 130, h: 70, url: PET_REPOS.hardware, built: true },
-    esp32:   { x: mapX(185, 110), y: 125, w: 110, h: 70, url: null, built: false },
-    mqtt:    { x: mapX(320, 110), y: 125, w: 110, h: 70, url: null, built: false },
-    api:     { x: mapX(455, 140), y: 125, w: 140, h: 70, url: PET_REPOS.backend, built: true },
-    web:     { x: mapX(625, 145), y: 70,  w: 145, h: 65, url: PET_REPOS.web, built: true },
-    mobile:  { x: mapX(625, 185), y: 185, w: 145, h: 65, url: PET_REPOS.mobile, built: true },
+    machine: { x: mapX(16, 92), y: 110, w: 92, h: 78, url: PET_REPOS.hardware, state: 'built', status: statusWorking, title: machineTitle, sub: machineSub },
+    arduino: { x: mapX(124, 92), y: 110, w: 92, h: 78, url: null, state: 'built', status: statusWorking, title: arduinoTitle, sub: arduinoSub },
+    uart: { x: mapX(232, 92), y: 110, w: 92, h: 78, url: null, state: 'planned', status: statusBenchWired, title: uartTitle, sub: uartSub },
+    esp32: { x: mapX(340, 92), y: 110, w: 92, h: 78, url: null, state: 'planned', status: statusInProgress, title: esp32Title, sub: esp32Sub },
+    mqtt: { x: mapX(448, 92), y: 110, w: 92, h: 78, url: null, state: 'verified', status: statusVerified, title: mqttTitle, sub: mqttSub },
+    api: { x: mapX(556, 100), y: 110, w: 100, h: 78, url: PET_REPOS.backend, state: 'built', status: statusBuilt, title: apiTitle, sub: apiSub },
+    web: { x: mapX(672, 112), y: 78, w: 112, h: 78, url: PET_REPOS.web, state: 'built', status: statusBuilt, title: webTitle, sub: webSub },
+    mobile: { x: mapX(672, 112), y: 170, w: 112, h: 78, url: PET_REPOS.mobile, state: 'built', status: statusBuilt, title: mobileTitle, sub: mobileSub },
   };
 
-  // Center connection points
+  const stateStyle = {
+    built: {
+      stroke: 'var(--accent, #06b6d4)',
+      dash: undefined,
+      statusFill: 'var(--accent, #06b6d4)',
+      statusOpacity: 1,
+    },
+    verified: {
+      stroke: 'var(--accent, #06b6d4)',
+      dash: undefined,
+      strokeOpacity: 0.6,
+      statusFill: 'var(--accent, #06b6d4)',
+      statusOpacity: 0.7,
+    },
+    planned: {
+      stroke: 'var(--border-strong, #475569)',
+      dash: '4 3',
+      statusFill: 'var(--muted, #94a3b8)',
+      statusOpacity: 1,
+    },
+  };
+
+  // Edge connection points (mirrored for RTL)
   const getCenterRight = (node) => ({
     x: isRtl ? node.x : node.x + node.w,
     y: node.y + node.h / 2,
@@ -61,15 +110,100 @@ export default function PetArchDiagram({ isRtl = false, t }) {
     y: node.y + node.h / 2,
   });
 
-  const pMachineOut = getCenterRight(nodes.machine);
-  const pEsp32In = getCenterLeft(nodes.esp32);
-  const pEsp32Out = getCenterRight(nodes.esp32);
-  const pMqttIn = getCenterLeft(nodes.mqtt);
-  const pMqttOut = getCenterRight(nodes.mqtt);
-  const pApiIn = getCenterLeft(nodes.api);
+  // Forward (telemetry/status) chain
+  const chain = [
+    ['machine', 'arduino', 'built'],
+    ['arduino', 'uart', 'planned'],
+    ['uart', 'esp32', 'planned'],
+    ['esp32', 'mqtt', 'planned'],
+    ['mqtt', 'api', 'verified'],
+  ];
+
+  const chainStroke = {
+    built: { stroke: 'var(--accent, #06b6d4)', dash: undefined, marker: 'url(#arrow-built)' },
+    verified: { stroke: 'var(--accent, #06b6d4)', dash: undefined, strokeOpacity: 0.6, marker: 'url(#arrow-verified)' },
+    planned: { stroke: 'var(--muted, #94a3b8)', dash: '4 3', marker: 'url(#arrow-planned)' },
+  };
+
   const pApiOut = getCenterRight(nodes.api);
   const pWebIn = getCenterLeft(nodes.web);
   const pMobileIn = getCenterLeft(nodes.mobile);
+
+  // Reverse command path anchor points (below the chain)
+  const cmdY = 266;
+  const cmdApiX = nodes.api.x + nodes.api.w / 2;
+  const cmdMachineX = nodes.machine.x + nodes.machine.w / 2;
+  const cmdLabelX = (cmdApiX + cmdMachineX) / 2;
+
+  const viewRepoLabel = getText('projects.pet.repos.viewRepo', 'View repository');
+
+  const renderNode = (key) => {
+    const node = nodes[key];
+    const style = stateStyle[node.state];
+    const cx = node.x + node.w / 2;
+    const body = (
+      <g className={`pet-arch__node pet-arch__node--${node.state}${node.url ? ' pet-arch__node--interactive' : ''}`}>
+        <rect
+          x={node.x}
+          y={node.y}
+          width={node.w}
+          height={node.h}
+          rx="10"
+          fill="var(--surface, #1e293b)"
+          stroke={style.stroke}
+          strokeWidth="1.5"
+          strokeOpacity={style.strokeOpacity}
+          strokeDasharray={style.dash}
+        />
+        <text
+          x={cx}
+          y={node.y + 26}
+          textAnchor="middle"
+          fill="var(--text, #f8fafc)"
+          fontSize="12"
+          fontWeight="700"
+          fontFamily="inherit"
+        >
+          {node.title}
+        </text>
+        <text
+          x={cx}
+          y={node.y + 46}
+          textAnchor="middle"
+          fill="var(--muted, #94a3b8)"
+          fontSize="9.5"
+          fontFamily="inherit"
+        >
+          {node.sub}
+        </text>
+        <text
+          x={cx}
+          y={node.y + 66}
+          textAnchor="middle"
+          fill={style.statusFill}
+          fillOpacity={style.statusOpacity}
+          fontSize="9.5"
+          fontWeight="700"
+          fontFamily="inherit"
+        >
+          {node.status}
+        </text>
+      </g>
+    );
+    if (!node.url) return <React.Fragment key={key}>{body}</React.Fragment>;
+    return (
+      <a
+        key={key}
+        href={node.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="pet-arch__link-node"
+        aria-label={`${node.title} - ${viewRepoLabel}`}
+      >
+        {body}
+      </a>
+    );
+  };
 
   return (
     <div className="pet-arch" aria-label={titleText}>
@@ -84,8 +218,8 @@ export default function PetArchDiagram({ isRtl = false, t }) {
         <title id="pet-arch-title">{titleText}</title>
         <desc id="pet-arch-desc">
           {isRtl
-            ? 'مخطط بنية النظام: آلة الأردوينو، جسر ESP32 وMQTT المخطط له، واجهة برمجة تطبيقات سيمفوني، وتطبيقات الويب والجوال.'
-            : 'Architecture diagram showing the Arduino machine, planned ESP32 & MQTT bridge, Symfony REST API, and Web and Mobile clients.'}
+            ? 'مخطط بنية النظام: آلة PET وArduino Mega (تعملان) متصلتان عبر واجهة UART ومحول مستوى مجهّزين على منضدة ببوابة ESP32 قيد التطوير، ثم وسيط MQTT مُتحقق منه محليًا، وواجهة Symfony مع PostgreSQL، وتطبيقَي الويب والجوال اللذين يطلبان البيانات كل 10 ثوانٍ. الآلة غير متصلة بالواجهة البرمجية.'
+            : 'Architecture diagram: the PET machine and Arduino Mega (working), linked through a bench-wired UART and level shifter to an ESP32 gateway in development, a locally verified MQTT broker, the Symfony API with PostgreSQL, and web and mobile apps polling every 10 s. The machine is not connected to the API.'}
         </desc>
 
         <defs>
@@ -102,6 +236,17 @@ export default function PetArchDiagram({ isRtl = false, t }) {
             <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--accent, #06b6d4)" />
           </marker>
           <marker
+            id="arrow-verified"
+            viewBox="0 0 10 10"
+            refX={isRtl ? "1" : "9"}
+            refY="5"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--accent, #06b6d4)" fillOpacity="0.6" />
+          </marker>
+          <marker
             id="arrow-planned"
             viewBox="0 0 10 10"
             refX={isRtl ? "1" : "9"}
@@ -114,31 +259,26 @@ export default function PetArchDiagram({ isRtl = false, t }) {
           </marker>
         </defs>
 
-        {/* Legend */}
-        <g className="pet-arch__legend" transform="translate(30, 25)">
-          {/* Built legend item */}
-          <line
-            x1="0"
-            y1="8"
-            x2="30"
-            y2="8"
-            stroke="var(--accent, #06b6d4)"
-            strokeWidth="2.5"
-          />
+        {/* Legend (three states only) */}
+        <g className="pet-arch__legend" transform="translate(24, 25)">
+          {/* Built / Working */}
+          <line x1="0" y1="8" x2="30" y2="8" stroke="var(--accent, #06b6d4)" strokeWidth="2.5" />
           <circle cx="15" cy="8" r="3" fill="var(--accent, #06b6d4)" />
-          <text
-            x="40"
-            y="12"
-            fill="var(--text, #f8fafc)"
-            fontSize="12"
-            fontWeight="600"
-            fontFamily="inherit"
-          >
+          <text x="40" y="12" fill="var(--text, #f8fafc)" fontSize="12" fontWeight="600" fontFamily="inherit">
             {legendBuilt}
           </text>
 
-          {/* Planned legend item */}
-          <g transform="translate(130, 0)">
+          {/* Verified locally */}
+          <g transform="translate(175, 0)">
+            <line x1="0" y1="8" x2="30" y2="8" stroke="var(--accent, #06b6d4)" strokeOpacity="0.6" strokeWidth="2.5" />
+            <circle cx="15" cy="8" r="3" fill="var(--accent, #06b6d4)" fillOpacity="0.6" />
+            <text x="40" y="12" fill="var(--accent, #06b6d4)" fillOpacity="0.75" fontSize="12" fontWeight="600" fontFamily="inherit">
+              {legendVerified}
+            </text>
+          </g>
+
+          {/* In progress or planned */}
+          <g transform="translate(340, 0)">
             <line
               x1="0"
               y1="8"
@@ -148,48 +288,31 @@ export default function PetArchDiagram({ isRtl = false, t }) {
               strokeWidth="2"
               strokeDasharray="4 3"
             />
-            <text
-              x="40"
-              y="12"
-              fill="var(--muted, #94a3b8)"
-              fontSize="12"
-              fontWeight="500"
-              fontFamily="inherit"
-            >
+            <text x="40" y="12" fill="var(--muted, #94a3b8)" fontSize="12" fontWeight="500" fontFamily="inherit">
               {legendPlanned}
             </text>
           </g>
         </g>
 
-        {/* --- Connections --- */}
-        {/* Planned connection: Machine -> ESP32 */}
-        <path
-          d={`M ${pMachineOut.x} ${pMachineOut.y} L ${pEsp32In.x} ${pEsp32In.y}`}
-          stroke="var(--muted, #94a3b8)"
-          strokeWidth="2"
-          strokeDasharray="4 3"
-          markerEnd="url(#arrow-planned)"
-        />
+        {/* --- Forward chain (telemetry / status) --- */}
+        {chain.map(([fromKey, toKey, kind]) => {
+          const from = getCenterRight(nodes[fromKey]);
+          const to = getCenterLeft(nodes[toKey]);
+          const s = chainStroke[kind];
+          return (
+            <path
+              key={`${fromKey}-${toKey}`}
+              d={`M ${from.x} ${from.y} L ${to.x} ${to.y}`}
+              stroke={s.stroke}
+              strokeOpacity={s.strokeOpacity}
+              strokeWidth="2"
+              strokeDasharray={s.dash}
+              markerEnd={s.marker}
+            />
+          );
+        })}
 
-        {/* Planned connection: ESP32 -> MQTT */}
-        <path
-          d={`M ${pEsp32Out.x} ${pEsp32Out.y} L ${pMqttIn.x} ${pMqttIn.y}`}
-          stroke="var(--muted, #94a3b8)"
-          strokeWidth="2"
-          strokeDasharray="4 3"
-          markerEnd="url(#arrow-planned)"
-        />
-
-        {/* Planned connection: MQTT -> Symfony API */}
-        <path
-          d={`M ${pMqttOut.x} ${pMqttOut.y} L ${pApiIn.x} ${pApiIn.y}`}
-          stroke="var(--muted, #94a3b8)"
-          strokeWidth="2"
-          strokeDasharray="4 3"
-          markerEnd="url(#arrow-planned)"
-        />
-
-        {/* Built connection: Symfony API -> Web Dashboard (Curved line) */}
+        {/* Symfony API -> Web Dashboard (curved) */}
         <path
           d={
             isRtl
@@ -202,7 +325,7 @@ export default function PetArchDiagram({ isRtl = false, t }) {
           markerEnd="url(#arrow-built)"
         />
 
-        {/* Built connection: Symfony API -> Mobile App (Curved line) */}
+        {/* Symfony API -> Mobile App (curved) */}
         <path
           d={
             isRtl
@@ -215,307 +338,46 @@ export default function PetArchDiagram({ isRtl = false, t }) {
           markerEnd="url(#arrow-built)"
         />
 
-        {/* --- Node 1: Arduino Machine (Built + Link) --- */}
-        <a
-          href={nodes.machine.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pet-arch__link-node"
-          aria-label={`${machineTitle} - ${getText('projects.pet.repos.viewRepo', 'View repository')}`}
+        {/* --- Reverse command path (apps -> API -> machine) --- */}
+        <path
+          d={`M ${cmdApiX} ${nodes.api.y + nodes.api.h} L ${cmdApiX} ${cmdY} L ${cmdMachineX} ${cmdY} L ${cmdMachineX} ${nodes.machine.y + nodes.machine.h}`}
+          stroke="var(--muted, #94a3b8)"
+          strokeWidth="2"
+          strokeDasharray="4 3"
+          fill="none"
+          markerEnd="url(#arrow-planned)"
+        />
+        <text
+          x={cmdLabelX}
+          y={cmdY - 8}
+          textAnchor="middle"
+          fill="var(--muted, #94a3b8)"
+          fontSize="10"
+          fontFamily="inherit"
         >
-          <g className="pet-arch__node pet-arch__node--built pet-arch__node--interactive">
-            <rect
-              x={nodes.machine.x}
-              y={nodes.machine.y}
-              width={nodes.machine.w}
-              height={nodes.machine.h}
-              rx="10"
-              fill="var(--surface, #1e293b)"
-              stroke="var(--accent, #06b6d4)"
-              strokeWidth="1.5"
-            />
-            <text
-              x={nodes.machine.x + nodes.machine.w / 2}
-              y={nodes.machine.y + 28}
-              textAnchor="middle"
-              fill="var(--text, #f8fafc)"
-              fontSize="12.5"
-              fontWeight="700"
-              fontFamily="inherit"
-            >
-              {machineTitle}
-            </text>
-            <text
-              x={nodes.machine.x + nodes.machine.w / 2}
-              y={nodes.machine.y + 48}
-              textAnchor="middle"
-              fill="var(--muted, #94a3b8)"
-              fontSize="10"
-              fontFamily="inherit"
-            >
-              {machineSub}
-            </text>
-          </g>
-        </a>
+          {commandPathText}
+        </text>
 
-        {/* --- Node 2: ESP32 Bridge (Planned) --- */}
-        <g className="pet-arch__node pet-arch__node--planned">
-          <rect
-            x={nodes.esp32.x}
-            y={nodes.esp32.y}
-            width={nodes.esp32.w}
-            height={nodes.esp32.h}
-            rx="10"
-            fill="var(--surface, #1e293b)"
-            stroke="var(--border-strong, #475569)"
-            strokeWidth="1.5"
-            strokeDasharray="4 3"
-          />
-          {/* Planned Pill */}
-          <rect
-            x={nodes.esp32.x + (nodes.esp32.w - 52) / 2}
-            y={nodes.esp32.y - 9}
-            width="52"
-            height="18"
-            rx="9"
-            fill="var(--surface-alt, #334155)"
-            stroke="var(--border-strong, #475569)"
-            strokeWidth="1"
-          />
-          <text
-            x={nodes.esp32.x + nodes.esp32.w / 2}
-            y={nodes.esp32.y + 3}
-            textAnchor="middle"
-            fill="var(--muted, #94a3b8)"
-            fontSize="9"
-            fontWeight="600"
-            fontFamily="inherit"
-          >
-            {plannedBadge}
-          </text>
-          <text
-            x={nodes.esp32.x + nodes.esp32.w / 2}
-            y={nodes.esp32.y + 32}
-            textAnchor="middle"
-            fill="var(--text, #f8fafc)"
-            fontSize="12"
-            fontWeight="600"
-            fontFamily="inherit"
-          >
-            {esp32Title}
-          </text>
-          <text
-            x={nodes.esp32.x + nodes.esp32.w / 2}
-            y={nodes.esp32.y + 50}
-            textAnchor="middle"
-            fill="var(--muted, #94a3b8)"
-            fontSize="10"
-            fontFamily="inherit"
-          >
-            {esp32Sub}
-          </text>
-        </g>
-
-        {/* --- Node 3: MQTT Broker (Planned) --- */}
-        <g className="pet-arch__node pet-arch__node--planned">
-          <rect
-            x={nodes.mqtt.x}
-            y={nodes.mqtt.y}
-            width={nodes.mqtt.w}
-            height={nodes.mqtt.h}
-            rx="10"
-            fill="var(--surface, #1e293b)"
-            stroke="var(--border-strong, #475569)"
-            strokeWidth="1.5"
-            strokeDasharray="4 3"
-          />
-          {/* Planned Pill */}
-          <rect
-            x={nodes.mqtt.x + (nodes.mqtt.w - 52) / 2}
-            y={nodes.mqtt.y - 9}
-            width="52"
-            height="18"
-            rx="9"
-            fill="var(--surface-alt, #334155)"
-            stroke="var(--border-strong, #475569)"
-            strokeWidth="1"
-          />
-          <text
-            x={nodes.mqtt.x + nodes.mqtt.w / 2}
-            y={nodes.mqtt.y + 3}
-            textAnchor="middle"
-            fill="var(--muted, #94a3b8)"
-            fontSize="9"
-            fontWeight="600"
-            fontFamily="inherit"
-          >
-            {plannedBadge}
-          </text>
-          <text
-            x={nodes.mqtt.x + nodes.mqtt.w / 2}
-            y={nodes.mqtt.y + 32}
-            textAnchor="middle"
-            fill="var(--text, #f8fafc)"
-            fontSize="12"
-            fontWeight="600"
-            fontFamily="inherit"
-          >
-            {mqttTitle}
-          </text>
-          <text
-            x={nodes.mqtt.x + nodes.mqtt.w / 2}
-            y={nodes.mqtt.y + 50}
-            textAnchor="middle"
-            fill="var(--muted, #94a3b8)"
-            fontSize="10"
-            fontFamily="inherit"
-          >
-            {mqttSub}
-          </text>
-        </g>
-
-        {/* --- Node 4: Symfony REST API (Built + Link) --- */}
-        <a
-          href={nodes.api.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pet-arch__link-node"
-          aria-label={`${apiTitle} - ${getText('projects.pet.repos.viewRepo', 'View repository')}`}
-        >
-          <g className="pet-arch__node pet-arch__node--built pet-arch__node--interactive">
-            <rect
-              x={nodes.api.x}
-              y={nodes.api.y}
-              width={nodes.api.w}
-              height={nodes.api.h}
-              rx="10"
-              fill="var(--surface, #1e293b)"
-              stroke="var(--accent, #06b6d4)"
-              strokeWidth="1.5"
-            />
-            <text
-              x={nodes.api.x + nodes.api.w / 2}
-              y={nodes.api.y + 28}
-              textAnchor="middle"
-              fill="var(--text, #f8fafc)"
-              fontSize="12.5"
-              fontWeight="700"
-              fontFamily="inherit"
-            >
-              {apiTitle}
-            </text>
-            <text
-              x={nodes.api.x + nodes.api.w / 2}
-              y={nodes.api.y + 48}
-              textAnchor="middle"
-              fill="var(--muted, #94a3b8)"
-              fontSize="9.5"
-              fontFamily="inherit"
-            >
-              {apiSub}
-            </text>
-          </g>
-        </a>
-
-        {/* --- Node 5: Web Dashboard (Built + Link) --- */}
-        <a
-          href={nodes.web.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pet-arch__link-node"
-          aria-label={`${webTitle} - ${getText('projects.pet.repos.viewRepo', 'View repository')}`}
-        >
-          <g className="pet-arch__node pet-arch__node--built pet-arch__node--interactive">
-            <rect
-              x={nodes.web.x}
-              y={nodes.web.y}
-              width={nodes.web.w}
-              height={nodes.web.h}
-              rx="10"
-              fill="var(--surface, #1e293b)"
-              stroke="var(--border, #334155)"
-              strokeWidth="1.5"
-            />
-            <text
-              x={nodes.web.x + nodes.web.w / 2}
-              y={nodes.web.y + 26}
-              textAnchor="middle"
-              fill="var(--text, #f8fafc)"
-              fontSize="12"
-              fontWeight="700"
-              fontFamily="inherit"
-            >
-              {webTitle}
-            </text>
-            <text
-              x={nodes.web.x + nodes.web.w / 2}
-              y={nodes.web.y + 44}
-              textAnchor="middle"
-              fill="var(--muted, #94a3b8)"
-              fontSize="9.5"
-              fontFamily="inherit"
-            >
-              {webSub}
-            </text>
-          </g>
-        </a>
-
-        {/* --- Node 6: Mobile App (Built + Link) --- */}
-        <a
-          href={nodes.mobile.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pet-arch__link-node"
-          aria-label={`${mobileTitle} - ${getText('projects.pet.repos.viewRepo', 'View repository')}`}
-        >
-          <g className="pet-arch__node pet-arch__node--built pet-arch__node--interactive">
-            <rect
-              x={nodes.mobile.x}
-              y={nodes.mobile.y}
-              width={nodes.mobile.w}
-              height={nodes.mobile.h}
-              rx="10"
-              fill="var(--surface, #1e293b)"
-              stroke="var(--border, #334155)"
-              strokeWidth="1.5"
-            />
-            <text
-              x={nodes.mobile.x + nodes.mobile.w / 2}
-              y={nodes.mobile.y + 26}
-              textAnchor="middle"
-              fill="var(--text, #f8fafc)"
-              fontSize="12"
-              fontWeight="700"
-              fontFamily="inherit"
-            >
-              {mobileTitle}
-            </text>
-            <text
-              x={nodes.mobile.x + nodes.mobile.w / 2}
-              y={nodes.mobile.y + 44}
-              textAnchor="middle"
-              fill="var(--muted, #94a3b8)"
-              fontSize="9.5"
-              fontFamily="inherit"
-            >
-              {mobileSub}
-            </text>
-          </g>
-        </a>
+        {/* --- Nodes --- */}
+        {renderNode('machine')}
+        {renderNode('arduino')}
+        {renderNode('uart')}
+        {renderNode('esp32')}
+        {renderNode('mqtt')}
+        {renderNode('api')}
+        {renderNode('web')}
+        {renderNode('mobile')}
 
         {/* Status text footer inside diagram */}
         <text
-          x={isRtl ? 770 : 30}
-          y="290"
+          x={isRtl ? 776 : 24}
+          y="298"
           textAnchor={isRtl ? "end" : "start"}
           fill="var(--muted, #94a3b8)"
           fontSize="10"
           fontFamily="inherit"
         >
-          {getText(
-            'projects.pet.arch.note',
-            '* Interactive nodes link to their respective repositories. Web and Mobile apps currently poll the API every 10 s.'
-          )}
+          {noteText}
         </text>
       </svg>
     </div>

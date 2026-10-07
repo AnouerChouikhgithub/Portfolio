@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Download, ZoomIn, ZoomOut } from 'lucide-react';
 import { useI18n } from '../i18n/I18nProvider';
+import useScrollLock from '../hooks/useScrollLock';
 
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 4.0;
@@ -21,6 +22,7 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
   const { t } = useI18n();
   const panelRef = useRef(null);
   const scrollContainerRef = useRef(null);
+  useScrollLock(true, panelRef);
 
   // Zoom state (1 = 100% / fit container width)
   const [zoom, setZoom] = useState(1);
@@ -64,8 +66,22 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
         const page = await pdf.getPage(pageNum);
         const unscaledViewport = page.getViewport({ scale: 1 });
         const fitWidthScale = availableWidth / unscaledViewport.width;
-        const renderScale = fitWidthScale * targetZoom * dpr;
-        const scaledViewport = page.getViewport({ scale: renderScale });
+        const cssViewport = page.getViewport({ scale: fitWidthScale * targetZoom });
+        const scaledViewport = page.getViewport({ scale: fitWidthScale * targetZoom * dpr });
+        const annotations = await page.getAnnotations({ intent: 'display' });
+        const links = annotations
+          .filter((annotation) => annotation.subtype === 'Link' && annotation.url)
+          .map((annotation, linkIndex) => {
+            const [x1, y1, x2, y2] = cssViewport.convertToViewportRectangle(annotation.rect);
+            return {
+              key: `${pageNum}-${linkIndex}`,
+              url: annotation.url,
+              left: Math.min(x1, x2),
+              top: Math.min(y1, y2),
+              width: Math.abs(x2 - x1),
+              height: Math.abs(y2 - y1),
+            };
+          });
 
         const canvas = document.createElement('canvas');
         canvas.width = Math.floor(scaledViewport.width);
@@ -87,6 +103,7 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
           canvas,
           width: cssWidth,
           height: cssHeight,
+          links,
         });
       }
 
@@ -220,7 +237,6 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
   // ── Keyboard shortcuts & scroll lock ──────────────────────────────────────
   useEffect(() => {
     const previousFocus = document.activeElement;
-    document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (e) => {
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName) || e.target?.isContentEditable) {
@@ -243,10 +259,9 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    panelRef.current?.focus();
+    scrollContainerRef.current?.focus({ preventScroll: true });
 
     return () => {
-      document.body.style.overflow = '';
       document.removeEventListener('keydown', handleKeyDown);
       const target = triggerRef?.current ?? previousFocus;
       target?.focus?.();
@@ -317,14 +332,21 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
   // ── Attach canvas DOM nodes ───────────────────────────────────────────────
   const attachCanvas = useCallback((node, canvas) => {
     if (node && canvas && !node.contains(canvas)) {
-      node.innerHTML = '';
-      node.appendChild(canvas);
+      node.querySelector('canvas')?.remove();
+      node.insertBefore(canvas, node.firstChild);
     }
   }, []);
 
   // Instant CSS scale feedback while debounce is pending
   const cssScale = renderedZoom > 0 ? zoom / renderedZoom : 1;
   const isScaleTransformed = Math.abs(cssScale - 1) > 0.005;
+  const isResume = /\/Anouer_Chouikh_CV_(EN|FR)\.pdf$/i.test(src);
+  const resumeLinks = [
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/anouer-chouikh-303306220/' },
+    { label: 'Portfolio', href: 'https://anouer-chouikh.netlify.app/' },
+    { label: 'GitHub', href: 'https://github.com/AnouerChouikhgithub' },
+    { label: 'Email', href: 'mailto:anouer.chouikh2005@gmail.com' },
+  ];
 
   return (
     <div className="event-modal" onClick={onClose} aria-hidden="true">
@@ -406,6 +428,19 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
         </header>
 
         {/* PDF scroll & display viewport */}
+        {isResume && (
+          <nav className="pdf-modal__links" aria-label="CV contact links">
+            {resumeLinks.map(({ label, href }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer">
+                {label}
+              </a>
+            ))}
+            <a href={src} download>
+              Download PDF
+            </a>
+          </nav>
+        )}
+
         <div
           ref={scrollContainerRef}
           className={`pdf-modal__body ${zoom > 1 ? 'pdf-modal__body--zoomed' : ''}`}
@@ -415,6 +450,8 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
           onPointerCancel={handlePointerUp}
           onDoubleClick={handleDoubleClick}
           onContextMenu={(e) => !showDownload && e.preventDefault()}
+          tabIndex={0}
+          aria-label="PDF document pages"
         >
           {loading && (
             <div className="pdf-canvas-viewer__status">
@@ -445,7 +482,25 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
                     width: `${item.width}px`,
                     height: `${item.height}px`,
                   }}
-                />
+                >
+                  {item.links.map((link) => (
+                    <a
+                      key={link.key}
+                      className="pdf-canvas-viewer__link"
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Open ${link.url}`}
+                      title={link.url}
+                      style={{
+                        left: `${link.left}px`,
+                        top: `${link.top}px`,
+                        width: `${link.width}px`,
+                        height: `${link.height}px`,
+                      }}
+                    />
+                  ))}
+                </div>
               ))}
             </div>
           )}

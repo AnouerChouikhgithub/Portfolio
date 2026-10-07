@@ -154,14 +154,15 @@
           "label": "مخطط له"
         }
       },
+      "statusAsOf": "Status as of October 2026",
       "chips": {
         "temp": "هدف تحكم PID عند 245 °C",
         "micro": "مخطو دقيق 1/16، 3200 خطوة/دورة",
         "iters": "3 إصدارات عتادية",
-        "endpoints": "13 نقطة نهاية REST",
+        "endpoints": "15 نقطة نهاية REST",
         "repos": "4 مستودعات برمجية"
       },
-      "summary": "آلة مؤتمتة لتحويل القوارير البلاستيكية إلى خيوط طابعات ثلاثية الأبعاد باستخدام تحكم PID في درجة الحرارة (تستهدف 245 °C) وبثق خطوي دقيق مع التدرج في التسارع، صُممت بأجزاء مطبوعة ثلاثية الأبعاد عبر SolidWorks. مقترنة بمنصة برمجية متكاملة تتكون من واجهة برمجة تطبيقات Symfony 7.4 (PHP 8.3) بـ 13 نقطة نهاية وتوثيق JWT واستقبال للقياسات عن بُعد، ولوحة تحكم ويب React وتطبيق جوال Expo يعملان على بيانات تجريبية. جسر ESP32 مع بروتوكول MQTT لنقل البيانات والتحكم بالآلة مخطط له في المرحلة القادمة.",
+      "summary": "آلة مؤتمتة لتحويل القوارير البلاستيكية إلى خيوط طابعات ثلاثية الأبعاد باستخدام تحكم PID في درجة الحرارة (تستهدف 245 °C) وبثق خطوي دقيق مع التدرج في التسارع، صُممت بأجزاء مطبوعة ثلاثية الأبعاد عبر SolidWorks. مقترنة بمنصة برمجية متكاملة تتكون من واجهة برمجة تطبيقات Symfony 7.4 (PHP 8.3) بـ 15 نقطة نهاية وتوثيق JWT واستقبال للقياسات عن بُعد، ولوحة تحكم ويب React وتطبيق جوال Expo يعملان على بيانات تجريبية. جسر ESP32 مع بروتوكول MQTT لنقل البيانات والتحكم بالآلة مخطط له في المرحلة القادمة.",
       "stack": {
         "title": "التقنيات حسب الطبقة",
         "mechanical": {
@@ -207,23 +208,35 @@
         "badge": "مخطط تفاعلي",
         "legend": {
           "built": "مبني",
+          "verified": "Verified locally",
           "planned": "مخطط له"
+        },
+        "status": {
+          "working": "Working",
+          "benchWired": "Bench wired",
+          "inProgress": "In progress",
+          "verified": "Verified locally",
+          "built": "Built"
         },
         "nodes": {
           "machine": "آلة Arduino",
           "machineSub": "تحكم PID ومحرك خطوي (V3)",
+          "arduino": "Arduino Mega",
+          "arduinoSub": "PID · steppers v1",
+          "uart": "UART + shifter",
+          "uartSub": "TXS0108E · Serial1",
           "esp32": "جسر ESP32",
           "esp32Sub": "عتاد الجسر",
           "mqtt": "وسيط MQTT",
           "mqttSub": "تدفق القياسات",
           "api": "واجهة Symfony 7.4",
-          "apiSub": "PostgreSQL · JWT · 13 نقطة",
+          "apiSub": "PostgreSQL · JWT · 15 نقطة",
           "web": "لوحة تحكم الويب",
           "webSub": "React · Vite · TS",
           "mobile": "تطبيق الجوال",
           "mobileSub": "React Native · Expo"
         },
-        "plannedBadge": "مخطط له",
+        "commandPath": "Command path: apps → API → machine",
         "note": "* العقد التفاعلية ترتبط بمستودعاتها البرمجية الخاصة. تطبيقا الويب والجوال يقومان بجلب البيانات من الواجهة كل 10 ثوانٍ."
       },
       "gallery": {
