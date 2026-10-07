@@ -1,0 +1,22 @@
+/* Design system — split from the former single styles.css (Phase 4c).
+   Vite inlines these @imports IN ORDER, so the cascade is byte-identical to
+   the original file (verified by reconstitution check in the split script
+   and by a dist CSS diff). Keep this order. */
+@import './tokens.css';
+@import './typography.css';
+@import './utilities.css';
+@import './header.css';
+@import './hero.css';
+@import './about.css';
+@import './skills.css';
+@import './projects.css';
+@import './project-modal.css';
+@import './pet-modal.css';
+@import './community.css';
+@import './events.css';
+@import './pdf-modal.css';
+@import './contact.css';
+@import './footer.css';
+@import './theme-overrides.css';
+@import './responsive.css';
+@import './skills-subscreen.css';

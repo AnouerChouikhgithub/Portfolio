@@ -2,7 +2,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
-import './styles.css'
+import './styles/index.css'
 import { I18nProvider } from './i18n/I18nProvider'
 import { ThemeProvider } from './theme/ThemeProvider'
 import MotionProvider from './motion/MotionProvider'

@@ -1,0 +1,53 @@
+/* ========================================
+   About Section
+   ======================================== */
+.about {
+    padding: 6rem 0;
+}
+
+.about__content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.about__image-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.about__image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--accent);
+    box-shadow: 0 0 40px var(--glow);
+    transition: transform var(--transition);
+}
+
+.about__image:hover {
+    transform: scale(1.05);
+}
+
+.about__intro {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    color: var(--text);
+}
+
+.about__mission {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--accent-2);
+}
+
+.about__mission-title {
+    color: var(--accent-2);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+

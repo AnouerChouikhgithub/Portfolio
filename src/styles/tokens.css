@@ -1,0 +1,434 @@
+/* ========================================
+   Design tokens
+   Palette keeps the cyan + emerald "circuit" identity.
+   Every text/background pair below is verified in docs/DESIGN.md
+   (body text >= 4.5:1, UI/large >= 3:1) in BOTH themes.
+   ======================================== */
+   :root {
+    /* ── Surfaces ─────────────────────────────────────────────── */
+    --bg: #070A0F;
+    --bg-elevated: #0C121A;
+    --surface: #0F1620;
+    --surface-2: #151E2B;
+    --surface-alt: #0C121A;
+
+    /* ── Text ─────────────────────────────────────────────────── */
+    --text: #E6EAF0;
+    --muted: #94A3B8;
+    --text-faint: color-mix(in srgb, var(--muted) 72%, transparent);
+
+    /* ── Accents ──────────────────────────────────────────────── */
+    --accent: #22D3EE;
+    --accent-2: #34D399;
+    --accent-warm: #FBBF24;
+    --accent-contrast: #061018;
+
+    /* ── Status & content-link hues ───────────────────────── */
+    --danger: #FF4D4F;
+    --link-blue: #60A5FA;
+    --link-red: #F87171;
+    --link-orange: var(--accent-warm);
+    --link-yellow: #FACC15;
+    --link-teal: #06B6D4;
+    --link-violet: #A78BFA;
+    --link-hover: #7DD3FC;
+    --link-teal-hover: #22D3EE;
+    --link-violet-hover: #C4B5FD;
+
+    /* ── Lines & chrome ───────────────────────────────────────── */
+    --border: rgba(148, 163, 184, 0.14);
+    --border-strong: color-mix(in srgb, var(--accent) 30%, transparent);
+    --border-hover: color-mix(in srgb, var(--accent) 60%, transparent);
+    --header-bg: color-mix(in srgb, var(--bg) 82%, transparent);
+    --overlay: color-mix(in srgb, #02060F 82%, transparent);
+    --glow: color-mix(in srgb, var(--accent) 35%, transparent);
+    --ring: var(--accent);
+
+    /* ── Gradients ────────────────────────────────────────────── */
+    --grad-accent: linear-gradient(135deg, var(--accent), var(--accent-2));
+    --grad-hero: linear-gradient(135deg, #5fe8ff, #66d4ff, #3dd8d8, #3ec5f5);
+    --grad-brand-warm: linear-gradient(135deg, var(--accent), var(--accent-2) 55%, var(--accent-warm));
+
+    /* ── Radii ────────────────────────────────────────────────── */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-pill: 999px;
+
+    /* ── Spacing scale (4px base) ─────────────────────────────── */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+
+    /* ── Elevation ────────────────────────────────────────────── */
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.40), 0 2px 6px rgb(0 0 0 / 0.28);
+    --shadow-2: 0 6px 16px -4px rgb(0 0 0 / 0.45), 0 2px 6px -2px rgb(0 0 0 / 0.35);
+    --shadow-3: 0 24px 48px -16px rgb(0 0 0 / 0.55), 0 8px 20px -8px rgb(0 0 0 / 0.45);
+    --shadow: var(--shadow-2);
+    --shadow-lg: var(--shadow-3);
+    --card-shadow: var(--shadow-1);
+
+    /* ── Elevation (aliases kept for existing rules) ──────────── */
+
+    /* ── Layout ───────────────────────────────────────────────── */
+    --max-width: 1200px;
+    --scroll-offset: 84px;
+
+    /* ── Motion ───────────────────────────────────────────────── */
+    --dur-fast: 180ms;
+    --dur-base: 500ms;
+    --dur-slow: 900ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-std: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: var(--dur-fast) var(--ease-std);
+
+    /* ── Z-index scale ────────────────────────────────────────── */
+    --z-background: -1;
+    --z-content: 1;
+    --z-subscreen: 999;
+    --z-header: 1000;
+    --z-modal: 1000;
+    --z-dropdown: 1100;
+    --z-progress: 1200;
+    --z-boundary: 1300;
+    --z-cursor: 1400;
+
+    /* ── Typography ───────────────────────────────────────────── */
+    --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-display: 'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+    --text-xs: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
+    --text-sm: clamp(0.85rem, 0.83rem + 0.1vw, 0.92rem);
+    --text-base: clamp(0.95rem, 0.93rem + 0.12vw, 1.05rem);
+    --text-lg: clamp(1.05rem, 1rem + 0.28vw, 1.25rem);
+    --text-h3: clamp(1.25rem, 2.5vw, 1.75rem);
+    --text-h2: clamp(2rem, 4vw, 3rem);
+    --text-h1: clamp(2.5rem, 5vw, 4rem);
+}
+
+html[data-theme="light"] {
+    color-scheme: light;
+
+    /* ── Surfaces ─────────────────────────────────────────────── */
+    --bg: #F6F8FB;
+    --bg-elevated: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #EEF3F8;
+    --surface-alt: #EEF3F8;
+
+    /* ── Text ─────────────────────────────────────────────────── */
+    --text: #0F1B26;
+    --muted: #475569;
+    --text-faint: color-mix(in srgb, var(--muted) 78%, transparent);
+
+    /* ── Accents ──────────────────────────────────────────────── */
+    --accent: #0E7490;
+    --accent-2: #047857;
+    --accent-warm: #92400E;
+    --accent-contrast: #FFFFFF;
+
+    /* ── Status & content-link hues (inked down for AA on white) ── */
+    --danger: #B91C1C;
+    --link-blue: #1D4ED8;
+    --link-red: #B91C1C;
+    --link-orange: var(--accent-warm);
+    --link-yellow: #713F12;
+    --link-teal: var(--accent);
+    --link-violet: #6D28D9;
+    --link-hover: var(--accent);
+    --link-teal-hover: #0B5F6E;
+    --link-violet-hover: #5B21B6;
+
+    /* ── Lines & chrome ───────────────────────────────────────── */
+    --border: rgba(15, 27, 38, 0.10);
+    --border-strong: color-mix(in srgb, var(--accent) 45%, transparent);
+    --border-hover: var(--accent);
+    --header-bg: color-mix(in srgb, var(--bg) 88%, transparent);
+    --overlay: color-mix(in srgb, #0F1B26 45%, transparent);
+    /* Light mode: no neon glow — use a soft tinted halo instead. */
+    --glow: color-mix(in srgb, var(--accent) 18%, transparent);
+    --ring: var(--accent);
+
+    /* ── Gradients ────────────────────────────────────────────── */
+    --grad-accent: linear-gradient(135deg, var(--accent), var(--accent-2));
+    --grad-hero: linear-gradient(135deg, #0A5666, #0F5F6E, #0A6270, #065F46);
+    --grad-brand-warm: linear-gradient(135deg, var(--accent), var(--accent-2) 55%, var(--accent-warm));
+
+    /* ── Elevation: layered tinted shadows, never neon glows ──── */
+    --shadow-1: 0 1px 2px rgba(15, 27, 38, 0.06), 0 4px 10px rgba(15, 27, 38, 0.06);
+    --shadow-2: 0 2px 6px rgba(15, 27, 38, 0.08), 0 12px 24px rgba(15, 27, 38, 0.10);
+    --shadow-3: 0 6px 16px rgba(15, 27, 38, 0.10), 0 28px 56px rgba(15, 27, 38, 0.16);
+    --shadow: var(--shadow-2);
+    --shadow-lg: var(--shadow-3);
+    --card-shadow: 0 1px 2px rgba(15, 27, 38, 0.06), 0 8px 20px rgba(15, 27, 38, 0.10);
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+/* ── Theme reveal ───────────────────────────────────────────────
+   View Transitions API: the new palette is uncovered with a circular
+   clip-path expanding from the toggle button. Falls back to the colour
+   transition declared on body/cards when unsupported or when the visitor
+   prefers reduced motion.                                                    */
+@media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none;
+        mix-blend-mode: normal;
+    }
+
+    ::view-transition-old(root) {
+        z-index: 1;
+    }
+
+    ::view-transition-new(root) {
+        z-index: 2;
+        animation: themeReveal 320ms var(--ease-out) both;
+        clip-path: circle(0 at var(--theme-reveal-x, 90%) var(--theme-reveal-y, 40px));
+    }
+
+    @keyframes themeReveal {
+        to {
+            clip-path: circle(150vmax at var(--theme-reveal-x, 90%) var(--theme-reveal-y, 40px));
+        }
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    background: var(--bg);
+    scroll-padding-top: var(--scroll-offset);
+}
+
+body {
+    font-family: var(--font-body);
+    font-feature-settings: 'cv11' 1, 'ss01' 1;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    /* Explicit properties only — never `transition: all` on the page shell. */
+    transition: background-color var(--dur-base) var(--ease-std), color var(--dur-base) var(--ease-std);
+}
+
+section,
+#projects,
+#community,
+#events,
+#skills,
+#contact {
+    scroll-margin-top: var(--scroll-offset);
+}
+
+.magnet {
+    display: inline-block;
+    will-change: transform;
+}
+
+/* ── SplitText utilities (reactbits/SplitText) ─────────────────
+   Segments are decorative for AT — the clean string ships in .sr-only
+   (also user-select:none so copy/paste never duplicates the text). */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+    user-select: none;
+}
+
+.split-word,
+.split-char,
+.split-line {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+}
+
+.scroll-progress {
+    position: fixed;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 1200;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transform-origin: left center;
+    pointer-events: none;
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+html[dir="rtl"] .scroll-progress {
+    transform-origin: right center;
+}
+
+.is-animating {
+    transition: none !important;
+}
+
+html[lang="ar"],
+html[dir="rtl"],
+[dir="rtl"] {
+    font-family: 'Cairo', 'Noto Sans Arabic', Tahoma, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.mixed-text-latin {
+    display: inline-block;
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+
+body,
+.header,
+.events-card,
+.project-card,
+.community-card,
+.skills__experience-card,
+.contact__form,
+.event-modal__panel,
+.project-modal__panel,
+.community-modal__panel {
+    transition: background-color var(--transition), color var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.modal-scroll-region {
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-2) transparent;
+}
+
+.modal-scroll-region::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-scroll-region::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-scroll-region::-webkit-scrollbar-thumb {
+    background: var(--accent-2);
+    border-radius: 999px;
+}
+
+.modal-reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+        opacity 500ms ease-out var(--reveal-delay, 0ms),
+        transform 500ms ease-out var(--reveal-delay, 0ms);
+}
+
+.modal-reveal.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.modal-reveal--scale {
+    transform: translateY(16px) scale(0.92);
+}
+
+.modal-reveal--scale.is-revealed {
+    transform: scale(1);
+}
+
+.modal-reveal--word-title {
+    transform: none;
+}
+
+.modal-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 500ms ease-out, transform 500ms ease-out;
+    transition-delay: calc(var(--word-index, 0) * 40ms);
+}
+
+.modal-countup__number {
+    display: inline-block;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+
+.modal-reveal--word-title.is-revealed .modal-word {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-crossfade {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+}
+
+.carousel-crossfade__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transition: none;
+}
+
+.carousel-crossfade__image--incoming {
+    animation: carouselFadeIn 300ms ease-out both;
+}
+
+.carousel-crossfade__image--outgoing {
+    animation: carouselFadeOut 300ms ease-out both;
+    pointer-events: none;
+}
+
+@keyframes carouselFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes carouselFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .modal-reveal,
+    .modal-word,
+    .carousel-crossfade__image {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+}
+

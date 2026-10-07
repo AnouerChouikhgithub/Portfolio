@@ -1,0 +1,119 @@
+/* Light mode keeps the same hierarchy while replacing glow-heavy surfaces with contrast and shadow. */
+html[data-theme="light"] {
+    color-scheme: light;
+}
+
+html[data-theme="light"] .hero__portrait,
+html[data-theme="light"] .about__image {
+    box-shadow: 0 8px 24px rgba(15, 35, 48, 0.14);
+}
+
+html[data-theme="light"] .about__mission,
+html[data-theme="light"] .skills__experience-card,
+html[data-theme="light"] .project-card,
+html[data-theme="light"] .community-card,
+html[data-theme="light"] .events-card,
+html[data-theme="light"] .contact__form,
+html[data-theme="light"] .contact__field {
+    border-color: var(--border);
+    box-shadow: var(--card-shadow);
+}
+
+/* Light mode: keep transparent overlays so project bg colour still shows through.
+   The panel background is set inline via JS (project.bg), so we only need to
+   ensure the overlay layers remain translucent in both themes.
+   Event and community modals don't use per-item bg, so restore their light overrides. */
+
+html[data-theme="light"] .event-modal__details,
+html[data-theme="light"] .community-modal__details {
+    background: var(--surface);
+}
+
+html[data-theme="light"] .event-modal__gallery,
+html[data-theme="light"] .community-modal__gallery {
+    background: var(--surface-alt);
+}
+
+html[data-theme="light"] .event-modal,
+html[data-theme="light"] .community-modal,
+html[data-theme="light"] .community-chapter-modal {
+    background: var(--overlay);
+}
+
+/* Light mode project modal styling with light background tints */
+html[data-theme="light"] .project-modal__panel {
+    /* Modal ink scale — the panel is a near-white island in light mode. */
+    --text: #111827;
+    --text-2: #374151;
+    --text-3: #6B7280;
+    --text-4: #9CA3AF;
+    --muted: #4B5563;
+    color: var(--text);
+    border-color: var(--border);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+}
+
+html[data-theme="light"] .project-modal__details {
+    background: rgba(255, 255, 255, 0.55);
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="light"] .project-modal__title {
+    color: var(--text);
+}
+
+html[data-theme="light"] .project-modal__description {
+    color: var(--text-2);
+}
+
+html[data-theme="light"] .project-modal .project-card__meta {
+    color: var(--text-3);
+}
+
+html[data-theme="light"] .project-modal__logo-icon {
+    background: var(--bg-elevated);
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="light"] .project-modal__close {
+    background: var(--bg-elevated);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: var(--text);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="light"] .project-modal__close:hover,
+html[data-theme="light"] .project-modal__close:focus-visible {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+html[data-theme="light"] .project-modal__tag {
+    color: var(--text-2);
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme="light"] .project-modal__nav {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme="light"] .project-modal__nav:hover,
+html[data-theme="light"] .project-modal__nav:focus-visible {
+    background: var(--bg-elevated);
+    color: var(--text);
+}
+
+html[data-theme="light"] .project-modal__gallery {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+html[data-theme="light"] .project-modal__link--disabled {
+    color: var(--text-4);
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+

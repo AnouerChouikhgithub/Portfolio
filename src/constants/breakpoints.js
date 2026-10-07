@@ -1,5 +1,5 @@
 /**
- * Shared breakpoint constants — MUST match the media queries in src/styles.css.
+ * Shared breakpoint constants — MUST match the media queries in src/styles/responsive.css.
  * Mobile-first: base styles target small screens, min-width queries scale up.
  *
  * CSS breakpoints (source of truth):

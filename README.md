@@ -80,7 +80,7 @@ A single-page portfolio for **Anouer Chouikh** — Computer Engineering & IoT st
 └── src/
     ├── main.jsx                # Entry — mounts providers + App
     ├── App.jsx                 # Section composition
-    ├── styles.css              # Design tokens + all component styles
+    ├── styles/                 # Design tokens + component styles, split by section
     ├── components/             # Header, Hero, About, Skills, Projects,
     │                           # Community, Events, Contact, Footer,
     │                           # PdfModal, MixedText
@@ -151,7 +151,7 @@ npm run preview
 
 **Breakpoints live in two synced places** — keep them consistent when changing:
 
-- CSS: media queries in [src/styles.css](src/styles.css) (768 px is the mobile/desktop boundary)
+- CSS: media queries in [src/styles/responsive.css](src/styles/responsive.css) (768 px is the mobile/desktop boundary)
 - JS: [src/constants/breakpoints.js](src/constants/breakpoints.js) consumed by the `useResponsive()` hook via `matchMedia`
 
 Testing tools: Chrome DevTools device toolbar, [Responsively App](https://responsively.app/), real iOS/Android devices.
@@ -167,7 +167,7 @@ Testing tools: Chrome DevTools device toolbar, [Responsively App](https://respon
 
 1. Create `src/i18n/<code>.json` — copy `en.json` and translate all keys (the build fails if keys don't match — `check-i18n` runs automatically).
 2. Register it in `dictionaries` in [src/i18n/I18nProvider.jsx](src/i18n/I18nProvider.jsx).
-3. If RTL, add its code to `RTL_LANGUAGES` in [src/constants/i18nConfig.js](src/constants/i18nConfig.js) and add a font rule in `styles.css` if needed.
+3. If RTL, add its code to `RTL_LANGUAGES` in [src/constants/i18nConfig.js](src/constants/i18nConfig.js) and add a font rule in `src/styles/tokens.css` if needed.
 4. Add an hreflang link in `index.html`.
 
 Validate anytime with `npm run check:i18n`.
@@ -178,7 +178,7 @@ Validate anytime with `npm run check:i18n`.
 - Applied via `data-theme` on `<html>`; colors come from CSS custom properties (`--bg`, `--surface`, `--text`, `--accent`, …).
 - **No FOUC:** an inline script in `index.html` applies the saved theme before React boots.
 
-**Customize colors:** edit the token blocks at the top of [src/styles.css](src/styles.css) — `:root` (dark defaults) and `html[data-theme="light"]`.
+**Customize colors:** edit the token blocks at the top of [src/styles/tokens.css](src/styles/tokens.css) — `:root` (dark defaults) and `html[data-theme="light"]`.
 
 ## 8. Environment Variables
 
@@ -329,7 +329,7 @@ Overwrite `public/Anouer_Chouikh_CV_EN.pdf` and/or `_FR.pdf` keeping the same na
 Append an entry to `projects` in [Projects.jsx](src/components/Projects.jsx) (slug, title, tech, photos, accent color, logo path), then add matching `projects.items.<slug>` translations in all three language files. Link to it anywhere with `#project-<slug>`.
 
 **How do I change colors/theme?**
-Edit the CSS custom properties at the top of [styles.css](src/styles.css) (`:root` = dark, `html[data-theme="light"]` = light).
+Edit the CSS custom properties at the top of [src/styles/tokens.css](src/styles/tokens.css) (`:root` = dark, `html[data-theme="light"]` = light).
 
 **How do I add a language?**
 Section 6 above — new JSON file, register in the provider, keep keys aligned (build enforces it).

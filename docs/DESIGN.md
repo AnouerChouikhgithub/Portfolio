@@ -3,7 +3,7 @@
 ## Tokens
 
 All colour, spacing, radius, elevation, z-index and motion values live in
-`src/styles.css` under `:root` (dark — the default theme) and
+`src/styles/tokens.css` under `:root` (dark — the default theme) and
 `html[data-theme="light"]`. Components should reference tokens, not raw hex
 values.
 
@@ -182,6 +182,20 @@ overlay pigments (`rgba(0,0,0,·)`, `rgba(255,255,255,·)`), the PDF link
 focus ring `#087f9e` (AA on white paper in both themes), and the background
 files' palette constants — those are declared as custom properties
 (`--hero-bg-start`, `--section-base`, …) in their own theme-scoped blocks.
+
+## CSS file structure (Phase 4c)
+
+The 4,600-line `src/styles.css` was split into `src/styles/*.css` — 18
+contiguous slices imported in order by `src/styles/index.css` (what
+`main.jsx` imports). Vite inlines `@import`s in order, so the cascade is
+byte-identical to the original: the split script asserts byte-exact
+reconstitution of the source and balanced braces per chunk, and the built
+dist CSS hash did not change across the split.
+
+Order matters — do not reorder `index.css`:
+tokens → typography → utilities → header → hero → about → skills →
+projects → project-modal → pet-modal → community → events → pdf-modal →
+contact → footer → theme-overrides (light) → responsive → skills-subscreen.
 
 ## Motion ownership
 
