@@ -154,6 +154,35 @@ through refs — no React state per animation frame — while keeping the
   lifted, icon scales 1.12) and an explicit transition list instead of
   `transition: all`.
 
+## Colour token pass (Phase 4b)
+
+- New tokens in `:root` + `html[data-theme="light"]`: `--danger` and the
+  `--link-*` family (blue/red/orange/yellow/teal/violet + hover variants).
+  Event-modal link hues and every error/danger colour now resolve from
+  tokens; the nine `html[data-theme="light"]` override rules for link hues
+  were deleted because the light token block re-inks them (same values as
+  before — asserted by the colour QA in both themes).
+- **Two AA fixes fell out of tokenising:** light-theme `.contact__error` is
+  now `#B91C1C` (≈6.9:1 on white) instead of `#ff4d4f` (≈3.1:1, fail), and
+  accent-filled buttons (`.project-modal__link`, `.pet-modal__primary-cta`)
+  use `var(--accent-contrast)` — in light mode that flips their text to
+  white (≈5.3:1) where the old hardcoded `#061018` on `#0E7490` was ≈3.2:1
+  (fail).
+- All 33 `rgba(34, 211, 238, α)` hairlines became
+  `color-mix(in srgb, var(--accent) α%, transparent)` — pixel-identical in
+  dark (`--accent` *is* `#22d3ee`) and now tinted by the light accent
+  instead of staying bright cyan on white.
+- The light project-modal's grey ink scale is now a scoped token set
+  (`--text`…`--text-4` on `.project-modal__panel`).
+
+**Intentionally kept as literals** (artwork/chrome, not theme semantics):
+`color-mix` darken/lighten mixers (`#000`/`#fff`), white logo/PDF-paper
+plates (stay white in *both* themes by design), black/white shadow and
+overlay pigments (`rgba(0,0,0,·)`, `rgba(255,255,255,·)`), the PDF link
+focus ring `#087f9e` (AA on white paper in both themes), and the background
+files' palette constants — those are declared as custom properties
+(`--hero-bg-start`, `--section-base`, …) in their own theme-scoped blocks.
+
 ## Motion ownership
 
 See `src/motion/README.md` — GSAP owns scroll-linked work, Motion owns
