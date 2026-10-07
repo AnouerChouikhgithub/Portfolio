@@ -1,27 +1,40 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 const numberPattern = /\d+/g;
 
+// Counts numbers inside `text` up from 0 when scrolled into view.
+// Phase 3c: animation frames write textContent through refs instead of
+// calling setState per frame (no React re-render per rAF while visible).
+// The wrapper keeps `aria-label={text}` so screen readers always get the
+// final string; individual number spans stay aria-hidden.
 export default function AnimatedCountText({ text }) {
   const ref = useRef(null);
+  const numberRefs = useRef([]);
   const targets = useMemo(
     () => [...text.matchAll(numberPattern)].map((match) => Number(match[0])),
     [text],
   );
-  const [values, setValues] = useState(() => targets.map(() => 0));
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return undefined;
 
-    setValues(targets.map(() => 0));
-    const finish = () => setValues(targets);
+    const nodes = numberRefs.current.slice(0, targets.length).filter(Boolean);
+    const writeAll = (values) => {
+      for (let index = 0; index < nodes.length; index += 1) {
+        nodes[index].textContent = String(values[index]);
+      }
+    };
+
+    const showFinal = () => writeAll(targets);
+    writeAll(targets.map(() => 0));
+
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      finish();
+      showFinal();
       return undefined;
     }
     if (!('IntersectionObserver' in window)) {
-      finish();
+      showFinal();
       return undefined;
     }
 
@@ -35,7 +48,7 @@ export default function AnimatedCountText({ text }) {
         startedAt ??= timestamp;
         const progress = Math.min((timestamp - startedAt) / 850, 1);
         const easedProgress = 1 - ((1 - progress) ** 3);
-        setValues(targets.map((target) => Math.round(target * easedProgress)));
+        writeAll(targets.map((target) => Math.round(target * easedProgress)));
         if (progress < 1) frameId = window.requestAnimationFrame(animate);
       };
       frameId = window.requestAnimationFrame(animate);
@@ -54,12 +67,15 @@ export default function AnimatedCountText({ text }) {
       {parts.map((part, index) => (
         <span key={`part-${index}`} aria-hidden="true">
           {part}
-          {index < values.length ? (
+          {index < targets.length ? (
             <span
+              ref={(node) => {
+                numberRefs.current[index] = node;
+              }}
               className="modal-countup__number"
               style={{ minWidth: `${targets[index].toString().length}ch` }}
             >
-              {values[index]}
+              0
             </span>
           ) : ''}
         </span>

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Header from './components/Header'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -9,8 +10,12 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollProgress from './motion/ScrollProgress'
 import SectionBackground from './components/SectionBackground'
+import { initCardSpotlight } from './motion/cardSpotlight'
 
 export default function App() {
+  // Single delegated pointer listener feeding the card spotlight/tilt CSS vars.
+  useEffect(() => initCardSpotlight(), [])
+
   return (
     <>
       {/* Fixed grain/vignette: hides the seams between section bands with a

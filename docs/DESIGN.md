@@ -105,6 +105,34 @@ under `prefers-reduced-motion`, it falls back to the explicit `background-color`
 / `color` transitions on `body` and cards. `transition: all` is never used on
 `body` or `section`.
 
+## Card pointer spotlight (Phase 3c)
+
+Four card selectors (`.project-card`, `.events-card`, `.community-card`,
+`.skills-group-card`) declare a radial `--glow` gradient positioned by
+`--mx/--my`; `.project-card` additionally consumes `--rx/--ry` for a subtle
+3D tilt. `src/motion/cardSpotlight.js` feeds them from **one** delegated,
+rAF-throttled `pointermove` listener mounted once in `App.jsx`.
+
+- Fine pointers only (`pointer: fine`): touch devices keep the resting state
+  (glow parked at `-999px`, tilt `0deg`), so nothing is lost but nothing
+  flickers on tap either.
+- Fully disabled under `prefers-reduced-motion` (listener never attaches).
+- Vars reset on pointer-leave and on any scroll/resize — the card's own hover
+  lift shifts its box, so the rect is re-read inside each frame instead of
+  being cached.
+- CSS: the cards paint `background-color`, not the `background` shorthand —
+  a shorthand later in the cascade would reset `background-image` and kill
+  the spotlight (this was the original reason the gradient never rendered).
+- Tilt is composed into the same `transform` as the hover lift
+  (`translateY(-8px) perspective(900px) rotateX(var(--rx)) rotateY(var(--ry))`)
+  so hover and tilt never clobber each other. Tilt is intentionally limited
+  to `.project-card` (the marquee cards); the other cards keep their existing
+  hover transforms untouched.
+
+`AnimatedCountText` (project-modal chips) counts up by writing `textContent`
+through refs — no React state per animation frame — while keeping the
+`aria-label` full string on the wrapper for screen readers.
+
 ## Motion ownership
 
 See `src/motion/README.md` — GSAP owns scroll-linked work, Motion owns

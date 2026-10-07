@@ -7,6 +7,7 @@ dist
 # Local QA helpers (headless-Chrome scripts with machine-specific paths)
 .audit.mjs
 .shot.mjs
+.spotlight.mjs
 .wide.mjs
 .overflow.mjs
 .verify.mjs

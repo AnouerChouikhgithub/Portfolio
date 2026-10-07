@@ -1124,18 +1124,21 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
     gap: 2rem;
 }
 
+/* Pointer spotlight: --mx/--my (glow position) and --rx/--ry (tilt) are
+   written by src/motion/cardSpotlight.js. Resting position is off-canvas so
+   the glow only appears while a fine pointer is over the card. */
 .project-card,
 .events-card,
 .community-card,
 .skills-group-card {
-    --mx: 50%;
-    --my: 50%;
+    --mx: -999px;
+    --my: -999px;
     background-image: radial-gradient(320px circle at var(--mx, -999px) var(--my, -999px), var(--glow), transparent 70%);
     background-repeat: no-repeat;
 }
 
 .project-card {
-    background: var(--surface);
+    background-color: var(--surface);
     border-radius: 12px;
     padding: 2rem;
     border: 1px solid var(--border);
@@ -1147,6 +1150,7 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
     color: inherit;
     font: inherit;
     cursor: pointer;
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
 }
 
 .project-card__image {
@@ -1172,7 +1176,7 @@ html[dir="rtl"] .nav__logo:focus-visible .nav__logo-name {
 
 .project-card:hover,
 .project-card:focus-visible {
-    transform: translateY(-8px);
+    transform: translateY(-8px) perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     box-shadow: var(--shadow-lg);
     border-color: var(--accent);
 }
@@ -2114,7 +2118,7 @@ html[data-theme="light"] .pet-gallery__main {
     width: 100%;
     max-width: 220px;
     min-height: 0;
-    background: var(--bg);
+    background-color: var(--bg);
     padding: 1.5rem 1rem;
     border-radius: 12px;
     text-align: center;
@@ -2598,7 +2602,7 @@ html[data-theme="light"] .pet-gallery__main {
 }
 
 .events-card {
-    background: var(--surface);
+    background-color: var(--surface);
     border-radius: 12px;
     padding: 2rem;
     border: 1px solid rgba(34, 211, 238, 0.1);
@@ -4142,7 +4146,7 @@ section {
     gap: 1rem;
     padding: 1.25rem 1.5rem;
     border-radius: 14px;
-    background: var(--surface);
+    background-color: var(--surface);
     border: 1px solid var(--border-strong);
     color: var(--text);
     font: inherit;
@@ -4175,7 +4179,7 @@ section {
     transform: translateY(-3px) scale(1.01);
     border-color: var(--accent);
     box-shadow: 0 6px 20px var(--glow);
-    background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+    background-color: color-mix(in srgb, var(--accent) 6%, var(--surface));
     outline: none;
 }
 
