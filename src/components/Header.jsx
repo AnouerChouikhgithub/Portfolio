@@ -19,6 +19,56 @@ export default function Header() {
   const mobileMenuRef = useRef(null);
   const themeIconRef = useRef(null);
   const isFirstThemePaint = useRef(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+
+  // Floating pill: solidify after a few px of scroll; tuck the bar away while
+  // scrolling down and bring it back on scroll-up. Whether the bar is actually
+  // hidden is resolved at render time so an open menu always wins.
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let lastY = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const y = window.scrollY;
+        const delta = y - lastY;
+        lastY = y;
+        setIsScrolled(y > 24);
+        if (reducedMotion) return;
+        if (y < 80 || delta < -4) setIsHidden(false);
+        else if (delta > 4) setIsHidden(true);
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  // Scrollspy: whichever section crosses the viewport's reading band owns the
+  // active nav pill. IntersectionObserver, no scroll-handler polling.
+  useEffect(() => {
+    const ids = ['home', ...NAVIGATION_ITEMS.map(([key]) => key)];
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length || typeof IntersectionObserver === 'undefined') return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id === 'home' ? '' : entry.target.id);
+          }
+        }
+      },
+      { rootMargin: '-42% 0px -52% 0px', threshold: 0 },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
 
   // Sun <-> moon micro-morph (anime.js owns icon micro-motion; skipped for
   // reduced motion and on the initial render where there is nothing to morph).
@@ -123,8 +173,13 @@ export default function Header() {
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
+  const headerHidden = isHidden && !isMobileMenuOpen && !isLanguageOpen;
+
   return (
-    <header className="header">
+    <header
+      className={`header${isScrolled ? ' header--scrolled' : ''}${headerHidden ? ' header--hidden' : ''}`}
+      onFocus={() => setIsHidden(false)}
+    >
       <nav
         className="nav__container container"
         aria-label={t('nav.primary')}
@@ -137,11 +192,21 @@ export default function Header() {
         </a>
 
         <ul className={`nav__list ${isMobileMenuOpen ? 'is-open' : ''}`} id="primary-navigation">
-          {navigation.map(([key, href]) => (
-            <li key={href}>
-              <a className="nav__link" href={href} onClick={closeMobileMenu}>{t(`nav.${key}`)}</a>
-            </li>
-          ))}
+          {navigation.map(([key, href], index) => {
+            const isActive = activeSection === key;
+            return (
+              <li key={href} style={{ '--i': index }}>
+                <a
+                  className={`nav__link${isActive ? ' is-active' : ''}`}
+                  href={href}
+                  onClick={closeMobileMenu}
+                  aria-current={isActive ? 'location' : undefined}
+                >
+                  {t(`nav.${key}`)}
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="nav__controls">

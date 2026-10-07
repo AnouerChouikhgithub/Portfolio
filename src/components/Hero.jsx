@@ -48,7 +48,7 @@ export default function Hero() {
             </div>
             <h1 id="hero-heading" className="hero__name">{t('common.name')}</h1>
             <p className="hero__title">{t('hero.title')}</p>
-            <p className="hero__tagline">Robotics • IoT</p>
+            <p className="hero__tagline">{t('hero.tagline')}</p>
             <div className="hero__buttons">
               <a className="btn btn--primary" href="#projects">{t('hero.projects')}</a>
               <a className="btn btn--secondary" href="#contact">{t('hero.contact')}</a>

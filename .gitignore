@@ -11,3 +11,4 @@ dist
 .overflow.mjs
 .verify.mjs
 .shotstats.mjs
+.headercheck.mjs
