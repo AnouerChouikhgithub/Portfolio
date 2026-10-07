@@ -99,7 +99,14 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
     ...(project.accent ? { '--accent': project.accent } : {}),
     ...(bgDark ? { '--project-bg-dark': bgDark } : {}),
     ...(bgLight ? { '--project-bg-light': bgLight } : {}),
-    ...(currentBg ? { background: currentBg, '--project-bg': currentBg } : {}),
+    // The panel surface stays opaque (AA never depends on the frost), and
+    // --sub-panel-bg / --sub-bg feed the SubScreen shell + backdrop tint.
+    ...(currentBg ? {
+      background: currentBg,
+      '--project-bg': currentBg,
+      '--sub-panel-bg': currentBg,
+      '--sub-bg': currentBg,
+    } : {}),
   };
 
   // Resolved technical skills list for non-PET projects

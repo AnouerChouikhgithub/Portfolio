@@ -115,6 +115,8 @@ html[data-theme="light"] .community-card__since {
     line-height: 1.6;
 }
 
+/* Legacy wrapper kept forәт modal internals that still target `.project-modal`:
+   the visible backdrop layers moved to overlay/SubScreen (subscreen.css). */
 .project-modal {
     position: fixed;
     inset: 0;
@@ -123,8 +125,11 @@ html[data-theme="light"] .community-card__since {
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    background: var(--overlay);
-    backdrop-filter: blur(8px);
-    animation: modalBackdropIn 260ms ease both;
+    background: transparent;
+    pointer-events: none;
+}
+
+.project-modal > .project-modal__panel {
+    pointer-events: auto;
 }
 

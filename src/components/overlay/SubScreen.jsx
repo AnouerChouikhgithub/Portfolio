@@ -83,6 +83,60 @@ export default function SubScreen({
   const panelRef = useRef(null);
   const layerRef = useRef(null);
   const panelOpenProps = useRef(null);
+  const dragRef = useRef(null);
+
+  // Mobile drag-to-dismiss: dragging the handle down > 90 px closes (rAF-throttled).
+  useEffect(() => {
+    const grip = dragRef.current;
+    const panel = panelRef.current;
+    if (!open || !grip || !panel) return undefined;
+
+    let startY = 0;
+    let active = false;
+    let frame = 0;
+    let currentDelta = 0;
+
+    const onPointerDown = (event) => {
+      active = true;
+      startY = event.clientY;
+    };
+    const onPointerMove = (event) => {
+      if (!active) return;
+      currentDelta = Math.max(0, event.clientY - startY);
+      if (!frame) {
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          panel.style.transform = `translateY(${currentDelta}px)`;
+          panel.style.opacity = String(Math.max(1 - currentDelta / 400, 0.35));
+        });
+      }
+    };
+    const finish = () => {
+      if (!active) return;
+      active = false;
+      if (frame) { cancelAnimationFrame(frame); frame = 0; }
+      if (currentDelta > 90) {
+        onClose();
+      } else {
+        panel.style.transition = 'transform 260ms ease, opacity 260ms ease';
+        panel.style.transform = '';
+        panel.style.opacity = '';
+        setTimeout(() => { panel.style.transition = ''; }, 280);
+      }
+      currentDelta = 0;
+    };
+
+    grip.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', finish);
+    window.addEventListener('pointercancel', finish);
+    return () => {
+      grip.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', finish);
+      window.removeEventListener('pointercancel', finish);
+    };
+  }, [open, onClose]);
 
   useEffect(() => {
     if (open) setMounted(true);
@@ -175,6 +229,14 @@ export default function SubScreen({
         aria-labelledby={labelledBy}
         data-depth={depth}
       >
+        {/* Mobile drag handle (CSS hides it ≥ 721 px) */}
+        <div
+          className="subscreen__sheet-grip"
+          ref={dragRef}
+          role="separator"
+          aria-orientation="horizontal"
+          aria-label="Drag down to close"
+        />
         {children}
       </div>
     </div>,

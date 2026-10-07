@@ -112,7 +112,7 @@ html[data-theme="light"] .subscreen__tint {
     padding: 0;
 }
 
-/* ── Panel shell ───────────────────────────────────────────────────── */
+/* ── Panel shell (Step 4) ─────────────────────────────────────────── */
 .subscreen__panel {
     position: relative;
     z-index: 2;
@@ -128,6 +128,68 @@ html[data-theme="light"] .subscreen__tint {
         0 0 42px color-mix(in srgb, var(--sub-accent, var(--accent)) 22%, transparent),
         var(--shadow-lg);
     outline: none;
+}
+
+/* Per-project surface: the modal injects --project-bg (bgDark/bgLight).
+   Title and chips keep using --accent from the same injection. */
+.subscreen--project .subscreen__panel {
+    background:
+        radial-gradient(110% 90% at 50% 0%,
+            color-mix(in srgb, var(--sub-accent, var(--accent)) 10%, transparent),
+            transparent 55%),
+        var(--sub-panel-bg, var(--surface));
+}
+
+/* Overscroll containment for the independent scroll regions */
+.subscreen .modal-scroll-region,
+.subscreen .project-modal__content {
+    overscroll-behavior: contain;
+}
+
+/* ── Mobile sheet (Step 4) ─────────────────────────────────────────── */
+@media (max-width: 720px) {
+    .subscreen {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .subscreen__panel {
+        width: 100%;
+        height: calc(100dvh - env(safe-area-inset-top, 0px));
+        max-height: none;
+        border-radius: 18px 18px 0 0;
+        /* The sheet slides up out of the card; the drag handle carries
+           the same dimiss gesture (JS attaches pointer events). */
+    }
+
+    .subscreen--project .subscreen__panel,
+    .subscreen--event .subscreen__panel,
+    .subscreen--community .subscreen__panel {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .subscreen__sheet-grip {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        justify-content: center;
+        padding: 0.55rem 0 0.35rem;
+        width: 100%;
+        touch-action: none;
+    }
+
+    .subscreen__sheet-grip::before {
+        content: '';
+        width: 44px;
+        height: 5px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--text) 34%, transparent);
+    }
+}
+
+@media (min-width: 721px) {
+    .subscreen__sheet-grip { display: none; }
 }
 
 /* Lower layer demotion while another sub-screen sits on top */
