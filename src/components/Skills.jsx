@@ -464,21 +464,24 @@ export default function Skills() {
 
       {/* ── Internship Certificate Modal ───────────────────────────── */}
       {isCertOpen && (
-        <Suspense fallback={null}>
-          <ModalErrorBoundary
-            onClose={() => setIsCertOpen(false)}
-            message={t('common.viewLoadError')}
-            closeLabel={t('common.close')}
-          >
-            <PdfModal
-              src="/internship-certificate.pdf"
-              title={t('certificate.dialogTitle')}
-              showDownload={false}
+        createPortal(
+          <Suspense fallback={null}>
+            <ModalErrorBoundary
               onClose={() => setIsCertOpen(false)}
-              triggerRef={certTriggerRef}
-            />
-          </ModalErrorBoundary>
-        </Suspense>
+              message={t('common.viewLoadError')}
+              closeLabel={t('common.close')}
+            >
+              <PdfModal
+                src="/internship-certificate.pdf"
+                title={t('certificate.dialogTitle')}
+                showDownload={false}
+                onClose={() => setIsCertOpen(false)}
+                triggerRef={certTriggerRef}
+              />
+            </ModalErrorBoundary>
+          </Suspense>,
+          document.body,
+        )
       )}
     </>
   );

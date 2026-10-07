@@ -340,13 +340,6 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
   // Instant CSS scale feedback while debounce is pending
   const cssScale = renderedZoom > 0 ? zoom / renderedZoom : 1;
   const isScaleTransformed = Math.abs(cssScale - 1) > 0.005;
-  const isResume = /\/Anouer_Chouikh_CV_(EN|FR)\.pdf$/i.test(src);
-  const resumeLinks = [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/anouer-chouikh-303306220/' },
-    { label: 'Portfolio', href: 'https://anouer-chouikh.netlify.app/' },
-    { label: 'GitHub', href: 'https://github.com/AnouerChouikhgithub' },
-    { label: 'Email', href: 'mailto:anouer.chouikh2005@gmail.com' },
-  ];
 
   return (
     <div className="event-modal" onClick={onClose} aria-hidden="true">
@@ -428,19 +421,6 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
         </header>
 
         {/* PDF scroll & display viewport */}
-        {isResume && (
-          <nav className="pdf-modal__links" aria-label="CV contact links">
-            {resumeLinks.map(({ label, href }) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer">
-                {label}
-              </a>
-            ))}
-            <a href={src} download>
-              Download PDF
-            </a>
-          </nav>
-        )}
-
         <div
           ref={scrollContainerRef}
           className={`pdf-modal__body ${zoom > 1 ? 'pdf-modal__body--zoomed' : ''}`}

@@ -151,31 +151,6 @@
     border-radius: 999px;
 }
 
-.pdf-modal__links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-    flex: 0 0 auto;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-}
-
-.pdf-modal__links a {
-    color: var(--accent);
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.pdf-modal__links a:hover,
-.pdf-modal__links a:focus-visible {
-    text-decoration: underline;
-    outline-color: var(--accent);
-}
-
 .pdf-modal__body--zoomed {
     overflow: auto;
 }
@@ -287,4 +262,3 @@ html[data-theme="light"] .pdf-modal__btn {
 html[data-theme="light"] .pdf-modal__zoom-group .pdf-modal__btn {
     background: transparent;
 }
-
