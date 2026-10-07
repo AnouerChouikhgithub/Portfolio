@@ -13,6 +13,10 @@ import SectionBackground from './components/SectionBackground'
 export default function App() {
   return (
     <>
+      {/* Fixed grain/vignette: hides the seams between section bands with a
+          very low-contrast texture (paper grain in light, fine grain +
+          vignette in dark). Purely decorative. */}
+      <div className="page-grain" aria-hidden="true" />
       <ScrollProgress />
       <Header />
       <main>

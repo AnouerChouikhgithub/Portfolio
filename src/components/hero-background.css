@@ -1,4 +1,8 @@
 .hero {
+    /* Stacked above the fixed grain layer, same as every section's
+       content — grain covers backgrounds only, never text. */
+    position: relative;
+    z-index: 1;
     /* Theme-driven hero wash — both background layers read these. */
     --hero-bg-start: #050b10;
     --hero-bg-mid: #08202a;
@@ -110,6 +114,23 @@ html[data-theme="light"] .hero-background__glow--teal {
     -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 42%, #000 5%, transparent 100%);
 }
 
+/* Both hero layers stay mounted; the theme token crossfades them so a
+   theme toggle never hard-cuts. Keep the fade short and skip it entirely
+   under reduced motion. */
+.hero-background,
+.hero-background-blueprint {
+    transition: opacity var(--dur-base) var(--ease-std);
+}
+
+.hero-background {
+    opacity: 1;
+}
+
+html[data-theme="light"] .hero-background {
+    opacity: 0;
+    pointer-events: none;
+}
+
 .hero-background__trace {
     fill: none;
     stroke: var(--accent);
@@ -117,6 +138,17 @@ html[data-theme="light"] .hero-background__glow--teal {
     stroke-linecap: round;
     animation: heroCircuitTracePulse 8s ease-in-out infinite;
     animation-play-state: paused;
+}
+
+/* Draw-on is owned by anime.js: keep the traces hidden only until the
+   drawable proxies have installed their dash attributes. */
+.hero-background[data-draw="pending"] .hero-background__trace {
+    visibility: hidden;
+}
+
+.hero-background[data-draw="failed"] .hero-background__trace,
+.hero-background[data-draw="ready"] .hero-background__trace {
+    visibility: visible;
 }
 
 .hero-background__node {

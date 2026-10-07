@@ -1,28 +1,119 @@
 :root {
+    /* Journey bands: every section sits within ~4% of --bg so body-copy
+       contrast is untouched, while each band shifts hue along the route
+       accent -> accent-2 -> warm. `--section-from` is the *previous* band,
+       which the base gradient blends from, so neighbouring sections overlap
+       instead of flipping colour at a hard seam. */
     --section-base: #060d13;
     --section-tint: #0a1f27;
     --section-line: #22d3ee;
+    --band-page: var(--bg);
+    --band-about: color-mix(in srgb, var(--bg) 96%, var(--accent) 4%);
+    --band-skills: color-mix(in srgb, var(--bg) 96%, color-mix(in srgb, var(--accent) 50%, var(--accent-2)) 4%);
+    --band-projects: color-mix(in srgb, var(--bg) 96%, var(--accent-2) 4%);
+    --band-community: color-mix(in srgb, var(--bg) 95%, var(--accent-2) 5%);
+    --band-events: color-mix(in srgb, var(--bg) 96%, color-mix(in srgb, var(--accent-2) 50%, var(--accent-warm)) 4%);
+    --band-contact: color-mix(in srgb, var(--bg) 96%, var(--accent-2) 4%);
+    --band-footer: color-mix(in srgb, var(--bg) 94%, color-mix(in srgb, var(--accent-warm) 33%, var(--accent)) 6%);
 }
 
 html[data-theme="light"] {
     --section-base: #f6fafc;
     --section-tint: #e6f4f8;
     --section-line: #0e7490;
+    --band-page: var(--bg);
+    --band-about: color-mix(in srgb, var(--bg) 96%, var(--accent) 4%);
+    --band-skills: color-mix(in srgb, var(--bg) 96%, color-mix(in srgb, var(--accent) 50%, var(--accent-2)) 4%);
+    --band-projects: color-mix(in srgb, var(--bg) 96%, var(--accent-2) 4%);
+    --band-community: color-mix(in srgb, var(--bg) 95%, var(--accent-2) 5%);
+    --band-events: color-mix(in srgb, var(--bg) 96%, color-mix(in srgb, var(--accent-2) 50%, var(--accent-warm)) 4%);
+    --band-contact: color-mix(in srgb, var(--bg) 96%, var(--accent-2) 4%);
+    --band-footer: color-mix(in srgb, var(--bg) 95%, color-mix(in srgb, var(--accent-warm) 33%, var(--accent)) 5%);
+}
+
+/* Sections are positioned but do NOT isolate: that would trap their
+   content inside per-section stacking contexts, making it impossible for
+   the single fixed .page-grain layer to sit above section backgrounds
+   yet below section content. Explicit z-indexes below keep the internal
+   layering identical (backgrounds 0, content 1, modals 1000+). */
+main > section:not(#home),
+.footer {
+    position: relative;
+}
+
+/* Per-section band + hue journey (accent -> accent-2 -> warm). */
+main > section#about {
+    --band-current: var(--band-about);
+    --section-from: var(--band-page);
+    --section-line: var(--accent);
+}
+
+main > section#skills {
+    --band-current: var(--band-skills);
+    --section-from: var(--band-about);
+    --section-line: color-mix(in srgb, var(--accent) 55%, var(--accent-2));
+}
+
+main > section#projects {
+    --band-current: var(--band-projects);
+    --section-from: var(--band-skills);
+    --section-line: color-mix(in srgb, var(--accent) 25%, var(--accent-2));
+}
+
+main > section#community {
+    --band-current: var(--band-community);
+    --section-from: var(--band-projects);
+    --section-line: var(--accent-2);
+}
+
+main > section#events {
+    --band-current: var(--band-events);
+    --section-from: var(--band-community);
+    --section-line: color-mix(in srgb, var(--accent-2) 65%, var(--accent-warm));
+}
+
+main > section#contact {
+    --band-current: var(--band-contact);
+    --section-from: var(--band-events);
+    --section-line: color-mix(in srgb, var(--accent) 70%, var(--accent-2));
+}
+
+/* Note: every mix above is exactly two inputs (nested where three hues are
+   needed) — Chrome rejects 3-input color-mix(), which silently invalidated
+   the whole declaration. */
+
+.footer {
+    --band-current: var(--band-footer);
+    --section-from: var(--band-contact);
 }
 
 main > section:not(#home),
 .footer {
-    position: relative;
-    isolation: isolate;
+    background: var(--band-current, var(--section-base));
 }
 
-main > section#about,
-main > section#skills,
-main > section#projects,
-main > section#community,
-main > section#events,
-main > section#contact {
-    background: var(--section-base);
+/* ── Global grain / vignette ───────────────────────────────────────
+   One fixed layer over the whole page: a whisper of noise plus (in dark)
+   a vignette, so band seams disappear and the surface reads as paper
+   rather than flat colour. Never intercepts pointer events.          */
+.page-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image:
+        radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, color-mix(in srgb, var(--bg) 85%, transparent) 100%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+    background-size: 100% 100%, 180px 180px;
+}
+
+html[data-theme="light"] .page-grain {
+    /* Paper grain only — light mode gets no vignette. */
+    opacity: 0.35;
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
 }
 
 main > section:not(#home) > :not(.section-background):not([role="dialog"]),
@@ -34,8 +125,8 @@ main > section:not(#home) > :not(.section-background):not([role="dialog"]),
 .section-background,
 .section-background__base,
 .section-background__grid,
-.section-background__motion,
-.section-background__fade {
+.section-background__parallax,
+.section-background__motion {
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -43,10 +134,14 @@ main > section:not(#home) > :not(.section-background):not([role="dialog"]),
 
 .section-background {
     z-index: 0;
+    /* The drift/parallax transforms must never widen the document. */
+    overflow: clip;
 }
 
 .section-background__base {
-    background: linear-gradient(180deg, var(--section-base), var(--section-tint));
+    /* Overlapping transition: start on the previous section's band and
+       settle into this one inside the first 180px — no hard seam. */
+    background: linear-gradient(180deg, var(--section-from, var(--band-current)) 0px, var(--band-current) 180px);
 }
 
 .section-background__grid {
@@ -60,7 +155,14 @@ main > section:not(#home) > :not(.section-background):not([role="dialog"]),
 }
 
 footer.footer {
-    background: var(--section-base);
+    background: var(--band-current, var(--section-base));
+}
+
+.section-background__parallax {
+    /* GSAP scrubs this wrapper (transform only) for slow hatch/ruler
+       parallax; the CSS drift keeps animating the inner layer so the two
+       never fight over the same property. No permanent will-change — the
+       layers are large and always composited only while on screen. */
 }
 
 .section-background__motion {
@@ -72,15 +174,15 @@ footer.footer {
 
 .section-background--about .section-background__motion {
     background:
-        radial-gradient(ellipse 42% 36% at 15% 20%, rgba(34, 211, 238, 0.11), transparent 100%),
-        radial-gradient(ellipse 38% 34% at 85% 78%, rgba(16, 185, 129, 0.09), transparent 100%);
+        radial-gradient(ellipse 42% 36% at 15% 20%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 100%),
+        radial-gradient(ellipse 38% 34% at 85% 78%, color-mix(in srgb, var(--accent-2) 9%, transparent), transparent 100%);
     animation: sectionBackgroundDriftA 38s ease-in-out alternate infinite;
 }
 
+/* Skills: the dots themselves live in the reactive canvas (DotGrid);
+   this layer only keeps a slow diagonal sweep behind it. */
 .section-background--skills .section-background__motion {
     background:
-        radial-gradient(circle, var(--section-line) 1.5px, transparent 2px) 12% 24% / 84px 84px,
-        radial-gradient(circle, var(--section-line) 1.5px, transparent 2px) 54% 56% / 112px 112px,
         linear-gradient(35deg, transparent 49.7%, color-mix(in srgb, var(--section-line) 18%, transparent) 50%, transparent 50.3%);
     animation: sectionBackgroundDriftB 42s ease-in-out alternate infinite;
 }
@@ -105,28 +207,74 @@ footer.footer {
 .section-background--events .section-background__motion {
     background:
         repeating-linear-gradient(0deg, transparent 0 72px, color-mix(in srgb, var(--section-line) 14%, transparent) 73px 74px, transparent 75px 146px),
-        radial-gradient(ellipse 60% 15% at 50% 50%, rgba(34, 211, 238, 0.1), transparent 100%);
+        radial-gradient(ellipse 60% 15% at 50% 50%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 100%);
     animation: sectionBackgroundDriftA 44s ease-in-out alternate infinite;
 }
 
 .section-background--contact .section-background__motion {
     opacity: 0.95;
     background:
-        radial-gradient(ellipse 64% 45% at 50% 100%, rgba(34, 211, 238, 0.14), transparent 100%),
-        radial-gradient(ellipse 42% 32% at 0% 82%, rgba(16, 185, 129, 0.11), transparent 100%);
+        radial-gradient(ellipse 64% 45% at 50% 100%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 100%),
+        radial-gradient(ellipse 42% 32% at 0% 82%, color-mix(in srgb, var(--accent-2) 11%, transparent), transparent 100%);
     animation: sectionBackgroundDriftB 42s ease-in-out alternate infinite;
 }
 
-.section-background__fade--top {
-    bottom: auto;
-    height: 120px;
-    background: linear-gradient(to bottom, var(--section-base), transparent);
+/* Community constellation: GSAP scrubs the line draw on scroll. */
+.section-background__dots {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.9;
 }
 
-.section-background__fade--bottom {
-    top: auto;
-    height: 120px;
-    background: linear-gradient(to top, var(--section-base), transparent);
+.section-background__constellation {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.55;
+}
+
+.section-background__constellation line {
+    stroke: var(--section-line);
+    stroke-width: 1;
+    opacity: 0.35;
+    /* JS sets the exact dash length on mount; the 1200 default keeps the
+       lines hidden if JS never runs (progressive enhancement). */
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+}
+
+.section-background__constellation circle {
+    fill: var(--section-line);
+    opacity: 0;
+}
+
+/* Contact + footer: a glow rising from the bottom edge. */
+.footer::before {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 70%;
+    pointer-events: none;
+    background: radial-gradient(ellipse 72% 100% at 50% 100%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 72%);
+}
+
+/* Sections settle into the next band at their tail so the boundary is a
+   soft overlap rather than a 120px fade to a flat colour. */
+
+/* Hero -> about wipe: collapsed by default (and under reduced motion);
+   GSAP scrubs it open while the boundary crosses the viewport. */
+.section-background__wipe {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 180px;
+    pointer-events: none;
+    background: linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 55%, transparent));
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
 }
 
 main > section#contact .contact__form {
@@ -188,5 +336,18 @@ footer.footer {
     .section-background__motion {
         animation: none !important;
         transform: none !important;
+    }
+
+    /* GSAP never runs, so show the scroll-drawn art in its final state. */
+    .section-background__constellation line {
+        stroke-dashoffset: 0;
+    }
+
+    .section-background__constellation circle {
+        opacity: 0.5;
+    }
+
+    .section-background__wipe {
+        display: none;
     }
 }

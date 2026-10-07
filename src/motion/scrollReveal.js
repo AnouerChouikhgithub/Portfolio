@@ -3,6 +3,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Exposed for QA scripts (assert trigger counts are stable across
+// theme/language toggles). Harmless in production: read-only handle.
+if (typeof window !== 'undefined') {
+  window.ScrollTrigger = ScrollTrigger;
+}
+
 export function initScrollReveal() {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) {
@@ -148,8 +154,102 @@ export function initScrollReveal() {
       );
     });
 
-    window.addEventListener('load', () => ScrollTrigger.refresh());
-    window.addEventListener('localechange', () => window.setTimeout(() => ScrollTrigger.refresh(), 300));
+    // ── Section identity parallax (transform only, scrubbed) ──────────
+    // GSAP owns the parallax wrapper; the inner .section-background__motion
+    // keeps its own CSS drift, so no two libraries animate one property.
+    const scrubParallax = (selector, fromVars, toVars) => {
+      gsap.utils.toArray(selector).forEach((element) => {
+        const section = element.closest('section, footer');
+        if (!section) return;
+        gsap.fromTo(element, fromVars, {
+          ...toVars,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      });
+    };
+
+    // Projects: diagonal blueprint hatch drifts slowly across the band.
+    scrubParallax(
+      '.section-background--projects .section-background__parallax',
+      { yPercent: -4 },
+      { yPercent: 4 },
+    );
+
+    // Events: film-strip ruler slides horizontally (RTL just mirrors it).
+    scrubParallax(
+      '.section-background--events .section-background__parallax',
+      { xPercent: -3 },
+      { xPercent: 3 },
+    );
+
+    // About -> hero wipe: the tinted divider retracts as you scroll in.
+    gsap.utils.toArray('.section-background__wipe').forEach((element) => {
+      const section = element.closest('section');
+      if (!section) return;
+      gsap.fromTo(
+        element,
+        { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' },
+        {
+          clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 85%',
+            end: 'top 35%',
+            scrub: true,
+          },
+        },
+      );
+    });
+
+    // Community constellation: lines draw on as the section scrolls by.
+    gsap.utils.toArray('.section-background__constellation').forEach((svg) => {
+      const section = svg.closest('section');
+      if (!section) return;
+      const lines = svg.querySelectorAll('line');
+      const dots = svg.querySelectorAll('circle');
+      lines.forEach((line) => {
+        const length = line.getTotalLength ? line.getTotalLength() : 1200;
+        gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
+      });
+      gsap.to(lines, {
+        strokeDashoffset: 0,
+        ease: 'none',
+        stagger: 0.04,
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 75%',
+          end: 'center 55%',
+          scrub: true,
+        },
+      });
+      gsap.to(dots, {
+        opacity: 0.5,
+        ease: 'none',
+        stagger: 0.05,
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 70%',
+          end: 'center 55%',
+          scrub: true,
+        },
+      });
+    });
+
+    // Layout settles after fonts/images: re-measure trigger positions.
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener('load', refresh);
+    window.addEventListener('localechange', () => window.setTimeout(refresh, 300));
+    if (document.fonts?.ready) document.fonts.ready.then(refresh);
+    document.querySelectorAll('img').forEach((image) => {
+      if (!image.complete) image.addEventListener('load', refresh, { once: true });
+    });
   });
 
   return () => ctx.revert();

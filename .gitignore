@@ -9,3 +9,5 @@ dist
 .shot.mjs
 .wide.mjs
 .overflow.mjs
+.verify.mjs
+.shotstats.mjs

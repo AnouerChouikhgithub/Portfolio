@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import { useTheme } from '../theme/ThemeProvider';
+import { loadAnime, prefersReducedMotion } from '../motion/anime';
 import './hero-background.css';
 
 const traces = [
@@ -12,6 +14,43 @@ const traces = [
 
 export default function HeroBackground() {
   const backgroundRef = useRef(null);
+  const hasDrawnRef = useRef(false);
+  const { theme } = useTheme();
+
+  // anime.js owns the draw-on (lazy chunk). The CSS hide-rule stays active
+  // until the drawable proxies have written their own dash attributes, so
+  // there is never a frame showing the finished traces.
+  const drawTraces = () => {
+    const background = backgroundRef.current;
+    if (!background || hasDrawnRef.current) return;
+    hasDrawnRef.current = true;
+
+    if (prefersReducedMotion()) {
+      background.dataset.draw = 'ready';
+      return;
+    }
+
+    loadAnime()
+      .then(({ animate, svg, stagger }) => {
+        const paths = background.querySelectorAll('.hero-background__trace');
+        if (!paths.length) {
+          background.dataset.draw = 'ready';
+          return;
+        }
+        const drawables = svg.createDrawable(paths);
+        background.dataset.draw = 'ready';
+        animate(drawables, {
+          draw: ['0 0', '0 1'],
+          duration: 1500,
+          delay: stagger(140),
+          ease: 'inOutQuad',
+        });
+      })
+      .catch(() => {
+        // Network/parse failure: reveal the traces rather than hide art.
+        background.dataset.draw = 'ready';
+      });
+  };
 
   useEffect(() => {
     const background = backgroundRef.current;
@@ -28,19 +67,27 @@ export default function HeroBackground() {
     let isDocumentVisible = document.visibilityState !== 'hidden';
     let frameId = 0;
 
+    const isThemeVisible = () => theme === 'dark';
+
     const updateActiveState = () => {
-      const isActive = isInView && isDocumentVisible;
-      background.dataset.active = String(isActive);
+      // The hero itself is "active" whenever it is on screen (the portrait
+      // ring keys off this), but this layer only animates when it is the
+      // layer the current theme actually shows.
+      const heroActive = isInView && isDocumentVisible;
+      const layerActive = heroActive && isThemeVisible();
+      background.dataset.active = String(layerActive);
       background.dataset.reducedMotion = String(reducedMotionQuery.matches);
-      hero.dataset.heroActive = String(isActive);
-      if (!isActive && frameId) {
+      hero.dataset.heroActive = String(heroActive);
+      if (layerActive) drawTraces();
+      if (!layerActive && frameId) {
         window.cancelAnimationFrame(frameId);
         frameId = 0;
       }
     };
 
     const updatePointer = (event) => {
-      if (reducedMotionQuery.matches || !pointerQuery.matches || !isInView || !isDocumentVisible) return;
+      if (reducedMotionQuery.matches || !pointerQuery.matches || !isInView
+        || !isDocumentVisible || !isThemeVisible()) return;
       const bounds = hero.getBoundingClientRect();
       target.x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
       target.y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
@@ -81,13 +128,9 @@ export default function HeroBackground() {
     };
     const updateMotionPreference = () => {
       updateActiveState();
-      if (reducedMotionQuery.matches) {
-        hero.removeEventListener('pointermove', updatePointer);
-      } else {
-        hero.removeEventListener('pointermove', updatePointer);
-        if (pointerQuery.matches) {
-          hero.addEventListener('pointermove', updatePointer, { passive: true });
-        }
+      hero.removeEventListener('pointermove', updatePointer);
+      if (!reducedMotionQuery.matches && pointerQuery.matches) {
+        hero.addEventListener('pointermove', updatePointer, { passive: true });
       }
     };
     const observer = 'IntersectionObserver' in window
@@ -118,10 +161,10 @@ export default function HeroBackground() {
       hero.removeEventListener('pointerleave', resetPointer);
       if (frameId) window.cancelAnimationFrame(frameId);
     };
-  }, []);
+  }, [theme]);
 
   return (
-    <div ref={backgroundRef} className="hero-background" data-active="false" aria-hidden="true">
+    <div ref={backgroundRef} className="hero-background" data-active="false" data-draw="pending" aria-hidden="true">
       <div className="hero-background__parallax" data-parallax="0.75">
         <div className="hero-background__glow hero-background__glow--cyan" />
       </div>

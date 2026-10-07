@@ -1,8 +1,47 @@
 import { useEffect, useRef } from 'react';
+import { useTheme } from '../theme/ThemeProvider';
+import { loadAnime, prefersReducedMotion } from '../motion/anime';
 import './hero-background-blueprint.css';
 
 export default function HeroBackgroundBlueprint() {
   const backgroundRef = useRef(null);
+  const hasDrawnRef = useRef(false);
+  const { theme } = useTheme();
+
+  // anime.js owns the line draw (lazy chunk). The CSS pending-rule hides the
+  // drawing until the drawable proxies have written their own dash attributes,
+  // so there is never a flashed half-drawn frame. Reduced motion / chunk
+  // failure falls back to the finished artwork.
+  const drawBlueprint = () => {
+    const background = backgroundRef.current;
+    if (!background || hasDrawnRef.current) return;
+    hasDrawnRef.current = true;
+
+    if (prefersReducedMotion()) {
+      background.dataset.draw = 'ready';
+      return;
+    }
+
+    loadAnime()
+      .then(({ animate, svg, stagger }) => {
+        const paths = background.querySelectorAll('.blueprint-draw path, .blueprint-draw circle');
+        if (!paths.length) {
+          background.dataset.draw = 'ready';
+          return;
+        }
+        const drawables = svg.createDrawable(paths);
+        background.dataset.draw = 'ready';
+        animate(drawables, {
+          draw: ['0 0', '0 1'],
+          duration: 1400,
+          delay: stagger(60),
+          ease: 'inOutQuad',
+        });
+      })
+      .catch(() => {
+        background.dataset.draw = 'ready';
+      });
+  };
 
   useEffect(() => {
     const background = backgroundRef.current;
@@ -17,10 +56,14 @@ export default function HeroBackgroundBlueprint() {
     let documentVisible = document.visibilityState !== 'hidden';
     let frameId = 0;
 
+    const isThemeVisible = () => theme === 'light';
+
     const updateActivity = () => {
-      background.dataset.active = String(inView && documentVisible);
+      const active = inView && documentVisible && isThemeVisible();
+      background.dataset.active = String(active);
       background.dataset.reducedMotion = String(reducedMotion.matches);
-      if ((!inView || !documentVisible || reducedMotion.matches) && frameId) {
+      if (active) drawBlueprint();
+      if (!active && frameId) {
         cancelAnimationFrame(frameId);
         frameId = 0;
       }
@@ -40,7 +83,8 @@ export default function HeroBackgroundBlueprint() {
     };
 
     const handlePointerMove = (event) => {
-      if (reducedMotion.matches || !pointerQuery.matches || !inView || !documentVisible) return;
+      if (reducedMotion.matches || !pointerQuery.matches || !inView
+        || !documentVisible || !isThemeVisible()) return;
       const bounds = hero.getBoundingClientRect();
       target.x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
       target.y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
@@ -72,10 +116,10 @@ export default function HeroBackgroundBlueprint() {
       pointerQuery.removeEventListener('change', updateActivity);
       if (frameId) cancelAnimationFrame(frameId);
     };
-  }, []);
+  }, [theme]);
 
   return (
-    <div ref={backgroundRef} className="hero-background-blueprint" data-active="false" aria-hidden="true">
+    <div ref={backgroundRef} className="hero-background-blueprint" data-active="false" data-draw="pending" aria-hidden="true">
       <div className="hero-background-blueprint__grid" />
       <svg className="hero-background-blueprint__drawing" viewBox="0 0 1600 900" preserveAspectRatio="none">
         <g className="blueprint-draw blueprint-draw--one">

@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
-import { useTheme } from '../theme/ThemeProvider';
 import HeroBackground from './HeroBackground';
 import HeroBackgroundBlueprint from './HeroBackgroundBlueprint';
 import ModalErrorBoundary from './ModalErrorBoundary';
@@ -16,7 +15,6 @@ const resumePaths = {
 
 export default function Hero() {
   const { language, t } = useI18n();
-  const { theme } = useTheme();
   const resumePath = resumePaths[language] || resumePaths.en;
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const triggerRef = useRef(null);
@@ -35,7 +33,10 @@ export default function Hero() {
   return (
     <>
       <section className="hero" aria-labelledby="hero-heading" data-hero-active="false">
-        {theme === 'light' ? <HeroBackgroundBlueprint /> : <HeroBackground />}
+        {/* Both layers stay mounted; CSS crossfades them on theme change so
+            toggling never hard-cuts. Each layer pauses itself when hidden. */}
+        <HeroBackground />
+        <HeroBackgroundBlueprint />
         <div className="hero__container container">
           <div className="hero__content">
             <div className="hero__portrait-wrap">

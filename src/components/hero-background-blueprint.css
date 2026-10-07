@@ -8,9 +8,14 @@
     overflow: hidden;
     transform: translateX(-50%);
     pointer-events: none;
+    opacity: 0;
     background: linear-gradient(180deg, #f7fafb 0%, #e9f6f9 100%);
     --blueprint-spot-x: 50vw;
     --blueprint-spot-y: 42vh;
+}
+
+html[data-theme="light"] .hero-background-blueprint {
+    opacity: 1;
 }
 
 .hero-background-blueprint__grid {
@@ -55,19 +60,11 @@
     -webkit-mask-image: radial-gradient(ellipse 82% 74% at 50% 38%, #000 10%, transparent 100%);
 }
 
-.blueprint-draw path,
-.blueprint-draw circle {
-    stroke-dasharray: 1200;
-    stroke-dashoffset: 1200;
-}
-
-.hero-background-blueprint[data-active="true"] .blueprint-draw--one path {
-    animation: blueprintDraw 1.8s ease-out forwards;
-}
-
-.hero-background-blueprint[data-active="true"] .blueprint-draw--two path,
-.hero-background-blueprint[data-active="true"] .blueprint-draw--two circle {
-    animation: blueprintDraw 1.8s ease-out 0.35s forwards;
+/* Line draw is owned by anime.js (loaded lazily). Keep the drawing hidden
+   only while the chunk installs its dash attributes; on failure or reduced
+   motion the finished artwork shows instead. */
+.hero-background-blueprint[data-draw="pending"] .blueprint-draw {
+    visibility: hidden;
 }
 
 .hero-background-blueprint__labels {
@@ -79,7 +76,8 @@
     opacity: 0;
 }
 
-.hero-background-blueprint[data-active="true"] .hero-background-blueprint__labels {
+.hero-background-blueprint[data-active="true"] .hero-background-blueprint__labels,
+.hero-background-blueprint[data-draw="failed"] .hero-background-blueprint__labels {
     animation: blueprintLabelReveal 500ms ease-out 0.9s forwards;
 }
 
@@ -103,19 +101,14 @@
     background: linear-gradient(to bottom, transparent, var(--bg));
 }
 
-@keyframes blueprintDraw {
-    to { stroke-dashoffset: 0; }
-}
-
 @keyframes blueprintLabelReveal {
     to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .blueprint-draw path,
-    .blueprint-draw circle {
-        stroke-dashoffset: 0;
-        animation: none !important;
+    .hero-background,
+    .hero-background-blueprint {
+        transition-duration: 0ms;
     }
 
     .hero-background-blueprint__spotlight {
