@@ -146,6 +146,25 @@ html[data-theme="light"] .subscreen__tint {
     overscroll-behavior: contain;
 }
 
+/* Skills group: the shell is a full-viewport frost; the old centered card
+   look is preserved by .skills-subscreen inside a transparent full panel. */
+.subscreen--skills .subscreen__panel {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+}
+
+/* Mobile: the skills sheet keeps the same frost, no card radius */
+@media (max-width: 720px) {
+    .subscreen--skills .subscreen__panel {
+        border-radius: 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+}
+
 /* ── Mobile sheet (Step 4) ─────────────────────────────────────────── */
 @media (max-width: 720px) {
     .subscreen {

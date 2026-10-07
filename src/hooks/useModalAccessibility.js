@@ -13,6 +13,9 @@ import useScrollLock from './useScrollLock'
  * @param {function} options.onClose       Close callback (invoked on Escape).
  * @param {object}  [options.triggerRef]   Ref to the element that opened the modal.
  * @param {string}  [options.focusSelector] Selector used to find focusable children.
+ * @param {function} [options.canHandleKeys] Optional gate — when it returns false
+ *        the keydown handler ignores Escape/Tab entirely. SubScreen passes an
+ *        is-top-layer check so stacked layers never all close on one Escape.
  */
 export function useModalAccessibility({
   panelRef,
@@ -20,6 +23,7 @@ export function useModalAccessibility({
   triggerRef,
   enabled = true,
   focusSelector = 'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+  canHandleKeys,
 }) {
   useScrollLock(enabled, panelRef)
 
@@ -35,6 +39,9 @@ export function useModalAccessibility({
     focusFirst()
 
     const handleKeyDown = (event) => {
+      // Stacked layers: only the top-most sub-screen reacts to keys, so a
+      // single Escape closes one layer instead of collapsing the whole stack.
+      if (canHandleKeys && !canHandleKeys()) return
       if (event.key === 'Escape') {
         event.stopPropagation()
         onClose()
@@ -68,7 +75,7 @@ export function useModalAccessibility({
       const restoreTarget = triggerRef?.current ?? previousActiveElement
       restoreTarget?.focus?.()
     }
-  }, [panelRef, onClose, triggerRef, enabled, focusSelector])
+  }, [panelRef, onClose, triggerRef, enabled, focusSelector, canHandleKeys])
 
   return null
 }

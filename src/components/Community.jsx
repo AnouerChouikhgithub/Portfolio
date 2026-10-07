@@ -166,7 +166,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
   const hasPhotos = Array.isArray(community.photos) && community.photos.length > 0;
   const closeChapter = useCallback(() => setActiveChapter(null), []);
 
-  useModalAccessibility({ panelRef: modalRef, onClose });
+  // Accessibility (trap, Escape, focus) is owned by the wrapping SubScreen.
 
   const since = t(`community.items.${community.slug}.since`);
   const location = t(`community.items.${community.slug}.location`);
@@ -328,7 +328,6 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
 function ChapterDetailModal({ chapter, onClose }) {
   const { t, isRtl } = useI18n();
   const modalRef = useRef(null);
-  useModalAccessibility({ panelRef: modalRef, onClose });
 
   if (!chapter) {
     return null;
@@ -515,25 +514,35 @@ export default function Community() {
         })}
       </div>
 
-      {activeCommunity && (
-        <ModalErrorBoundary
-          onClose={() => {
-            setActiveCommunity(null);
-            setActiveChapter(null);
-          }}
-          message={t('common.viewLoadError')}
-          closeLabel={t('common.close')}
-        >
-          <CommunityModal
-            community={activeCommunity}
-            initialChapter={activeChapter}
+      <SubScreen
+        open={Boolean(activeCommunity)}
+        onClose={() => {
+          setActiveCommunity(null);
+          setActiveChapter(null);
+        }}
+        labelledBy="community-modal-title"
+        variant="community"
+      >
+        {activeCommunity && (
+          <ModalErrorBoundary
             onClose={() => {
               setActiveCommunity(null);
               setActiveChapter(null);
             }}
-          />
-        </ModalErrorBoundary>
-      )}
+            message={t('common.viewLoadError')}
+            closeLabel={t('common.close')}
+          >
+            <CommunityModal
+              community={activeCommunity}
+              initialChapter={activeChapter}
+              onClose={() => {
+                setActiveCommunity(null);
+                setActiveChapter(null);
+              }}
+            />
+          </ModalErrorBoundary>
+        )}
+      </SubScreen>
     </div>
   );
 }

@@ -38,7 +38,9 @@ const openLayers = [];
 export function notifySubscreenOpen(ref) {
   layerSeq += 1;
   const layer = { id: layerSeq, ref, isClosing: false };
-  openLayers.forEach((other) => other.ref.current?.classList.add('is-covered'));
+  // Defensive: a stale registry entry must never crash the open path (its
+  // element may already be gone during fast open/close interleavings).
+  openLayers.forEach((other) => other.ref.current?.classList?.add('is-covered'));
   openLayers.forEach((other) => other.onCovered?.());
   openLayers.push(layer);
   document.documentElement.classList.add('has-subscreen');
@@ -53,7 +55,7 @@ export function notifySubscreenClose(layer) {
   const idx = openLayers.indexOf(layer);
   if (idx !== -1) openLayers.splice(idx, 1);
   // Whoever is still open on top becomes uncovered again.
-  openLayers.forEach((other) => other.ref.current?.classList.remove('is-covered'));
+  openLayers.forEach((other) => other.ref.current?.classList?.remove('is-covered'));
   if (!openLayers.length) {
     document.documentElement.classList.remove('has-subscreen');
   }
@@ -148,10 +150,17 @@ export default function SubScreen({
     return undefined;
   }, [open, mounted]);
 
+  // NOTE: `mounted` must be a dependency — when `open` flips true the portal
+  // commits on the NEXT render (after setMounted), so this effect has to run
+  // again once the panel element actually exists.
   useLayoutEffect(() => {
     if (!open || !panelRef.current) return;
-    const layer = notifySubscreenOpen(layerRef);
-    layerRef.current = layer;
+    // Register the WRAPPER ref (a real DOM ref). Never store the plain layer
+    // object back into layerRef — the registry reads ref.current as a DOM
+    // element to toggle .is-covered, and a plain object has no classList
+    // (this was the stacked-chapter crash).
+    const layer = notifySubscreenOpen(wrapperRef);
+    layerRef.current = { layer, wrapperRef };
     const panel = panelRef.current;
     layer.onCovered = () => {}; // consumers may use class only
     setDepth(layer.id);
@@ -165,10 +174,21 @@ export default function SubScreen({
       panel.style.setProperty('--origin-h', `${rect.height}px`);
       wrapperRef.current?.classList.add('has-origin');
     }
+    document.documentElement.classList.add('has-subscreen');
     return () => {
       notifySubscreenClose(layer);
+      // Re-derive after this cleanup: another instance's mount effect may have
+      // run before this cleanup (StrictMode double-invoke) and must not lose
+      // the flag; clear only when no layer remains, deferred to a microtask.
+      queueMicrotask(() => {
+        if (!openLayers.length) {
+          document.documentElement.classList.remove('has-subscreen');
+        } else {
+          document.documentElement.classList.add('has-subscreen');
+        }
+      });
     };
-  }, [open, originEl]);
+  }, [open, mounted, originEl]);
 
   // Page-level inertness: portal sits outside #root, so everything inside
   // #root is view-only while any sub-screen is open.
@@ -190,6 +210,9 @@ export default function SubScreen({
     panelRef,
     onClose,
     enabled: Boolean(open),
+    // Stacked layers: only the registry's top-most wrapper responds to
+    // Escape/Tab, so closing one layer never collapses the whole stack.
+    canHandleKeys: () => isTopSubscreen(wrapperRef.current),
   });
 
   if (!mounted) return null;
@@ -226,8 +249,11 @@ export default function SubScreen({
       <div
         ref={panelRef}
         className={`subscreen__panel ${panelClassName}`}
+        role="dialog"
+        aria-modal="true"
         aria-labelledby={labelledBy}
         data-depth={depth}
+        style={accent ? { '--accent': accent, '--sub-accent': accent } : undefined}
       >
         {/* Mobile drag handle (CSS hides it ≥ 721 px) */}
         <div

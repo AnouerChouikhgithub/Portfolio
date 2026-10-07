@@ -61,6 +61,12 @@
     transition: transform var(--transition);
 }
 
+/* The card a sub-screen morphed out of: stays in layout (no shift) but is
+   visually replaced by the panel until the close morph returns to it. */
+.project-card.is-open-behind {
+    visibility: hidden;
+}
+
 .project-card:hover,
 .project-card:focus-visible {
     transform: translateY(-8px) perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));

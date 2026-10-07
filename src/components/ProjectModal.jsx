@@ -14,7 +14,6 @@ import MixedText from './MixedText';
 import PetArchDiagram from './PetArchDiagram';
 import AnimatedCountText from './AnimatedCountText';
 import ModalWordReveal from './ModalWordReveal';
-import useModalAccessibility from '../hooks/useModalAccessibility';
 import CinematicGallery from './gallery/CinematicGallery';
 import useModalReveals from '../hooks/useModalReveals';
 import { getSkillById, getGroupForSkill } from '../data/portfolio-data';
@@ -27,7 +26,9 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
 
   const isPet = project.slug === 'pet-filament-machine';
 
-  useModalAccessibility({ panelRef: modalRef, onClose });
+  // Accessibility (trap, Escape, focus) is owned by the wrapping SubScreen
+  // in Projects.jsx / Skills.jsx — a second hook here would double-close on
+  // Escape and fight the top-layer gate.
 
   const projectMeta = t(`projects.items.${project.slug}.meta`, '');
   const projectTitle = t(`projects.items.${project.slug}.title`, project.title || project.name);

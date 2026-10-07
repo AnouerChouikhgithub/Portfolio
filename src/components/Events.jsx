@@ -335,7 +335,7 @@ function EventModal({ event, onClose }) {
   const modalRef = useRef(null);
   const hasPhotos = Array.isArray(event.photos) && event.photos.length > 0;
 
-  useModalAccessibility({ panelRef: modalRef, onClose });
+  // Accessibility (trap, Escape, focus) is owned by the wrapping SubScreen.
 
   const meta = t(`events.items.${event.slug}.meta`);
   const description = t(`events.items.${event.slug}.description`);

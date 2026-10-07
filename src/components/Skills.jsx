@@ -1,5 +1,5 @@
 import { lazy, Suspense, useRef, useState, useMemo, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
+import SubScreen from './overlay/SubScreen';
 import WebpImage from './WebpImage';
 import {
   Eye,
@@ -16,7 +16,6 @@ import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import ProjectModal from './ProjectModal';
 import ModalErrorBoundary from './ModalErrorBoundary';
-import useScrollLock from '../hooks/useScrollLock';
 import useModalReveals from '../hooks/useModalReveals';
 import {
   GROUPS,
@@ -64,7 +63,7 @@ export default function Skills() {
     () => GROUPS.find((g) => g.id === activeGroupId) ?? null,
     [activeGroupId],
   );
-  useScrollLock(Boolean(activeGroup), subscreenRef);
+  // Scroll lock is owned by SubScreen now.
   useModalReveals(subscreenRef, activeGroupId);
 
   const groupSkills = useMemo(
@@ -128,20 +127,7 @@ export default function Skills() {
     return () => window.removeEventListener('hashchange', syncFromHash);
   }, [syncFromHash]);
 
-  // Handle ESC key for subscreen overlay
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        if (activeProject) return; // Project detail modal handles its own ESC
-        if (activeGroupId) {
-          handleCloseSubscreen();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeGroupId, activeProject]);
+  // ESC is owned by SubScreen (top-layer only), no window listener here.
 
   const handleOpenGroup = (groupId, skillId = null) => {
     setActiveGroupId(groupId);
@@ -309,23 +295,22 @@ export default function Skills() {
       </div>
 
       {/* ── Group Subscreen Overlay ─────────────────────────────────── */}
-      {activeGroup && (
-        <ModalErrorBoundary
-          onClose={handleCloseSubscreen}
-          message={t('common.viewLoadError')}
-          closeLabel={t('common.close')}
-        >
+      <SubScreen
+        open={Boolean(activeGroup)}
+        onClose={handleCloseSubscreen}
+        labelledBy="skills-subscreen-title"
+        variant="skills"
+        accent={activeGroup?.color}
+      >
+        {activeGroup && (
+          <ModalErrorBoundary
+            onClose={handleCloseSubscreen}
+            message={t('common.viewLoadError')}
+            closeLabel={t('common.close')}
+          >
         <div
           className="skills-subscreen modal-scroll-region"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="skills-subscreen-title"
           ref={subscreenRef}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              handleCloseSubscreen();
-            }
-          }}
         >
           <div className="skills-subscreen__container">
             {/* Header */}
@@ -438,12 +423,20 @@ export default function Skills() {
             )}
           </div>
         </div>
-        </ModalErrorBoundary>
-      )}
+          </ModalErrorBoundary>
+        )}
+      </SubScreen>
 
-      {/* ── Project Detail Modal (Preserves Subscreen Scroll State) ── */}
-      {activeProject && (
-        createPortal(
+      {/* ── Project Detail Modal (stacked layer over the Skills subscreen) ── */}
+      <SubScreen
+        open={Boolean(activeProject)}
+        onClose={handleCloseProjectModal}
+        accent={activeProject?.accent}
+        labelledBy="project-modal-title"
+        variant="project"
+        className="subscreen--project"
+      >
+        {activeProject && (
           <ModalErrorBoundary
             onClose={handleCloseProjectModal}
             message={t('common.viewLoadError')}
@@ -457,10 +450,9 @@ export default function Skills() {
                 handleOpenGroup(groupId, skillId);
               }}
             />
-          </ModalErrorBoundary>,
-          document.body,
-        )
-      )}
+          </ModalErrorBoundary>
+        )}
+      </SubScreen>
 
       {/* ── Internship Certificate Modal ───────────────────────────── */}
       {isCertOpen && (
