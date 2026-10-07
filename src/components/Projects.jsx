@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, memo, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import ProjectModal from './ProjectModal';
+import ModalErrorBoundary from './ModalErrorBoundary';
 import { PROJECTS } from '../data/portfolio-data';
 import { scrollToId } from '../motion/lenisStore';
 
@@ -98,11 +99,17 @@ export default function Projects() {
       </div>
 
       {activeProject && (
-        <ProjectModal
-          project={activeProject}
+        <ModalErrorBoundary
           onClose={closeProject}
-          onOpenSkillGroup={handleOpenSkillGroup}
-        />
+          message={t('common.viewLoadError')}
+          closeLabel={t('common.close')}
+        >
+          <ProjectModal
+            project={activeProject}
+            onClose={closeProject}
+            onOpenSkillGroup={handleOpenSkillGroup}
+          />
+        </ModalErrorBoundary>
       )}
     </div>
   );

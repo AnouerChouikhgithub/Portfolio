@@ -4,6 +4,7 @@
     "firstName": "Anouer",
     "portraitAlt": "Portrait of Anouer Chouikh",
     "close": "Close",
+    "viewLoadError": "This view couldn't be loaded. Close it and try again.",
     "description": "Description",
     "chapters": "Chapters",
     "location": "Location",

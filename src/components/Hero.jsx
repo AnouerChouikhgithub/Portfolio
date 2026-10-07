@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/I18nProvider';
 import { useTheme } from '../theme/ThemeProvider';
 import HeroBackground from './HeroBackground';
 import HeroBackgroundBlueprint from './HeroBackgroundBlueprint';
+import ModalErrorBoundary from './ModalErrorBoundary';
 
 // Lazy-loaded: pdfjs-dist (~450 KB) is only fetched when the user opens the resume.
 const PdfModal = lazy(() => import('./PdfModal'));
@@ -65,13 +66,19 @@ export default function Hero() {
 
       {isResumeOpen && (
         <Suspense fallback={null}>
-          <PdfModal
-            src={resumePath}
-            title={t('hero.resumePreview')}
-            showDownload={true}
+          <ModalErrorBoundary
             onClose={() => setIsResumeOpen(false)}
-            triggerRef={triggerRef}
-          />
+            message={t('common.viewLoadError')}
+            closeLabel={t('common.close')}
+          >
+            <PdfModal
+              src={resumePath}
+              title={t('hero.resumePreview')}
+              showDownload={true}
+              onClose={() => setIsResumeOpen(false)}
+              triggerRef={triggerRef}
+            />
+          </ModalErrorBoundary>
         </Suspense>
       )}
     </>

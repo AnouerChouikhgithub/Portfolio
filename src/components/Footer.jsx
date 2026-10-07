@@ -11,7 +11,7 @@ export default function Footer() {
   const links = ['home', 'about', 'skills', 'projects', 'community', 'events'];
   return (
     <footer className="footer">
-      <SectionBackground variant="a" emphasis />
+      <SectionBackground variant="contact" />
       <div className="container footer__content">
         <div className="footer__copy">{t('footer.copyright')}</div>
         <nav className="footer__nav" aria-label={t('nav.footer')}>
@@ -29,4 +29,3 @@ export default function Footer() {
     </footer>
   )
 }
-

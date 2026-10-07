@@ -4,6 +4,7 @@ import MixedText from './MixedText';
 import CrossfadeImage from './CrossfadeImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
 import useAutoCarousel from '../hooks/useAutoCarousel';
+import ModalErrorBoundary from './ModalErrorBoundary';
 import { scrollToId } from '../motion/lenisStore';
 
 const communityImageList = (folder, files) => files.map((file) => `/Communities/${folder}/${file}`);
@@ -325,7 +326,15 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
         </div>
       </div>
 
-      {activeChapter && <ChapterDetailModal chapter={activeChapter} onClose={closeChapter} />}
+      {activeChapter && (
+        <ModalErrorBoundary
+          onClose={closeChapter}
+          message={t('common.viewLoadError')}
+          closeLabel={t('common.close')}
+        >
+          <ChapterDetailModal chapter={activeChapter} onClose={closeChapter} />
+        </ModalErrorBoundary>
+      )}
     </div>
   );
 }
@@ -524,14 +533,23 @@ export default function Community() {
       </div>
 
       {activeCommunity && (
-        <CommunityModal
-          community={activeCommunity}
-          initialChapter={activeChapter}
+        <ModalErrorBoundary
           onClose={() => {
             setActiveCommunity(null);
             setActiveChapter(null);
           }}
-        />
+          message={t('common.viewLoadError')}
+          closeLabel={t('common.close')}
+        >
+          <CommunityModal
+            community={activeCommunity}
+            initialChapter={activeChapter}
+            onClose={() => {
+              setActiveCommunity(null);
+              setActiveChapter(null);
+            }}
+          />
+        </ModalErrorBoundary>
       )}
     </div>
   );

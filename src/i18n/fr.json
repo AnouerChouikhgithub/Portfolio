@@ -4,6 +4,7 @@
     "firstName": "Anouer",
     "portraitAlt": "Portrait d'Anouer Chouikh",
     "close": "Fermer",
+    "viewLoadError": "Cette vue n'a pas pu être chargée. Fermez-la et réessayez.",
     "description": "Description",
     "chapters": "Chapitres",
     "location": "Lieu",

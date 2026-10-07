@@ -25,7 +25,7 @@ main > section#contact {
     background: var(--section-base);
 }
 
-main > section:not(#home) > :not(.section-background),
+main > section:not(#home) > :not(.section-background):not([role="dialog"]),
 .footer > :not(.section-background) {
     position: relative;
     z-index: 1;
@@ -34,7 +34,7 @@ main > section:not(#home) > :not(.section-background),
 .section-background,
 .section-background__base,
 .section-background__grid,
-.section-background__glow,
+.section-background__motion,
 .section-background__fade {
     position: absolute;
     inset: 0;
@@ -59,40 +59,62 @@ main > section:not(#home) > :not(.section-background),
     -webkit-mask-image: radial-gradient(ellipse 88% 82% at 50% 45%, #000 22%, transparent 100%);
 }
 
-.section-background__glow--cyan {
-    background: radial-gradient(ellipse 58% 52% at 0% 0%, rgba(34, 211, 238, 0.1), transparent 100%);
-}
-
-.section-background__glow--teal {
-    background: radial-gradient(ellipse 58% 56% at 100% 100%, rgba(16, 185, 129, 0.09), transparent 100%);
-}
-
-.section-background--b .section-background__glow--cyan {
-    background-image: radial-gradient(ellipse 58% 52% at 100% 0%, rgba(34, 211, 238, 0.1), transparent 100%);
-}
-
-.section-background--b .section-background__glow--teal {
-    background-image: radial-gradient(ellipse 58% 56% at 0% 100%, rgba(16, 185, 129, 0.09), transparent 100%);
-}
-
-.section-background--emphasis .section-background__glow--cyan {
-    background-image: radial-gradient(ellipse 62% 58% at 0% 0%, rgba(34, 211, 238, 0.12), transparent 100%);
-}
-
-.section-background--emphasis .section-background__glow--teal {
-    background-image: radial-gradient(ellipse 62% 60% at 100% 100%, rgba(16, 185, 129, 0.11), transparent 100%);
-}
-
-.section-background--b.section-background--emphasis .section-background__glow--cyan {
-    background-image: radial-gradient(ellipse 62% 58% at 100% 0%, rgba(34, 211, 238, 0.12), transparent 100%);
-}
-
-.section-background--b.section-background--emphasis .section-background__glow--teal {
-    background-image: radial-gradient(ellipse 62% 60% at 0% 100%, rgba(16, 185, 129, 0.11), transparent 100%);
-}
-
 footer.footer {
     background: var(--section-base);
+}
+
+.section-background__motion {
+    z-index: 0;
+    opacity: 0.72;
+    transform-origin: center;
+    animation-play-state: paused;
+}
+
+.section-background--about .section-background__motion {
+    background:
+        radial-gradient(ellipse 42% 36% at 15% 20%, rgba(34, 211, 238, 0.11), transparent 100%),
+        radial-gradient(ellipse 38% 34% at 85% 78%, rgba(16, 185, 129, 0.09), transparent 100%);
+    animation: sectionBackgroundDriftA 38s ease-in-out alternate infinite;
+}
+
+.section-background--skills .section-background__motion {
+    background:
+        radial-gradient(circle, var(--section-line) 1.5px, transparent 2px) 12% 24% / 84px 84px,
+        radial-gradient(circle, var(--section-line) 1.5px, transparent 2px) 54% 56% / 112px 112px,
+        linear-gradient(35deg, transparent 49.7%, color-mix(in srgb, var(--section-line) 18%, transparent) 50%, transparent 50.3%);
+    animation: sectionBackgroundDriftB 42s ease-in-out alternate infinite;
+}
+
+.section-background--projects .section-background__motion {
+    background:
+        radial-gradient(circle at 50% 50%, transparent 35px, color-mix(in srgb, var(--section-line) 13%, transparent) 36px, transparent 37px),
+        radial-gradient(circle at 50% 50%, transparent 52px, color-mix(in srgb, var(--section-line) 10%, transparent) 53px, transparent 54px),
+        repeating-linear-gradient(135deg, transparent 0 58px, color-mix(in srgb, var(--section-line) 10%, transparent) 59px 60px, transparent 61px 118px);
+    background-size: 260px 260px, 260px 260px, 100% 100%;
+    animation: sectionBackgroundDriftA 46s linear alternate infinite;
+}
+
+.section-background--community .section-background__motion {
+    background:
+        radial-gradient(circle, color-mix(in srgb, var(--section-line) 42%, transparent) 1.5px, transparent 2px) 20px 20px / 72px 72px,
+        radial-gradient(circle, color-mix(in srgb, var(--section-line) 34%, transparent) 1.5px, transparent 2px) 56px 56px / 112px 112px,
+        linear-gradient(45deg, transparent 49.8%, color-mix(in srgb, var(--section-line) 12%, transparent) 50%, transparent 50.2%);
+    animation: sectionBackgroundDriftB 40s ease-in-out alternate infinite;
+}
+
+.section-background--events .section-background__motion {
+    background:
+        repeating-linear-gradient(0deg, transparent 0 72px, color-mix(in srgb, var(--section-line) 14%, transparent) 73px 74px, transparent 75px 146px),
+        radial-gradient(ellipse 60% 15% at 50% 50%, rgba(34, 211, 238, 0.1), transparent 100%);
+    animation: sectionBackgroundDriftA 44s ease-in-out alternate infinite;
+}
+
+.section-background--contact .section-background__motion {
+    opacity: 0.95;
+    background:
+        radial-gradient(ellipse 64% 45% at 50% 100%, rgba(34, 211, 238, 0.14), transparent 100%),
+        radial-gradient(ellipse 42% 32% at 0% 82%, rgba(16, 185, 129, 0.11), transparent 100%);
+    animation: sectionBackgroundDriftB 42s ease-in-out alternate infinite;
 }
 
 .section-background__fade--top {
@@ -109,14 +131,61 @@ footer.footer {
 
 main > section#contact .contact__form {
     border: 1px solid color-mix(in srgb, var(--section-line) 15%, transparent);
+    background: color-mix(in srgb, var(--section-tint) 48%, var(--surface));
 }
 
 footer.footer {
     border-top: 0;
 }
 
+@keyframes sectionBackgroundDriftA {
+    from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
+    to { transform: translate3d(1.5%, 1%, 0) scale(1.025); }
+}
+
+@keyframes sectionBackgroundDriftB {
+    from { transform: translate3d(1%, -1.5%, 0) scale(1.01); }
+    to { transform: translate3d(-1%, 1.5%, 0) scale(1); }
+}
+
+.section-background.is-active .section-background__motion {
+    animation-play-state: running;
+}
+
+.modal-error-boundary {
+    position: fixed;
+    inset: 0;
+    z-index: 1300;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: var(--overlay);
+}
+
+.modal-error-boundary__panel {
+    display: grid;
+    gap: 1rem;
+    width: min(100%, 420px);
+    padding: 1.5rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 16px;
+}
+
+.modal-error-boundary__panel button {
+    justify-self: end;
+    padding: 0.65rem 1rem;
+    color: var(--accent-contrast);
+    background: var(--accent);
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    cursor: pointer;
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .section-background__glow {
+    .section-background__motion {
         animation: none !important;
         transform: none !important;
     }

@@ -4,6 +4,7 @@
     "firstName": "أنور",
     "portraitAlt": "صورة أنور شويخ",
     "close": "إغلاق",
+    "viewLoadError": "تعذر تحميل هذه النافذة. أغلقها وحاول مرة أخرى.",
     "description": "الوصف",
     "chapters": "الفصول",
     "location": "الموقع",
