@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/I18nProvider';
 import { Menu, Moon, Sun, X } from 'lucide-react';
 import { useTheme } from '../theme/ThemeProvider';
 import { microAnimate } from '../motion/anime';
+import WebpImage from './WebpImage';
 
 const NAVIGATION_ITEMS = [
   ['about', '#about'], ['skills', '#skills'], ['projects', '#projects'],
@@ -187,7 +188,7 @@ export default function Header() {
         onKeyDown={handleMobileMenuKeyDown}
       >
         <a href="#home" className="nav__logo" aria-label={t('nav.home')}>
-          <img src="/me2.jpg" alt={t('common.name')} className="nav__logo-image" />
+          <WebpImage src="/me2.jpg" alt={t('common.name')} className="nav__logo-image" />
           <span className="nav__logo-name" aria-hidden="true">{t('common.firstName')}</span>
         </a>
 

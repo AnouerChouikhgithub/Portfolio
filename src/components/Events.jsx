@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import CrossfadeImage from './CrossfadeImage';
+import WebpImage from './WebpImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
 import useAutoCarousel from '../hooks/useAutoCarousel';
 import ModalErrorBoundary from './ModalErrorBoundary';
@@ -420,7 +421,7 @@ function EventModal({ event, onClose }) {
                       aria-label={`${t('common.viewPhoto')} ${index + 1}`}
                       onClick={() => activateManualSelection(index)}
                     >
-                      <img src={photo} alt={`${event.title} ${index + 1}`} />
+                      <WebpImage src={photo} alt={`${event.title} ${index + 1}`} />
                     </button>
                   ))}
                 </div>

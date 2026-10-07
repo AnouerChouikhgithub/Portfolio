@@ -246,7 +246,7 @@ Browser form ──POST /api/contact──▶ Netlify Function ──▶ EmailJS
 | Tree-shaking | Only used Lucide/React-Icons symbols are imported (per-icon tree-shaking works out of the box) |
 | Memoization | `ProjectCard` memoized; `useMemo` for filtered skill lists; `useCallback` for stable modal close handlers |
 | Fonts | Inter loaded with `preconnect` + `display=swap`; Cairo fetched only when Arabic is active |
-| Images | `loading="lazy"` + `decoding="async"` below the fold |
+| Images | WebP-first via `<WebpImage>` (`<picture>` + automatic jpg fallback) — `npm run images:convert` turns `public/` photos into WebP siblings (37.8 MB → 10.2 MB, −73%); plus `loading="lazy"` + `decoding="async"` below the fold |
 | Rendering | Debounced PDF re-render (150/200 ms), `matchMedia` instead of resize listeners, `prefers-reduced-motion` respected |
 | Build output | ~124 KB app JS (40 KB gzip) + 151 KB react-vendor (48 KB gzip); CSS 43 KB (8 KB gzip) |
 

@@ -5,6 +5,7 @@ import ProjectModal from './ProjectModal';
 import ModalErrorBoundary from './ModalErrorBoundary';
 import { PROJECTS } from '../data/portfolio-data';
 import { scrollToId } from '../motion/lenisStore';
+import WebpImage from './WebpImage';
 
 /**
  * Memoized project card — only re-renders when its project data, the active
@@ -20,7 +21,7 @@ const ProjectCard = memo(function ProjectCard({ project, meta, preview, descript
       onClick={onSelect}
     >
       {project.logo && (
-        <img
+        <WebpImage
           className="project-card__logo"
           src={project.logo}
           alt={`${project.title} ${logoAltPrefix}`}

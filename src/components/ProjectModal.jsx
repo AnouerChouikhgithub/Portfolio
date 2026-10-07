@@ -6,6 +6,7 @@ import {
   ExternalLink,
   Cpu,
 } from 'lucide-react';
+import WebpImage from './WebpImage';
 import { FaGithub } from 'react-icons/fa';
 import { useI18n } from '../i18n/I18nProvider';
 import { useTheme } from '../theme/ThemeProvider';
@@ -179,7 +180,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                 {/* 2. Logo & Title */}
                 {project.logo && (
                   <div className="project-modal__logo-icon" aria-hidden="true">
-                    <img src={project.logo} alt="" />
+                    <WebpImage src={project.logo} alt="" />
                   </div>
                 )}
                 <h3 id="project-modal-title" className="project-modal__title pet-modal__title modal-reveal modal-reveal--word-title" aria-label={projectTitle}>
@@ -408,7 +409,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                 <p className="project-card__meta modal-reveal">{projectMeta || t('common.dateTbd')}</p>
                 {project.logo && (
                   <div className="project-modal__logo-icon" aria-hidden="true">
-                    <img src={project.logo} alt="" />
+                    <WebpImage src={project.logo} alt="" />
                   </div>
                 )}
                 <h3 id="project-modal-title" className="project-modal__title modal-reveal modal-reveal--word-title" aria-label={projectTitle}>
@@ -575,7 +576,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                           <span>{item.thumbLabel}</span>
                         </div>
                       ) : (
-                        <img
+                        <WebpImage
                           src={item.src}
                           alt={item.alt}
                           loading="lazy"
@@ -630,7 +631,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                       aria-label={`${t('common.photo')} ${index + 1} - ${projectTitle}`}
                       onClick={() => activateManualSelection(index)}
                     >
-                      <img
+                      <WebpImage
                         src={photo}
                         alt={`${projectTitle} ${t('common.photo')} ${index + 1}`}
                         loading="lazy"

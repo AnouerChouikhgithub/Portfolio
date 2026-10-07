@@ -1,5 +1,6 @@
 import { lazy, Suspense, useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import WebpImage from './WebpImage';
 import {
   Eye,
   Cpu,
@@ -394,7 +395,7 @@ export default function Skills() {
                           >
                             <div className="skills-project-item__icon-wrapper">
                               {project?.logo ? (
-                                <img
+                                <WebpImage
                                   src={project.logo}
                                   alt=""
                                   className="skills-project-item__logo"

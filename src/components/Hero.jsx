@@ -6,6 +6,7 @@ import HeroBackgroundBlueprint from './HeroBackgroundBlueprint';
 import ModalErrorBoundary from './ModalErrorBoundary';
 import SplitText from './reactbits/SplitText';
 import Magnet from './reactbits/Magnet';
+import WebpImage from './WebpImage';
 
 // Lazy-loaded: pdfjs-dist (~450 KB) is only fetched when the user opens the resume.
 const PdfModal = lazy(() => import('./PdfModal'));
@@ -86,7 +87,7 @@ export default function Hero() {
         <div className="hero__container container">
           <div className="hero__content" ref={contentRef}>
             <div className="hero__portrait-wrap">
-              <img
+              <WebpImage
                 className="hero__portrait"
                 src="/me2.jpg"
                 alt={t('common.portraitAlt')}

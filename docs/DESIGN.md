@@ -197,6 +197,22 @@ tokens → typography → utilities → header → hero → about → skills →
 projects → project-modal → pet-modal → community → events → pdf-modal →
 contact → footer → theme-overrides (light) → responsive → skills-subscreen.
 
+## Images (Phase 5b)
+
+`npm run images:convert` (sharp, devDependency) writes WebP siblings for
+every `public/**` photo — 109 files, **37.8 MB → 10.2 MB (−73%)**, capped at
+1920 px (retina-safe for full-screen galleries), q80, idempotent. Content
+images render through `<WebpImage>`: a `<picture>` whose `<source>` is the
+WebP and whose `<img src>` stays the original. `<picture>` gets
+`display: contents` (utilities.css) so wrapping is layout-neutral.
+
+Failure behaviour: if a WebP is missing or 404s, the `img` reverts to the
+original source once (then runs the consumer's `onError`) — a photo that
+hasn't been converted yet can never render broken. Originals are kept in
+the repo as the fallback (trade-off: deploy weight rises by ~10 MB while
+visitor transfer drops by ~27 MB; originals could be dropped later if the
+`onError` path is ever removed deliberately).
+
 ## Motion ownership
 
 See `src/motion/README.md` — GSAP owns scroll-linked work, Lenis owns smooth

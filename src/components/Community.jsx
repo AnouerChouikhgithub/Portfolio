@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import CrossfadeImage from './CrossfadeImage';
+import WebpImage from './WebpImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
 import useAutoCarousel from '../hooks/useAutoCarousel';
 import ModalErrorBoundary from './ModalErrorBoundary';
@@ -220,7 +221,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
                       aria-label={`Open ${chapterLogo.label || chapterLogo.name} chapter details`}
                       onClick={() => setActiveChapter(chapterLogo)}
                     >
-                      <img src={chapterLogo.path} alt={`${community.name} ${chapterLogo.name} chapter logo`} />
+                      <WebpImage src={chapterLogo.path} alt={`${community.name} ${chapterLogo.name} chapter logo`} />
                     </button>
                   ))}
                 </div>
@@ -312,7 +313,7 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
                       aria-label={`${t('common.viewPhoto')} ${index + 1}`}
                       onClick={() => activateManualSelection(index)}
                     >
-                      <img src={photo} alt={`${community.name} ${index + 1}`} />
+                      <WebpImage src={photo} alt={`${community.name} ${index + 1}`} />
                     </button>
                   ))}
                 </div>
@@ -376,7 +377,7 @@ function ChapterDetailModal({ chapter, onClose }) {
 
         <div className="community-chapter-modal__content modal-scroll-region">
           <div className="community-chapter-modal__logo-wrap">
-            <img src={chapter.path} alt={`${chapter.label || chapter.name} logo`} />
+            <WebpImage src={chapter.path} alt={`${chapter.label || chapter.name} logo`} />
           </div>
 
           <div className="community-chapter-modal__text">
@@ -516,7 +517,7 @@ export default function Community() {
               }}
             >
               <div className="community-card__logo community-card__logo--image" aria-label={`${club.name} logo`}>
-                <img src={club.logo} alt={`${club.name} logo`} className="community-card__image" />
+                <WebpImage src={club.logo} alt={`${club.name} logo`} className="community-card__image" />
               </div>
               <div className="community-card__name">
                 <MixedText text={club.name} isRtl={isRtl} />

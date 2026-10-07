@@ -28,3 +28,9 @@
     transition: transform 0.3s ease;
 }
 
+/* <picture> wrappers (WebpImage) must not create a layout box — children
+   behave exactly as if the <img> were unwrapped. */
+picture {
+    display: contents;
+}
+
