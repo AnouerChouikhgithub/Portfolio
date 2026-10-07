@@ -91,13 +91,13 @@
     /* ── Z-index scale ────────────────────────────────────────── */
     --z-background: -1;
     --z-content: 1;
-    --z-subscreen: 999;
+    --z-subscreen: 1400; /* sub-screens sit above header(1000) + progress(1200) */
     --z-header: 1000;
     --z-modal: 1000;
     --z-dropdown: 1100;
     --z-progress: 1200;
     --z-boundary: 1300;
-    --z-cursor: 1400;
+    --z-cursor: 1500;
 
     /* ── Typography ───────────────────────────────────────────── */
     --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;

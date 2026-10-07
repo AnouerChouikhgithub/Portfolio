@@ -118,7 +118,7 @@ html[data-theme="light"] .community-card__since {
 .project-modal {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    z-index: var(--z-subscreen);
     display: flex;
     align-items: center;
     justify-content: center;
