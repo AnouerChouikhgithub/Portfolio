@@ -553,6 +553,79 @@ html[data-theme="light"] .community-modal__gallery .cine-stage {
     display: none;
 }
 
+/* Constellation canvas sits behind the whole modal panel */
+.cine-constellation {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: auto;
+    opacity: 0.8;
+}
+
+.event-modal,
+.project-modal {
+    position: relative;
+}
+
+.event-modal > .event-modal__panel {
+    position: relative;
+    z-index: 1;
+}
+
+.community-modal__gallery {
+    position: relative;
+}
+
+.community-modal__gallery .cine-constellation {
+    position: absolute;
+    inset: -1rem;
+    z-index: 0;
+    height: auto;
+    width: auto;
+}
+
+.community-modal__gallery > *:not(.cine-constellation) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Polaroid caption strip at the foot of the community stage */
+.cine-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.cine-caption__name {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.cine-caption__year {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Polaroid keep-frame drawn over the active community slide */
+.cine-polaroid-frame {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    border: 10px solid #FAFAF7;
+    border-bottom-width: 56px;
+    border-radius: 6px;
+    box-shadow: 0 12px 30px rgba(2, 6, 23, 0.35);
+}
+
+html[data-theme="light"] .cine-polaroid-frame {
+    border-color: #FFFFFF;
+    box-shadow: 0 10px 24px rgba(84, 70, 48, 0.25);
+}
+
 /* ════════════════════════════════════════════════════════════════════
    PROJECT — "Blueprint HUD" (Step 5)
    ════════════════════════════════════════════════════════════════════ */

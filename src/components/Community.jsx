@@ -1,14 +1,20 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
-import CrossfadeImage from './CrossfadeImage';
 import WebpImage from './WebpImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
-import useAutoCarousel from '../hooks/useAutoCarousel';
+import CinematicGallery from './gallery/CinematicGallery';
+import ChapterConstellation from './gallery/ChapterConstellation';
 import ModalErrorBoundary from './ModalErrorBoundary';
 import { scrollToId } from '../motion/lenisStore';
 
 const communityImageList = (folder, files) => files.map((file) => `/Communities/${folder}/${file}`);
+
+/** Extracts the leading year from an i18n "since" string (e.g. "Since 2024"). */
+const sinceYear = (since) => {
+  const match = typeof since === 'string' ? since.match(/\d{4}/) : null;
+  return match ? match[0] : '';
+};
 
 const ieeeChapterLogos = [
   {
@@ -158,9 +164,6 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
   const modalRef = useRef(null);
   const [activeChapter, setActiveChapter] = useState(initialChapter);
   const hasPhotos = Array.isArray(community.photos) && community.photos.length > 0;
-  const carousel = useAutoCarousel(community.photos, 1500);
-  const selectedPhotoIndex = carousel.index;
-  const activateManualSelection = carousel.selectIndex;
   const closeChapter = useCallback(() => setActiveChapter(null), []);
 
   useModalAccessibility({ panelRef: modalRef, onClose });
@@ -172,6 +175,13 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
   useEffect(() => {
     setActiveChapter(initialChapter ?? null);
   }, [community.slug, initialChapter]);
+
+  const stageCaption = hasPhotos ? (
+    <p className="cine-caption" aria-hidden="true">
+      <span className="cine-caption__name">{community.name}</span>
+      <span className="cine-caption__year">{sinceYear(since) || ''}</span>
+    </p>
+  ) : null;
 
   return (
     <div className="event-modal" onClick={onClose}>
@@ -272,57 +282,27 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
             </div>
           </div>
 
-          <div className="event-modal__gallery modal-scroll-region" {...carousel.carouselProps}>
-            {community.photos?.length ? (
-              <>
-                <div className="event-modal__gallery-main">
-                  <button
-                    type="button"
-                    className="event-modal__nav event-modal__nav--prev"
-                    aria-label={t('common.prevPhoto')}
-                    onClick={() => {
-                      activateManualSelection((selectedPhotoIndex - 1 + community.photos.length) % community.photos.length);
-                    }}
-                  >
-                    ‹
-                  </button>
-
-                  <CrossfadeImage
-                    src={community.photos[selectedPhotoIndex]}
-                    alt={`${community.name} ${selectedPhotoIndex + 1}`}
-                  />
-
-                  <button
-                    type="button"
-                    className="event-modal__nav event-modal__nav--next"
-                    aria-label={t('common.nextPhoto')}
-                    onClick={() => {
-                      activateManualSelection((selectedPhotoIndex + 1) % community.photos.length);
-                    }}
-                  >
-                    ›
-                  </button>
-                </div>
-
-                <div className="event-modal__thumbs" aria-label={`${community.name} photo gallery`}>
-                  {community.photos.map((photo, index) => (
-                    <button
-                      key={`${community.slug}-photo-${index}`}
-                      type="button"
-                      className={`event-modal__thumb ${index === selectedPhotoIndex ? 'is-active' : ''}`}
-                      aria-label={`${t('common.viewPhoto')} ${index + 1}`}
-                      onClick={() => activateManualSelection(index)}
-                    >
-                      <WebpImage src={photo} alt={`${community.name} ${index + 1}`} />
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="event-modal__empty">
-                <span>{t('common.noPhotos')}</span>
-              </div>
-            )}
+          <div className="event-modal__gallery community-modal__gallery modal-scroll-region">
+            <CinematicGallery
+              items={hasPhotos ? community.photos : []}
+              variant="community"
+              altBuilder={(photo, i) => `${community.name} — photo ${i + 1}`}
+              labels={{
+                play: t('common.play'),
+                pause: t('common.pause'),
+                prev: t('common.previousPhoto'),
+                next: t('common.nextPhoto'),
+                viewPhoto: t('common.viewPhoto'),
+                stage: `${community.name} — ${t('sections.community')}`,
+                thumbStrip: `${community.name} photo gallery`,
+              }}
+              caption={stageCaption}
+              renderSlideOverlay={() => <div className="cine-polaroid-frame" aria-hidden="true" />}
+            />
+            <ChapterConstellation
+              chapterLogos={community.chapterLogos}
+              onOpenChapter={setActiveChapter}
+            />
           </div>
         </div>
       </div>
