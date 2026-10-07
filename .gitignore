@@ -18,3 +18,10 @@ dist
 .colorcheck.mjs
 .splitstyles.mjs
 .webpcheck.mjs
+.gallerycheck.mjs
+.dbg.mjs
+.dbg2.mjs
+.dbg3.mjs
+.gshot.mjs
+.modalsweep.mjs
+.rtlcheck.mjs
