@@ -4,6 +4,7 @@ import MixedText from './MixedText';
 import CrossfadeImage from './CrossfadeImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
 import useAutoCarousel from '../hooks/useAutoCarousel';
+import ModalErrorBoundary from './ModalErrorBoundary';
 import { scrollToId } from '../motion/lenisStore';
 
 const imageList = (folder, files) => files.map((file) => `/Events/${folder}/${file}`);
@@ -522,7 +523,15 @@ export default function Events() {
         </ul>
       </div>
 
-      {activeEvent && <EventModal event={activeEvent} onClose={() => setActiveEvent(null)} />}
+      {activeEvent && (
+        <ModalErrorBoundary
+          onClose={() => setActiveEvent(null)}
+          message={t('common.viewLoadError')}
+          closeLabel={t('common.close')}
+        >
+          <EventModal event={activeEvent} onClose={() => setActiveEvent(null)} />
+        </ModalErrorBoundary>
+      )}
     </div>
   );
 }

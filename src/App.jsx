@@ -17,12 +17,12 @@ export default function App() {
       <Header />
       <main>
         <section id="home"><Hero /></section>
-        <section id="about" className="about"><SectionBackground variant="a" /><About /></section>
-        <section id="skills" className="skills"><SectionBackground variant="b" /><Skills /></section>
-        <section id="projects" className="projects"><SectionBackground variant="a" /><Projects /></section>
-        <section id="community" className="community"><SectionBackground variant="b" /><Community /></section>
-        <section id="events" className="events"><SectionBackground variant="a" /><Events /></section>
-        <section id="contact" className="contact"><SectionBackground variant="b" emphasis /><Contact /></section>
+        <section id="about" className="about"><SectionBackground variant="about" /><About /></section>
+        <section id="skills" className="skills"><SectionBackground variant="skills" /><Skills /></section>
+        <section id="projects" className="projects"><SectionBackground variant="projects" /><Projects /></section>
+        <section id="community" className="community"><SectionBackground variant="community" /><Community /></section>
+        <section id="events" className="events"><SectionBackground variant="events" /><Events /></section>
+        <section id="contact" className="contact"><SectionBackground variant="contact" /><Contact /></section>
       </main>
       <Footer />
     </>

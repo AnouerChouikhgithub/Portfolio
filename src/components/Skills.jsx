@@ -1,4 +1,5 @@
 import { lazy, Suspense, useRef, useState, useMemo, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Eye,
   Cpu,
@@ -13,6 +14,7 @@ import {
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import ProjectModal from './ProjectModal';
+import ModalErrorBoundary from './ModalErrorBoundary';
 import useScrollLock from '../hooks/useScrollLock';
 import useModalReveals from '../hooks/useModalReveals';
 import {
@@ -65,7 +67,10 @@ export default function Skills() {
   useModalReveals(subscreenRef, activeGroupId);
 
   const groupSkills = useMemo(
-    () => (activeGroupId ? getSkillsForGroup(activeGroupId) : []),
+    () => {
+      const skills = activeGroupId ? getSkillsForGroup(activeGroupId) : [];
+      return Array.isArray(skills) ? skills.filter(Boolean) : [];
+    },
     [activeGroupId],
   );
 
@@ -73,9 +78,11 @@ export default function Skills() {
   const filteredProjects = useMemo(() => {
     if (!activeGroupId) return [];
     if (selectedSkillId) {
-      return getProjectsForSkill(selectedSkillId);
+      const projects = getProjectsForSkill(selectedSkillId);
+      return Array.isArray(projects) ? projects.filter(Boolean) : [];
     }
-    return getProjectsForGroup(activeGroupId);
+    const projects = getProjectsForGroup(activeGroupId);
+    return Array.isArray(projects) ? projects.filter(Boolean) : [];
   }, [activeGroupId, selectedSkillId]);
 
   // Total projects in this group (to know if the whole group has zero projects)
@@ -187,9 +194,12 @@ export default function Skills() {
   };
 
   // ── Translations ──
-  const translatedExperiences = t('skills.experience') || [];
-  const softSkillsList = t('skills.soft') || [];
-  const languagesList = t('skills.languages') || [];
+  const experienceTranslation = t('skills.experience');
+  const softSkillsTranslation = t('skills.soft');
+  const languagesTranslation = t('skills.languages');
+  const translatedExperiences = Array.isArray(experienceTranslation) ? experienceTranslation : [];
+  const softSkillsList = Array.isArray(softSkillsTranslation) ? softSkillsTranslation : [];
+  const languagesList = Array.isArray(languagesTranslation) ? languagesTranslation : [];
 
   return (
     <>
@@ -250,21 +260,21 @@ export default function Skills() {
           <h3 className="skills__subtitle">{t('sections.technical')}</h3>
 
           <div className="skills-groups-grid" role="list">
-            {GROUPS.map((group) => {
-              const Icon = GROUP_ICONS[group.icon] || Cpu;
-              const groupTitle = t(`skills.categories.${group.title}`, group.title);
+            {GROUPS.filter(Boolean).map((group) => {
+                const Icon = GROUP_ICONS[group?.icon] || Cpu;
+                const groupTitle = t(`skills.categories.${group?.title || ''}`, group?.title || '');
 
               return (
                 <button
-                  key={group.id}
-                  ref={(el) => { groupCardRefs.current[group.id] = el; }}
+                  key={group?.id}
+                  ref={(el) => { if (group?.id) groupCardRefs.current[group.id] = el; }}
                   type="button"
                   role="listitem"
                   className="skills-group-card"
-                  onClick={() => handleOpenGroup(group.id)}
+                  onClick={() => group?.id && handleOpenGroup(group.id)}
                   aria-haspopup="dialog"
                   aria-label={groupTitle}
-                  style={{ '--group-accent': group.color }}
+                  style={{ '--group-accent': group?.color || 'var(--accent)' }}
                 >
                   <div className="skills-group-card__icon-wrapper" aria-hidden="true">
                     <Icon size={28} strokeWidth={1.8} />
@@ -299,6 +309,11 @@ export default function Skills() {
 
       {/* ── Group Subscreen Overlay ─────────────────────────────────── */}
       {activeGroup && (
+        <ModalErrorBoundary
+          onClose={handleCloseSubscreen}
+          message={t('common.viewLoadError')}
+          closeLabel={t('common.close')}
+        >
         <div
           className="skills-subscreen modal-scroll-region"
           role="dialog"
@@ -326,7 +341,7 @@ export default function Skills() {
 
               <div className="skills-subscreen__title-wrapper">
                 <h3 id="skills-subscreen-title" className="skills-subscreen__title modal-reveal">
-                  {t(`skills.categories.${activeGroup.title}`, activeGroup.title)}
+                {t(`skills.categories.${activeGroup?.title || ''}`, activeGroup?.title || '')}
                 </h3>
               </div>
             </div>
@@ -365,11 +380,11 @@ export default function Skills() {
                 {filteredProjects.length > 0 ? (
                   <ul className="skills-subscreen__projects-list" role="list">
                     {filteredProjects.map((project) => {
-                      const projectTitle = t(`projects.items.${project.slug}.title`, project.title || project.name);
-                      const accentColor = project.accent || 'var(--accent)';
+                      const projectTitle = t(`projects.items.${project?.slug || ''}.title`, project?.title || project?.name || '');
+                      const accentColor = project?.accent || 'var(--accent)';
 
                       return (
-                        <li key={project.id} role="listitem" className="modal-reveal modal-reveal--scale">
+                        <li key={project?.id || project?.slug || projectTitle} role="listitem" className="modal-reveal modal-reveal--scale">
                           <button
                             type="button"
                             className="skills-project-item-btn"
@@ -378,7 +393,7 @@ export default function Skills() {
                             style={{ '--item-accent': accentColor }}
                           >
                             <div className="skills-project-item__icon-wrapper">
-                              {project.logo ? (
+                              {project?.logo ? (
                                 <img
                                   src={project.logo}
                                   alt=""
@@ -394,7 +409,7 @@ export default function Skills() {
                               ) : null}
                               <div
                                 className="skills-project-item__placeholder"
-                                style={{ display: project.logo ? 'none' : 'flex' }}
+                                style={{ display: project?.logo ? 'none' : 'flex' }}
                                 aria-hidden="true"
                               >
                                 <Box size={22} />
@@ -422,30 +437,46 @@ export default function Skills() {
             )}
           </div>
         </div>
+        </ModalErrorBoundary>
       )}
 
       {/* ── Project Detail Modal (Preserves Subscreen Scroll State) ── */}
       {activeProject && (
-        <ProjectModal
-          project={activeProject}
-          onClose={handleCloseProjectModal}
-          onOpenSkillGroup={(groupId, skillId) => {
-            handleCloseProjectModal();
-            handleOpenGroup(groupId, skillId);
-          }}
-        />
+        createPortal(
+          <ModalErrorBoundary
+            onClose={handleCloseProjectModal}
+            message={t('common.viewLoadError')}
+            closeLabel={t('common.close')}
+          >
+            <ProjectModal
+              project={activeProject}
+              onClose={handleCloseProjectModal}
+              onOpenSkillGroup={(groupId, skillId) => {
+                handleCloseProjectModal();
+                handleOpenGroup(groupId, skillId);
+              }}
+            />
+          </ModalErrorBoundary>,
+          document.body,
+        )
       )}
 
       {/* ── Internship Certificate Modal ───────────────────────────── */}
       {isCertOpen && (
         <Suspense fallback={null}>
-          <PdfModal
-            src="/internship-certificate.pdf"
-            title={t('certificate.dialogTitle')}
-            showDownload={false}
+          <ModalErrorBoundary
             onClose={() => setIsCertOpen(false)}
-            triggerRef={certTriggerRef}
-          />
+            message={t('common.viewLoadError')}
+            closeLabel={t('common.close')}
+          >
+            <PdfModal
+              src="/internship-certificate.pdf"
+              title={t('certificate.dialogTitle')}
+              showDownload={false}
+              onClose={() => setIsCertOpen(false)}
+              triggerRef={certTriggerRef}
+            />
+          </ModalErrorBoundary>
         </Suspense>
       )}
     </>
