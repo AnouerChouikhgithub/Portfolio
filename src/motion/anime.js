@@ -7,8 +7,8 @@
  * of the entry bundle while giving callers a single cached promise.
  *
  * Library ownership (see src/motion/README.md): anime.js owns SVG and
- * micro-motion only — never scroll-linked work (GSAP) or React presence
- * (Motion).
+ * micro-motion only — never scroll-linked work (GSAP) or layout/presence
+ * (React + CSS).
  */
 let animePromise;
 

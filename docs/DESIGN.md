@@ -199,6 +199,8 @@ contact → footer → theme-overrides (light) → responsive → skills-subscre
 
 ## Motion ownership
 
-See `src/motion/README.md` — GSAP owns scroll-linked work, Motion owns
-React presence/layout, anime.js owns SVG and micro-motion. One library per
-property per element.
+See `src/motion/README.md` — GSAP owns scroll-linked work, Lenis owns smooth
+scrolling (one instance), anime.js owns SVG/icon micro-motion, CSS owns
+hover/press/keyframes, and one delegated listener owns the card spotlight.
+There is no Framer Motion/`motion` dependency. One library per property per
+element.

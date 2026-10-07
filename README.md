@@ -51,6 +51,7 @@ A single-page portfolio for **Anouer Chouikh** — Computer Engineering & IoT st
 - **Contact form** — validated client- and server-side, honeypot anti-spam, delivered via EmailJS through a Netlify Function.
 - **SEO** — per-language `<title>`/meta description, hreflang alternates, canonical URL, semantic HTML.
 - **Accessibility** — focus traps in modals, ARIA roles, keyboard navigation (Tab/Escape/Arrows), reduced-motion support.
+- **Motion design** — staged hero entrance (SplitText + magnet buttons), floating glass-pill header with scrollspy and hide-on-scroll, pointer spotlight/tilt on cards, once-only scroll reveals and section parallax. Every layer bails under `prefers-reduced-motion` (see [src/motion/README.md](src/motion/README.md)).
 
 ## 2. Technology Stack
 
@@ -58,6 +59,7 @@ A single-page portfolio for **Anouer Chouikh** — Computer Engineering & IoT st
 |---|---|
 | Frontend | React 18.3, Vite 5.4 |
 | Styling | Vanilla CSS (custom properties, BEM, mobile-first media queries) |
+| Motion | GSAP 3 + ScrollTrigger, Lenis smooth scroll, anime.js (lazy), CSS transitions/keyframes — no Framer Motion |
 | Icons | Lucide React, React Icons |
 | i18n | Custom React Context provider + JSON dictionaries |
 | PDF | pdfjs-dist 5.x (Web Worker, canvas rendering) |
