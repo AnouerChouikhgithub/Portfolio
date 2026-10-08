@@ -444,38 +444,9 @@ function ChapterDetailModal({ chapter, onClose }) {
   );
 }
 
-const openCommunityBySlug = (slug, chapterName = null) => {
-  const matchedCommunity = clubs.find((community) => community.slug === slug);
-  if (!matchedCommunity) {
-    return;
-  }
-
-  const safeChapter = chapterName ? decodeURIComponent(chapterName) : null;
-  const chapterMatch = safeChapter
-    ? matchedCommunity.chapterLogos?.find((chapter) => {
-        const chapterKey = chapter.name.toLowerCase();
-        const chapterLabel = (chapter.label || chapter.name).toLowerCase();
-        return chapterKey === safeChapter.toLowerCase() || chapterLabel.includes(safeChapter.toLowerCase());
-      })
-    : null;
-
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('open-community', { detail: { slug, chapter: safeChapter } }));
-  }
-
-  return { matchedCommunity, chapterMatch };
-};
-
-if (typeof window !== 'undefined') {
-  window.openCommunityModal = (slug, chapterName = null) => {
-    const result = openCommunityBySlug(slug, chapterName);
-    if (!result) {
-      return false;
-    }
-
-    return true;
-  };
-}
+// Cross-section links (event descriptions → community modals) communicate via
+// the 'open-community' CustomEvent; Community listens for it below. No window
+// globals needed.
 
 export default function Community() {
   const { t, isRtl } = useI18n();

@@ -145,6 +145,8 @@
     border: 1px solid var(--border);
     color: var(--text);
     padding: 0.8rem 0.9rem;
+    /* Smooth ring/border/color transitions on focus. */
+    transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
     border-radius: 8px;
     font-size: 0.95rem;
     outline: none;

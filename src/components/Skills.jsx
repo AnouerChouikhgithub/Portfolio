@@ -16,7 +16,7 @@ import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import ProjectModal from './ProjectModal';
 import ModalErrorBoundary from './ModalErrorBoundary';
-import useScrollLock from '../hooks/useScrollLock';
+import useModalAccessibility from '../hooks/useModalAccessibility';
 import useModalReveals from '../hooks/useModalReveals';
 import {
   GROUPS,
@@ -55,7 +55,6 @@ export default function Skills() {
   const [activeProject, setActiveProject] = useState(null);
   const [isCertOpen, setIsCertOpen] = useState(false);
   const certTriggerRef = useRef(null);
-  const groupCardRefs = useRef({});
   const subscreenRef = useRef(null);
   const subscreenScrollPosRef = useRef(0);
 
@@ -64,8 +63,24 @@ export default function Skills() {
     () => GROUPS.find((g) => g.id === activeGroupId) ?? null,
     [activeGroupId],
   );
-  useScrollLock(Boolean(activeGroup), subscreenRef);
   useModalReveals(subscreenRef, activeGroupId);
+
+  const handleCloseSubscreen = useCallback(() => {
+    setActiveGroupId(null);
+    setSelectedSkillId(null);
+    setActiveProject(null);
+    window.history.pushState(null, '', '#skills');
+    // Focus returns to the triggering group card via useModalAccessibility.
+  }, []);
+
+  // Full dialog semantics for the subscreen: focus trap, Escape, initial
+  // focus, scroll lock, focus restore. Disabled while the project modal is
+  // stacked on top so Escape closes only the top layer.
+  useModalAccessibility({
+    panelRef: subscreenRef,
+    onClose: handleCloseSubscreen,
+    enabled: Boolean(activeGroup) && !activeProject,
+  });
 
   const groupSkills = useMemo(
     () => {
@@ -128,21 +143,6 @@ export default function Skills() {
     return () => window.removeEventListener('hashchange', syncFromHash);
   }, [syncFromHash]);
 
-  // Handle ESC key for subscreen overlay
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        if (activeProject) return; // Project detail modal handles its own ESC
-        if (activeGroupId) {
-          handleCloseSubscreen();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeGroupId, activeProject]);
-
   const handleOpenGroup = (groupId, skillId = null) => {
     setActiveGroupId(groupId);
     setSelectedSkillId(skillId);
@@ -150,19 +150,6 @@ export default function Skills() {
 
     const hashString = skillId ? `#skills/${groupId}?skill=${skillId}` : `#skills/${groupId}`;
     window.history.pushState(null, '', hashString);
-  };
-
-  const handleCloseSubscreen = () => {
-    const prevGroupId = activeGroupId;
-    setActiveGroupId(null);
-    setSelectedSkillId(null);
-    setActiveProject(null);
-    window.history.pushState(null, '', '#skills');
-
-    // Return focus to the group card
-    if (prevGroupId && groupCardRefs.current[prevGroupId]) {
-      groupCardRefs.current[prevGroupId].focus();
-    }
   };
 
   const handleSkillChipClick = (skillId) => {
@@ -268,7 +255,6 @@ export default function Skills() {
               return (
                 <button
                   key={group?.id}
-                  ref={(el) => { if (group?.id) groupCardRefs.current[group.id] = el; }}
                   type="button"
                   role="listitem"
                   className="skills-group-card"
