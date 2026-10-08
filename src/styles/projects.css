@@ -61,12 +61,6 @@
     transition: transform var(--transition);
 }
 
-/* The card a sub-screen morphed out of: stays in layout (no shift) but is
-   visually replaced by the panel until the close morph returns to it. */
-.project-card.is-open-behind {
-    visibility: hidden;
-}
-
 .project-card:hover,
 .project-card:focus-visible {
     transform: translateY(-8px) perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
@@ -121,21 +115,16 @@ html[data-theme="light"] .community-card__since {
     line-height: 1.6;
 }
 
-/* Legacy wrapper kept forәт modal internals that still target `.project-modal`:
-   the visible backdrop layers moved to overlay/SubScreen (subscreen.css). */
 .project-modal {
     position: fixed;
     inset: 0;
-    z-index: var(--z-subscreen);
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    background: transparent;
-    pointer-events: none;
-}
-
-.project-modal > .project-modal__panel {
-    pointer-events: auto;
+    background: var(--overlay);
+    backdrop-filter: blur(8px);
+    animation: modalBackdropIn 260ms ease both;
 }
 

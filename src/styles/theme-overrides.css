@@ -34,13 +34,10 @@ html[data-theme="light"] .community-modal__gallery {
     background: var(--surface-alt);
 }
 
-/* Backdrop ink for the shared SubScreen frost (dark uses #02060F-derived tint,
-   light tints with cool slate instead) — legacy wrappers stay transparent. */
 html[data-theme="light"] .event-modal,
 html[data-theme="light"] .community-modal,
-html[data-theme="light"] .community-chapter-modal,
-html[data-theme="light"] .project-modal {
-    background: transparent;
+html[data-theme="light"] .community-chapter-modal {
+    background: var(--overlay);
 }
 
 /* Light mode project modal styling with light background tints */

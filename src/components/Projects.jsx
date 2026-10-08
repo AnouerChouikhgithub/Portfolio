@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect, memo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, memo, useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import ProjectModal from './ProjectModal';
-import SubScreen from './overlay/SubScreen';
-import MorphedSubScreenPanel from './overlay/MorphedSubScreenPanel';
 import ModalErrorBoundary from './ModalErrorBoundary';
 import { PROJECTS } from '../data/portfolio-data';
 import { scrollToId } from '../motion/lenisStore';
@@ -12,16 +10,12 @@ import WebpImage from './WebpImage';
 /**
  * Memoized project card — only re-renders when its project data, the active
  * selection, or translations change (not on every parent state update).
- * The card reports its element so the sub-screen can morph out of it; while
- * its sub-screen is open the card stays in layout with visibility:hidden
- * (zero layout shift) and focus returns to it on close.
  */
-const ProjectCard = memo(function ProjectCard({ project, meta, preview, description, isActive, isRtl, onSelect, dateTbdLabel, logoAltPrefix, cardRef }) {
+const ProjectCard = memo(function ProjectCard({ project, meta, preview, description, isActive, isRtl, onSelect, dateTbdLabel, logoAltPrefix }) {
   return (
     <button
-      ref={cardRef}
       type="button"
-      className={`project-card ${isActive ? 'is-open-behind' : ''}`}
+      className="project-card"
       aria-haspopup="dialog"
       aria-expanded={isActive}
       onClick={onSelect}
@@ -47,15 +41,7 @@ const ProjectCard = memo(function ProjectCard({ project, meta, preview, descript
 export default function Projects() {
   const { t, isRtl } = useI18n();
   const [activeProject, setActiveProject] = useState(null);
-  const [originEl, setOriginEl] = useState(null);
-  const cardRefs = useRef({});
-  const closeProject = useCallback(() => {
-    setActiveProject(null);
-    // Clear any deep link so Back/Refresh doesn't re-open it.
-    if (window.location.hash.startsWith('#project-')) {
-      window.history.pushState(null, '', window.location.pathname + window.location.search);
-    }
-  }, []);
+  const closeProject = useCallback(() => setActiveProject(null), []);
 
   useEffect(() => {
     const syncProjectFromHash = () => {
@@ -69,7 +55,6 @@ export default function Projects() {
 
       if (matchedProject) {
         setActiveProject(matchedProject);
-        setOriginEl(null); // deep link: no card to morph from
         scrollToId('projects');
       }
     };
@@ -85,11 +70,6 @@ export default function Projects() {
     const hash = skillId ? `#skills/${groupId}?skill=${skillId}` : `#skills/${groupId}`;
     window.location.hash = hash;
     scrollToId('skills');
-  };
-
-  const handleSelect = (project, element) => {
-    setOriginEl(element);
-    setActiveProject(project);
   };
 
   return (
@@ -111,8 +91,7 @@ export default function Projects() {
               description={description}
               isActive={activeProject?.slug === project.slug}
               isRtl={isRtl}
-              onSelect={(event) => handleSelect(project, event.currentTarget)}
-              cardRef={(el) => { cardRefs.current[project.slug] = el; }}
+              onSelect={() => setActiveProject(project)}
               dateTbdLabel={t('common.dateTbd')}
               logoAltPrefix={t('common.logo')}
             />
@@ -120,36 +99,19 @@ export default function Projects() {
         })}
       </div>
 
-      <SubScreen
-        open={Boolean(activeProject)}
-        onClose={closeProject}
-        accent={activeProject?.accent}
-        originEl={originEl}
-        labelledBy="project-modal-title"
-        variant="project"
-        className="subscreen--project"
-      >
-        {activeProject && (
-          <ModalErrorBoundary
+      {activeProject && (
+        <ModalErrorBoundary
+          onClose={closeProject}
+          message={t('common.viewLoadError')}
+          closeLabel={t('common.close')}
+        >
+          <ProjectModal
+            project={activeProject}
             onClose={closeProject}
-            message={t('common.viewLoadError')}
-            closeLabel={t('common.close')}
-          >
-            <MorphedSubScreenPanel
-              originEl={originEl}
-              active={Boolean(activeProject)}
-              onClose={closeProject}
-              restoreFocusTo={originEl}
-            >
-              <ProjectModal
-                project={activeProject}
-                onClose={closeProject}
-                onOpenSkillGroup={handleOpenSkillGroup}
-              />
-            </MorphedSubScreenPanel>
-          </ModalErrorBoundary>
-        )}
-      </SubScreen>
+            onOpenSkillGroup={handleOpenSkillGroup}
+          />
+        </ModalErrorBoundary>
+      )}
     </div>
   );
 }

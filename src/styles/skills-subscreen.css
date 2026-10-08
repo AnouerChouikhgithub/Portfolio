@@ -89,17 +89,24 @@
 }
 
 /* ── Full-screen Subscreen Overlay ────────────────────────────── */
-/* Lives INSIDE the shared SubScreen panel now: the shell owns positioning,
-   z-index and the layered frosted backdrop; this is just the scroll/center
-   container for the group card content. */
 .skills-subscreen {
-    width: 100%;
-    height: 100%;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 3rem 1.5rem;
     overflow-y: auto;
+    animation: subscreenFadeIn 250ms ease-out;
+}
+
+@keyframes subscreenFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 .skills-subscreen__container {

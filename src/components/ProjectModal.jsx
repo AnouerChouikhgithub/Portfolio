@@ -14,6 +14,7 @@ import MixedText from './MixedText';
 import PetArchDiagram from './PetArchDiagram';
 import AnimatedCountText from './AnimatedCountText';
 import ModalWordReveal from './ModalWordReveal';
+import useModalAccessibility from '../hooks/useModalAccessibility';
 import CinematicGallery from './gallery/CinematicGallery';
 import useModalReveals from '../hooks/useModalReveals';
 import { getSkillById, getGroupForSkill } from '../data/portfolio-data';
@@ -26,9 +27,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
 
   const isPet = project.slug === 'pet-filament-machine';
 
-  // Accessibility (trap, Escape, focus) is owned by the wrapping SubScreen
-  // in Projects.jsx / Skills.jsx — a second hook here would double-close on
-  // Escape and fight the top-layer gate.
+  useModalAccessibility({ panelRef: modalRef, onClose });
 
   const projectMeta = t(`projects.items.${project.slug}.meta`, '');
   const projectTitle = t(`projects.items.${project.slug}.title`, project.title || project.name);
@@ -100,14 +99,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
     ...(project.accent ? { '--accent': project.accent } : {}),
     ...(bgDark ? { '--project-bg-dark': bgDark } : {}),
     ...(bgLight ? { '--project-bg-light': bgLight } : {}),
-    // The panel surface stays opaque (AA never depends on the frost), and
-    // --sub-panel-bg / --sub-bg feed the SubScreen shell + backdrop tint.
-    ...(currentBg ? {
-      background: currentBg,
-      '--project-bg': currentBg,
-      '--sub-panel-bg': currentBg,
-      '--sub-bg': currentBg,
-    } : {}),
+    ...(currentBg ? { background: currentBg, '--project-bg': currentBg } : {}),
   };
 
   // Resolved technical skills list for non-PET projects
@@ -137,18 +129,17 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
     : null;
 
   return (
-    // The wrapper/backdrop/backdrop-click close now live in overlay/SubScreen;
-    // this component renders only the panel whose surface keeps per-project
-    // colors and current layout.
-    <div
-      className="project-modal__panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="project-modal-title"
-      ref={modalRef}
-      style={accentStyle}
-      dir={isRtl ? 'rtl' : 'ltr'}
-    >
+    <div className="project-modal" onClick={onClose}>
+      <div
+        className="project-modal__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-modal-title"
+        onClick={(event) => event.stopPropagation()}
+        ref={modalRef}
+        style={accentStyle}
+        dir={isRtl ? 'rtl' : 'ltr'}
+      >
         {/* Close button attached to the shell */}
         <button
           type="button"
@@ -539,6 +530,8 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
             )}
           </div>
         </div>
+
+      </div>
     </div>
   );
 }

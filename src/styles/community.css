@@ -131,7 +131,7 @@
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
-    z-index: var(--z-subscreen);
+    z-index: 1000;
 }
 
 .community-modal__panel {
