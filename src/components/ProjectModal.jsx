@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { lazy, Suspense, useEffect, useRef, useMemo } from 'react';
 import {
   Wrench,
   Server,
@@ -11,7 +11,6 @@ import { FaGithub } from 'react-icons/fa';
 import { useI18n } from '../i18n/I18nProvider';
 import { useTheme } from '../theme/ThemeProvider';
 import MixedText from './MixedText';
-import PetArchDiagram from './PetArchDiagram';
 import AnimatedCountText from './AnimatedCountText';
 import ModalWordReveal from './ModalWordReveal';
 import useModalAccessibility from '../hooks/useModalAccessibility';
@@ -19,6 +18,10 @@ import CinematicGallery from './gallery/CinematicGallery';
 import useModalReveals from '../hooks/useModalReveals';
 import { getSkillById, getGroupForSkill } from '../data/portfolio-data';
 import { PET_REPOS, PET_HUB_URL } from '../data/pet-repos';
+
+// Lazy-loaded: the PET architecture SVG only renders inside the PET project's
+// gallery, so its ~7 kB of diagram markup stays out of the shared modal chunk.
+const PetArchDiagram = lazy(() => import('./PetArchDiagram'));
 
 export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
   const { t, isRtl, language } = useI18n();
@@ -41,7 +44,7 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
       {
         id: 'pet-hero',
         type: 'image',
-        src: "/Projects/PET-Recycling-Filament-System/Capture%20d'%C3%A9cran%202026-09-28%20145437.png",
+        src: "/Projects/PET-Recycling-Filament-System/Capture d'écran 2026-09-28 145437.png",
         caption: t('projects.pet.gallery.machine.caption'),
         alt: t('projects.pet.gallery.machine.alt'),
         thumbLabel: t('projects.pet.status.machine.title', 'Machine'),
@@ -59,14 +62,14 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
         id: 'pet-wiring',
         // TODO(owner): replace after the schematic update
         type: 'image',
-        src: '/Projects/PET-Recycling-Filament-System/Schematic%20Diagram.jpg',
+        src: '/Projects/PET-Recycling-Filament-System/Schematic Diagram.jpg',
         caption: t('projects.pet.gallery.wiring.caption'),
         alt: t('projects.pet.gallery.wiring.alt'),
         isPaperCard: true,
         thumbLabel: t('projects.pet.gallery.wiring.alt', 'Wiring Diagram'),
       },
     ];
-  }, [isPet, t, isRtl]);
+  }, [isPet, t]);
 
   const genericPhotos = Array.isArray(project.photos) ? project.photos : [];
   const carouselItems = isPet ? petGalleryItems : genericPhotos;
@@ -122,11 +125,8 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
     }
   };
 
-  // PET captions flip with the active gallery item (kept via ref so the
-  // autoplay engine owns the index exclusively).
-  const activePetCaption = isPet && hasPhotos
-    ? petGalleryItems[selectedGalleryIndexRef.current]?.caption ?? null
-    : null;
+  // (PET captions live inside CinematicGallery; the autoplay engine owns the
+  // gallery index exclusively via its ref, so no React state mirrors it here.)
 
   return (
     <div className="project-modal" onClick={onClose}>
@@ -516,7 +516,9 @@ export default function ProjectModal({ project, onClose, onOpenSkillGroup }) {
                   if (typeof item === 'object' && item?.type === 'component') {
                     return (
                       <div className="pet-gallery__component-wrapper">
-                        <PetArchDiagram isRtl={isRtl} t={t} />
+                        <Suspense fallback={null}>
+                          <PetArchDiagram isRtl={isRtl} t={t} />
+                        </Suspense>
                       </div>
                     );
                   }

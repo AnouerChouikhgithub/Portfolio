@@ -46,6 +46,10 @@
 .cine-layer {
     position: absolute;
     inset: 0;
+    /* Photos must paint above the community polaroid deck (z-index: 1 — the
+       white cards peek out behind the photo) but below all variant overlay
+       chrome (letterbox/vignette z-2/3, HUD/brackets/scanline z-4). */
+    z-index: 2;
     will-change: transform, opacity;
 }
 
@@ -562,10 +566,11 @@ html[data-theme="light"] .community-modal__gallery .cine-stage {
     opacity: 0.8;
 }
 
-.event-modal,
-.project-modal {
-    position: relative;
-}
+/* NOTE: do not set `position: relative` on the .event-modal/.project-modal
+   wrappers here — it overrides the `position: fixed` overlay declared in
+   events.css/projects.css (this file imports later) and drops the modal into
+   page flow. The constellation canvas anchors to .community-modal__gallery,
+   which is positioned, so the wrapper never needed this. */
 
 .event-modal > .event-modal__panel {
     position: relative;

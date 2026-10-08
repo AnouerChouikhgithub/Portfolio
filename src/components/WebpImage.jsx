@@ -36,7 +36,10 @@ export default function WebpImage({ src, onError, size, ...rest }) {
 
   return (
     <picture>
-      <source srcSet={variant} type="image/webp" />
+      {/* srcset splits on whitespace — paths with spaces (e.g. "IEEE Chapters/")
+          must be percent-encoded or the candidate is silently dropped and the
+          browser falls back to the heavier original image. */}
+      <source srcSet={encodeURI(variant)} type="image/webp" />
       <img src={src} onError={handleError} {...rest} />
     </picture>
   );

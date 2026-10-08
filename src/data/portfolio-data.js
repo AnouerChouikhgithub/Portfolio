@@ -113,8 +113,8 @@ export const PROJECTS = [
     ],
     githubUrl: PET_HUB_URL,
     photos: [
-      "/Projects/PET-Recycling-Filament-System/Capture%20d'%C3%A9cran%202026-09-28%20145437.png",
-      "/Projects/PET-Recycling-Filament-System/Schematic%20Diagram.jpg",
+      "/Projects/PET-Recycling-Filament-System/Capture d'écran 2026-09-28 145437.png",
+      "/Projects/PET-Recycling-Filament-System/Schematic Diagram.jpg",
     ],
     logo: '/Projects/logos/PET Plastic Recycling.svg',
     accent: ACCENT_COLORS.green,
@@ -230,11 +230,11 @@ export const PROJECTS = [
     ],
     githubUrl: 'https://github.com/AnouerChouikhgithub/All-Terrain-Robot.git',
     photos: [
-      "/Projects/All%20Terrain/app-screenshot.jfif",
-      "/Projects/All%20Terrain/off-road-military-robot-action-camera-mount-main-450x500.jpg",
-      "/Projects/All%20Terrain/Schematic-Diagram-Arduino-Bluetooth-Version.jpg",
-      "/Projects/All%20Terrain/Schematic-Diagram-Arduino-PS2-Controller-Version.jpg",
-      "/Projects/All%20Terrain/Schematic-Diagram-ESP32Version.jpg",
+      "/Projects/All Terrain/app-screenshot.jfif",
+      "/Projects/All Terrain/off-road-military-robot-action-camera-mount-main-450x500.jpg",
+      "/Projects/All Terrain/Schematic-Diagram-Arduino-Bluetooth-Version.jpg",
+      "/Projects/All Terrain/Schematic-Diagram-Arduino-PS2-Controller-Version.jpg",
+      "/Projects/All Terrain/Schematic-Diagram-ESP32Version.jpg",
     ],
     logo: '/Projects/logos/All-Terrain-Robot.svg',
     accent: ACCENT_COLORS.amber,
@@ -264,8 +264,8 @@ export const PROJECTS = [
     ],
     githubUrl: 'https://github.com/AnouerChouikhgithub/Line-Folower-Robot.git',
     photos: [
-      "/Projects/Line%20Follower/images%20(1).jfif",
-      "/Projects/Line%20Follower/Schematic-Diagram-Arduino.jpg",
+      "/Projects/Line Follower/images (1).jfif",
+      "/Projects/Line Follower/Schematic-Diagram-Arduino.jpg",
     ],
     logo: '/Projects/logos/Line-Follower Robot.svg',
     accent: ACCENT_COLORS.blue,
@@ -341,10 +341,3 @@ export function getProjectsForGroup(groupId) {
     (p) => Array.isArray(p.technicalSkills) && p.technicalSkills.some((id) => groupSkillIds.has(id))
   );
 }
-
-// Aliases for compatibility
-export const PROJECTS_DATA = PROJECTS;
-export const SKILL_GROUPS = GROUPS.map((group) => ({
-  ...group,
-  skills: getSkillsForGroup(group.id),
-}));

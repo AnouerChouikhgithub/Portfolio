@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import WebpImage from './WebpImage';
@@ -9,33 +10,38 @@ import { scrollToId } from '../motion/lenisStore';
 
 const imageList = (folder, files) => files.map((file) => `/Events/${folder}/${file}`);
 
+// Inline links injected into event descriptions (projects ↔ communities ↔
+// events cross-navigation). Module-level: built and length-sorted once — the
+// longest labels must win so e.g. "RAS Chapter" matches before "RAS".
+const HYPERLINK_DEFINITIONS = [
+  { label: 'PET recycling machine', href: '#project-pet-filament-machine', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'NeuroFocus project', href: '#project-neurofocus', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'Carthago project', href: '#project-carthago', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'Fighter Robot challenge', href: '#project-fighter-robot', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'All Terrain Challenge', href: '#project-all-terrain-robot', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'All-Terrain Challenge', href: '#project-all-terrain-robot', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'Line Follower Challenge', href: '#project-line-follower-robot', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'Junior Robot challenge', href: '#project-junior-robot', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'combat robot', href: '#project-fighter-robot', className: 'event-modal__project-link event-modal__project-link--project' },
+  { label: 'OTDDPH organization', href: '#community-otddph', className: 'event-modal__project-link event-modal__project-link--otddph' },
+  { label: 'Tunisian Youth Science Association, El Alia', href: '#community-ajst', className: 'event-modal__project-link event-modal__project-link--blue' },
+  { label: 'Tunisian Youth Science Association', href: '#community-ajst', className: 'event-modal__project-link event-modal__project-link--blue' },
+  { label: 'IEEE ESSTHS SB', href: '#community-ieee-essths-sb', className: 'event-modal__project-link event-modal__project-link--blue' },
+  { label: 'IEEE ESSTHS', href: '#community-ieee-essths-sb', className: 'event-modal__project-link event-modal__project-link--blue' },
+  { label: 'IEEE', href: '#community-ieee-essths-sb', className: 'event-modal__project-link event-modal__project-link--blue' },
+  { label: 'RAS Chapter', href: '#community-ieee-essths-sb?chapter=RAS', className: 'event-modal__project-link event-modal__project-link--red' },
+  { label: 'RAS', href: '#community-ieee-essths-sb?chapter=RAS', className: 'event-modal__project-link event-modal__project-link--red' },
+  { label: 'SIGHT Group', href: '#community-ieee-essths-sb?chapter=SIGHT', className: 'event-modal__project-link event-modal__project-link--orange' },
+  { label: 'SIGHT', href: '#community-ieee-essths-sb?chapter=SIGHT', className: 'event-modal__project-link event-modal__project-link--orange' },
+  { label: 'CS Chapter', href: '#community-ieee-essths-sb?chapter=CS', className: 'event-modal__project-link event-modal__project-link--yellow' },
+].sort((first, second) => second.label.length - first.label.length);
+
 const renderProjectLinksInText = (text, onClose, isRtl = false) => {
   if (!text) {
     return text;
   }
 
-  const hyperlinkDefinitions = [
-    { label: 'PET recycling machine', href: '#project-pet-filament-machine', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'NeuroFocus project', href: '#project-neurofocus', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'Carthago project', href: '#project-carthago', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'Fighter Robot challenge', href: '#project-fighter-robot', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'All Terrain Challenge', href: '#project-all-terrain-robot', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'All-Terrain Challenge', href: '#project-all-terrain-robot', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'Line Follower Challenge', href: '#project-line-follower-robot', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'Junior Robot challenge', href: '#project-junior-robot', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'combat robot', href: '#project-fighter-robot', className: 'event-modal__project-link event-modal__project-link--project' },
-    { label: 'OTDDPH organization', href: '#community-otddph', className: 'event-modal__project-link event-modal__project-link--otddph' },
-    { label: 'Tunisian Youth Science Association, El Alia', href: '#community-ajst', className: 'event-modal__project-link event-modal__project-link--blue' },
-    { label: 'Tunisian Youth Science Association', href: '#community-ajst', className: 'event-modal__project-link event-modal__project-link--blue' },
-    { label: 'IEEE ESSTHS SB', href: '#community-ieee-essths-sb', className: 'event-modal__project-link event-modal__project-link--blue' },
-    { label: 'IEEE ESSTHS', href: '#community-ieee-essths-sb', className: 'event-modal__project-link event-modal__project-link--blue' },
-    { label: 'IEEE', href: '#community-ieee-essths-sb', className: 'event-modal__project-link event-modal__project-link--blue' },
-    { label: 'RAS Chapter', href: '#community-ieee-essths-sb?chapter=RAS', className: 'event-modal__project-link event-modal__project-link--red' },
-    { label: 'RAS', href: '#community-ieee-essths-sb?chapter=RAS', className: 'event-modal__project-link event-modal__project-link--red' },
-    { label: 'SIGHT Group', href: '#community-ieee-essths-sb?chapter=SIGHT', className: 'event-modal__project-link event-modal__project-link--orange' },
-    { label: 'SIGHT', href: '#community-ieee-essths-sb?chapter=SIGHT', className: 'event-modal__project-link event-modal__project-link--orange' },
-    { label: 'CS Chapter', href: '#community-ieee-essths-sb?chapter=CS', className: 'event-modal__project-link event-modal__project-link--yellow' },
-  ].sort((a, b) => b.label.length - a.label.length);
+  const hyperlinkDefinitions = HYPERLINK_DEFINITIONS;
 
   const textLower = text.toLowerCase();
   const parts = [];
@@ -407,10 +413,11 @@ function EventModal({ event, onClose }) {
                 prev: t('common.previousPhoto'),
                 next: t('common.nextPhoto'),
                 viewPhoto: t('common.viewPhoto'),
+                noPhotos: t('common.noPhotos'),
                 stage: `${event.title} — ${t('sections.events')}`,
                 thumbStrip: `${event.title} photo gallery`,
               }}
-              renderSlideOverlay={(photo, i, layer) => (layer === 'in' ? <EventHud index={i} count={event.photos.length} /> : null)}
+              renderSlideOverlay={(photo, i, layer) => (layer === 'in' && hasPhotos ? <EventHud index={i} count={event.photos.length} /> : null)}
             />
           </div>
         </div>
@@ -505,14 +512,18 @@ export default function Events() {
         </ul>
       </div>
 
-      {activeEvent && (
+      {/* Portaled to <body>: nested inside this section's `.container`
+          (position: relative + z-index: 1) the fixed modal was trapped in that
+          stacking context, so later sections painted over it. */}
+      {activeEvent && createPortal(
         <ModalErrorBoundary
           onClose={() => setActiveEvent(null)}
           message={t('common.viewLoadError')}
           closeLabel={t('common.close')}
         >
           <EventModal event={activeEvent} onClose={() => setActiveEvent(null)} />
-        </ModalErrorBoundary>
+        </ModalErrorBoundary>,
+        document.body,
       )}
     </div>
   );

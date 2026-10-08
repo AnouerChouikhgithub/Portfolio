@@ -221,8 +221,7 @@ export default function Header() {
               aria-label={t('nav.language')}
               aria-haspopup="listbox"
               aria-expanded={isLanguageOpen}
-              onFocus={() => setIsLanguageOpen(true)}
-              onClick={() => setIsLanguageOpen(true)}
+              onClick={() => setIsLanguageOpen((open) => !open)}
               onKeyDown={handleLanguageTriggerKeyDown}
             >
               {t(`languages.${language}`)}

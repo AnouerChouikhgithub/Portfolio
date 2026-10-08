@@ -263,9 +263,6 @@ export default function useAutoCarousel(items, options = {}) {
     };
   }, [running, slotKey]);
 
-  // Keep the carouselProps API shape (hover/focus pausing was intentionally removed).
-  const carouselProps = useMemo(() => ({}), []);
-
   return {
     index,
     previousIndex,
@@ -279,6 +276,5 @@ export default function useAutoCarousel(items, options = {}) {
     next,
     previous,
     progressRef,
-    carouselProps,
   };
 }

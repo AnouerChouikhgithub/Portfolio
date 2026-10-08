@@ -213,13 +213,16 @@ export default function CinematicGallery({
   }, { dependencies: [index, count], scope: rootRef });
 
   // ── Keyboard: arrows + Space (Space only, not page scroll) ────────────────
+  // RTL layouts flip the arrow semantics, mirroring the swipe handler below.
   const stageKeyDown = useCallback((event) => {
     if (event.key === 'ArrowRight') {
       event.preventDefault();
-      direction > 0 ? next() : next();
+      const isRtl = rootRef.current?.closest('[dir="rtl"]') != null;
+      if (isRtl) previous(); else next();
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
-      previous();
+      const isRtl = rootRef.current?.closest('[dir="rtl"]') != null;
+      if (isRtl) next(); else previous();
     } else if (event.key === ' ' || event.code === 'Space') {
       event.preventDefault();
       togglePlay();
@@ -272,7 +275,9 @@ export default function CinematicGallery({
         {/* Blurred backdrop layer for portrait/square photos */}
         {fitFor(index) === 'contain' && srcAt(index) && (
           <div className="cine-stage__backdrop" aria-hidden="true">
-            <WebpImage src={srcAt(index)} alt="" aria-hidden="true" />
+            {/* Reuses the slide's `main` variant (browser cache hit) instead of
+                fetching a second full-size image for the blurred backdrop. */}
+            <WebpImage src={srcAt(index)} alt="" aria-hidden="true" size="main" />
           </div>
         )}
 
