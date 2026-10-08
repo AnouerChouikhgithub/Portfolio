@@ -115,12 +115,9 @@ const renderProjectLinksInText = (text, onClose, isRtl = false) => {
             const slug = hashPath.replace('#community-', '');
             const chapterQuery = new URLSearchParams(queryString).get('chapter');
 
-            if (typeof window.openCommunityModal === 'function') {
-              window.openCommunityModal(slug, chapterQuery || null);
-            } else {
-              window.dispatchEvent(new CustomEvent('open-community', { detail: { slug, chapter: chapterQuery || null } }));
-            }
-
+            // Community listens for this event (works even when the hash is
+            // already on the same community, where no hashchange fires).
+            window.dispatchEvent(new CustomEvent('open-community', { detail: { slug, chapter: chapterQuery || null } }));
             window.location.hash = bestMatch.href;
             return;
           }

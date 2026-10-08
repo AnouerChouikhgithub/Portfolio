@@ -84,6 +84,13 @@
     height: 7rem;
     object-fit: contain;
     margin-bottom: 1rem;
+    /* Subtle deepening rise on card hover — mirrors the card's own lift. */
+    transition: transform var(--transition);
+}
+
+.project-card:hover .project-card__logo,
+.project-card:focus-visible .project-card__logo {
+    transform: translateY(-4px) scale(1.04);
 }
 
 .project-card__meta {

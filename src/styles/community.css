@@ -90,19 +90,31 @@
     object-fit: cover;
 }
 
+/* The visible photo gets a slow Ken Burns drift; hover pauses it so the
+   image holds still while the visitor looks. */
 .community-card__media-photo.is-active {
-    animation: communityCardPhotoIn 600ms ease both;
+    animation: communityCardPhotoIn 600ms ease both, communityCardDrift 18s ease-in-out infinite alternate;
 }
 
-@keyframes communityCardPhotoIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.community-card:hover .community-card__media-photo.is-active,
+.community-card:focus-visible .community-card__media-photo.is-active {
+    animation-play-state: paused;
+}
+
+@keyframes communityCardDrift {
+    from { transform: scale(1); }
+    to { transform: scale(1.08) translate(1.5%, -1%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .community-card__media-photo.is-active {
         animation: none;
     }
+}
+
+@keyframes communityCardPhotoIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* Club logo badge pinned to the photo's bottom corner (RTL flips via logical property). */

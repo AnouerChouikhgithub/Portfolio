@@ -255,6 +255,21 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
       } else if (e.key === '0') {
         e.preventDefault();
         updateZoom(1);
+      } else if (e.key === 'Tab') {
+        // Focus trap: keep Tab cycling inside the dialog.
+        const panel = panelRef.current;
+        if (!panel) return;
+        const focusables = panel.querySelectorAll('button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])');
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last || !panel.contains(document.activeElement)) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
 
