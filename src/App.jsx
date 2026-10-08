@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useI18n } from './i18n/I18nProvider';
 import Header from './components/Header'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -13,6 +14,7 @@ import SectionBackground from './components/SectionBackground'
 import { initCardSpotlight } from './motion/cardSpotlight'
 
 export default function App() {
+  const { t } = useI18n();
   // Single delegated pointer listener feeding the card spotlight/tilt CSS vars.
   useEffect(() => initCardSpotlight(), [])
 
@@ -22,9 +24,11 @@ export default function App() {
           very low-contrast texture (paper grain in light, fine grain +
           vignette in dark). Purely decorative. */}
       <div className="page-grain" aria-hidden="true" />
+      {/* Keyboard users can jump straight past the header into the content. */}
+      <a className="skip-link" href="#main">{t('a11y.skipToContent')}</a>
       <ScrollProgress />
       <Header />
-      <main>
+      <main id="main" tabIndex={-1}>
         {/* Home is a plain wrapper: Hero renders its own labelled <section>.
             Wrapping it in another <section> made it a nested landmark. */}
         <div id="home"><Hero /></div>

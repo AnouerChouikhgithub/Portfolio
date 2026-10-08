@@ -34,3 +34,40 @@ picture {
     display: contents;
 }
 
+/* Skip-to-content: hidden until keyboard-focused, then a clear pill that
+   lands the user (and their focus) right after the header. */
+.skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 50%;
+    z-index: 2000;
+    padding: 0.7rem 1.4rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 600;
+    transform: translate(-50%, -300%);
+    transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.skip-link:focus-visible,
+.skip-link:focus {
+    transform: translate(-50%, 0);
+}
+
+/* Programmatic focus lands on <main> after the skip link is activated. */
+main:focus {
+    outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skip-link {
+        transform: translate(-50%, -200%);
+    }
+
+    .skip-link:focus-visible,
+    .skip-link:focus {
+        transform: translate(-50%, 0);
+    }
+}
+

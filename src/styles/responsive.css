@@ -17,11 +17,6 @@
         width: 192px;
         height: 192px;
     }
-
-    .footer__content {
-        flex-direction: row;
-        justify-content: space-between;
-    }
 }
 
 /* Mobile devices (≤767px): hamburger navigation.
@@ -146,16 +141,26 @@
         grid-template-columns: 1fr;
     }
 
-    .skills__list {
-        grid-template-columns: 1fr;
+    /* Compact header controls and list rows grow to ≥ 44 px touch targets. */
+    .theme-toggle {
+        width: 2.75rem;
+        height: 2.75rem;
     }
 
-    .footer__content {
-        text-align: center;
+    .language-switcher__trigger {
+        min-width: 2.75rem;
+        min-height: 2.75rem;
     }
 
-    .footer__nav {
-        order: -1;
+    .footer__link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
+
+    .events__list-button {
+        min-height: 44px;
+        padding-block: 0.5rem;
     }
 }
 
@@ -165,8 +170,7 @@ html[dir="rtl"] .hero__content {
 }
 
 html[dir="rtl"] .skills__experience-bullets,
-html[dir="rtl"] .project-modal__details,
-html[dir="rtl"] .community-modal__details {
+html[dir="rtl"] .project-modal__details {
     text-align: start;
 }
 

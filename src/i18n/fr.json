@@ -53,6 +53,9 @@
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu"
   },
+  "a11y": {
+    "skipToContent": "Aller au contenu"
+  },
   "hero": {
     "title": "Étudiant en 3ème année d'ingénierie des systèmes informatiques & Internet des objets (ISITCom)",
     "tagline": "Robotique • IoT",
@@ -482,7 +485,9 @@
     "messageRequired": "Le message ne peut pas être vide."
   },
   "footer": {
-    "copyright": "© 2026 Anouer Chouikh. Tous droits réservés."
+    "copyright": "© 2026 Anouer Chouikh. Tous droits réservés.",
+    "tagline": "Étudiant en ingénierie — robots, systèmes et communauté.",
+    "backToTop": "Retour en haut"
   },
   "languages": {
     "en": "EN",

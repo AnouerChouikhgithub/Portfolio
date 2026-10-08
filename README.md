@@ -110,8 +110,8 @@ A single-page portfolio for **Anouer Chouikh** — Computer Engineering & IoT st
     │   ├── effects/            # DotGrid canvas background
     │   └── reactbits/          # Magnet + SplitText micro-interactions
     ├── hooks/                  # useModalAccessibility, useFormValidation, useAutoCarousel,
-    │                           # usePhotoCycle, useModalReveals, useScrollLock, useResponsive
-    ├── constants/              # breakpoints, formValidation, theme, i18nConfig
+    │                           # usePhotoCycle, useModalReveals, useScrollLock
+    ├── constants/              # formValidation, theme, i18nConfig
     ├── data/                   # portfolio-data.js (projects/skills/communities) + pet-repos.js
     ├── motion/                 # MotionProvider, ScrollProgress, anime.js loader,
     │                           # cardSpotlight, scrollReveal, lenisStore (+ README)
@@ -189,10 +189,7 @@ npm run preview
 | 768–1023 px | Tablets | Auto-fit grids, 2-column where applicable |
 | ≥ 1024 px | Desktop | Full nav bar, 3-column project grid, 5-column community grid |
 
-**Breakpoints live in two synced places** — keep them consistent when changing:
-
-- CSS: media queries in [src/styles/responsive.css](src/styles/responsive.css) (768 px is the mobile/desktop boundary)
-- JS: [src/constants/breakpoints.js](src/constants/breakpoints.js) consumed by the `useResponsive()` hook via `matchMedia`
+**Breakpoints live in [src/styles/responsive.css](src/styles/responsive.css)** (768 px is the mobile/desktop boundary). JS code keys off `matchMedia` only for media *features* (reduced motion, pointer type, visibility) — never re-implements the layout breakpoints.
 
 Testing tools: Chrome DevTools device toolbar, [Responsively App](https://responsively.app/), real iOS/Android devices.
 
@@ -312,7 +309,7 @@ Browser form ──POST /api/contact──▶ Netlify Function ──▶ EmailJS
 | Fonts | Inter/Space Grotesk with `preconnect` + `display=swap`; Cairo preloaded only when Arabic is active |
 | Images | WebP-first via `<WebpImage>` (`<picture>` + automatic jpg fallback) — `npm run images:convert` turns `public/` photos into WebP siblings (37.8 MB → 10.2 MB, −73%); plus `loading="lazy"` + `decoding="async"` below the fold |
 | Rendering | Debounced PDF re-render (150/200 ms), `matchMedia` instead of resize listeners, rAF loops pause when hidden/covered, `prefers-reduced-motion` respected |
-| Build output | Initial JS **≈ 167.7 kB gzip** (index 64.8 + vendor 52.4 + react 50.6) ≤ 175 kB budget; CSS **19.9 kB gzip** ≤ 22 kB budget; anime.js (43.2 kB gz) stays an async chunk |
+| Build output | Initial JS **≈ 168.4 kB gzip** (index 65.3 + vendor 52.4 + react 50.6) ≤ 175 kB budget; CSS **18.4 kB gzip** ≤ 22 kB budget; anime.js (43.2 kB gz) stays an async chunk |
 
 **Budgets & monitoring:** run Lighthouse (target ≥ 90 across the board) and check Core Web Vitals (LCP < 2.5 s, CLS < 0.1, INP < 200 ms). The biggest remaining lever is image weight — `public/` is ~77 MB, dominated by event photos (see roadmap in [docs/ROADMAP.md](docs/ROADMAP.md)).
 
@@ -328,8 +325,8 @@ Browser form ──POST /api/contact──▶ Netlify Function ──▶ EmailJS
 | LCP | 4.8 s | 4.5 s | hero portrait through `<picture>` |
 | CLS | 0.000 | 0.000 | `display: contents` on `<picture>` is layout-neutral |
 | TBT | 0 ms | 176 ms | hero entrance timeline + anime.js draw-on (async chunk) |
-| Initial JS (gzip) | 161.1 kB | 167.7 kB | budget ≤ 175 kB |
-| CSS (gzip) | 14.8 kB | 19.9 kB | budget ≤ 22 kB |
+| Initial JS (gzip) | 161.1 kB | 168.4 kB | budget ≤ 175 kB |
+| CSS (gzip) | 14.8 kB | 18.4 kB | budget ≤ 22 kB |
 | Photo payload | 37.8 MB jpg | **10.2 MB webp** | −73%, `npm run images:convert` |
 
 ## 17. SEO & Accessibility
@@ -342,6 +339,7 @@ Browser form ──POST /api/contact──▶ Netlify Function ──▶ EmailJS
 
 **Accessibility**
 - All interactive elements are real `<button>`/`<a>` elements with visible focus outlines
+- Skip-to-content link (`Tab` on load) with focus routed to `<main>`
 - Modals: `role="dialog"`, `aria-modal`, focus trap, `Escape` to close, focus restored to trigger — with correct stacking when a second dialog opens on top
 - Tabs implement the ARIA tabs pattern (Arrow/Home/End keys)
 - Form errors announced via `role="alert"`; inputs flagged with `aria-invalid`
@@ -356,7 +354,8 @@ Full checklists: [docs/TESTING.md](docs/TESTING.md). Quick smoke test:
 npm run dev
 ```
 
-- [ ] Mobile 320/375/425 px — hamburger menu opens/closes, buttons ≥ 44 px
+- [ ] Mobile 320/375/425 px — hamburger menu opens/closes, touch targets ≥ 44 px (header toggles, footer links, event rows)
+- [ ] Skip link — `Tab` from load shows “Skip to content”; activating it focuses `<main>`
 - [ ] Tablet 768 px, desktop 1024/1440/1920 px — grids reflow, no horizontal scroll
 - [ ] Theme toggle — persists across reload, no FOUC
 - [ ] Languages — EN/FR/AR; Arabic mirrors layout; `?lang=fr` / `?lang=ar` deep links

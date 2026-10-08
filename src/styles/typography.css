@@ -40,9 +40,18 @@ a {
     transition: color var(--transition);
 }
 
-a:focus-visible {
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 4px;
     border-radius: 4px;
+}
+
+/* Inputs keep their own focus ring (box-shadow) — no double outline. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: none;
 }
 

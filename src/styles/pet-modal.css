@@ -264,87 +264,10 @@ html[data-theme="light"] .pet-modal__stack-box {
     outline: none;
 }
 
-/* PET Gallery Styles */
-.pet-gallery__main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 380px;
-    max-height: 480px;
-    position: relative;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-html[data-theme="light"] .pet-gallery__main {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-.pet-gallery__preview-area {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem;
-}
-
-.pet-gallery__preview-area > .pet-gallery__component-wrapper {
-    animation: modalContentIn 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.pet-gallery__img-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.pet-gallery__img-wrapper img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    max-height: 420px;
-    object-fit: contain;
-    border-radius: 8px;
-}
-
-.pet-gallery__img-wrapper .carousel-crossfade__image {
-    max-height: 420px;
-    object-fit: contain;
-}
-
-/* Wiring diagram paper card in dark mode */
-.pet-gallery__img-wrapper--paper {
-    background: #ffffff;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-    margin: 0.5rem;
-}
-
-.pet-gallery__img-wrapper--paper img {
-    border-radius: 4px;
-    max-height: 380px;
-}
-
+/* PET diagram wrapper */
 .pet-gallery__component-wrapper {
     width: 100%;
     padding: 0.5rem;
-}
-
-.pet-gallery__caption {
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.45;
-    margin: 0;
-    padding: 0.25rem 0.5rem;
-    text-align: start;
 }
 
 /* Architecture Diagram SVG wrapper */
@@ -378,40 +301,6 @@ html[data-theme="light"] .pet-gallery__main {
 
 .pet-arch__link-node:focus-visible rect {
     outline: 2px solid var(--accent);
-}
-
-/* Thumbnails */
-.pet-gallery__thumb-placeholder {
-    height: 90px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.5rem;
-    color: var(--accent);
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-align: center;
-    background: var(--surface-alt);
-}
-
-.pet-gallery__thumb-img--paper {
-    background: #ffffff;
-    padding: 4px;
-}
-
-/* RTL Layout Rules */
-[dir="rtl"] .project-modal__nav--prev {
-    left: auto;
-    right: 0.75rem;
-    transform: translateY(-50%) scaleX(-1);
-}
-
-[dir="rtl"] .project-modal__nav--next {
-    right: auto;
-    left: 0.75rem;
-    transform: translateY(-50%) scaleX(-1);
 }
 
 /* 3. Mobile (<= 768px): single column, gallery first, modal full-height (100dvh), no sticky */
@@ -457,11 +346,6 @@ html[data-theme="light"] .pet-gallery__main {
         overflow: visible;
     }
 
-    .pet-gallery__main {
-        min-height: 260px;
-        max-height: 320px;
-    }
-
     .pet-modal__stack-layer {
         grid-template-columns: 1fr;
         gap: 0.25rem;
@@ -473,7 +357,6 @@ html[data-theme="light"] .pet-gallery__main {
     .pet-modal__status-card,
     .pet-modal__repo-link,
     .pet-modal__primary-cta,
-    .project-modal__thumb,
     .pet-arch__node--interactive {
         animation: none !important;
         transition: none !important;
