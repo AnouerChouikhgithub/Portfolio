@@ -105,8 +105,7 @@
    white — in light mode they are mixed down toward the ink token. */
 html[data-theme="light"] .project-card__title,
 html[data-theme="light"] .skills-project-item__title,
-html[data-theme="light"] .events-card__title,
-html[data-theme="light"] .community-card__since {
+html[data-theme="light"] .events-card__title {
     color: color-mix(in srgb, var(--project-accent, var(--accent)) 55%, var(--text));
 }
 

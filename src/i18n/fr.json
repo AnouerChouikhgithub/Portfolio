@@ -33,7 +33,9 @@
       "github": "GitHub",
       "linkedin": "LinkedIn",
       "instagram": "Instagram"
-    }
+    },
+    "play": "Lire le diaporama",
+    "pause": "Mettre le diaporama en pause"
   },
   "nav": {
     "home": "Accueil",

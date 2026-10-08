@@ -86,10 +86,10 @@ A single-page portfolio for **Anouer Chouikh** — Computer Engineering & IoT st
     ├── components/             # Header, Hero, About, Skills, Projects,
     │                           # Community, Events, Contact, Footer,
     │                           # PdfModal, MixedText
-    ├── hooks/                  # useResponsive, useModalAccessibility,
-    │                           # useFormValidation
+    ├── hooks/                  # useModalAccessibility, useFormValidation,
+    │                           # useAutoCarousel, useModalReveals, useScrollLock
     ├── constants/              # breakpoints, formValidation, theme, i18nConfig
-    ├── utils/                  # debounce, storage helpers
+    ├── utils/                  # storage helpers
     ├── i18n/                   # I18nProvider + en/fr/ar.json
     ├── theme/                  # ThemeProvider
     └── lib/                    # sendContact (API client)
@@ -233,7 +233,6 @@ Browser form ──POST /api/contact──▶ Netlify Function ──▶ EmailJS
 - **Context + custom hooks** — `useTheme()`, `useI18n()`; provider values memoized so consumers re-render only on real changes.
 - **Shared modal behavior** — focus trap, Escape handling, scroll lock, and focus restoration live in [useModalAccessibility](src/hooks/useModalAccessibility.js), reused by all four modals.
 - **Form logic** — [useFormValidation](src/hooks/useFormValidation.js) returns i18n-key errors; rules are constants shared with the server.
-- **Responsive JS** — [useResponsive](src/hooks/useResponsive.js) uses `matchMedia` listeners (no resize-thrash); pure CSS handles layout wherever possible.
 - **CSS** — BEM naming, single source of design tokens, consolidated media queries (no duplicate breakpoint blocks).
 - **Data-driven UI** — projects/communities/events are plain data arrays mapped to components; add an entry + translations and the UI follows.
 

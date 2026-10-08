@@ -33,7 +33,9 @@
       "github": "GitHub",
       "linkedin": "LinkedIn",
       "instagram": "Instagram"
-    }
+    },
+    "play": "Play slideshow",
+    "pause": "Pause slideshow"
   },
   "nav": {
     "home": "Home",

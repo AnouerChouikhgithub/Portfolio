@@ -8,7 +8,8 @@
     "build": "npm run check:i18n && vite build",
     "preview": "vite preview",
     "check:i18n": "node scripts/check-i18n.mjs",
-    "images:convert": "node scripts/convert-images.mjs"
+    "images:convert": "node scripts/convert-images.mjs",
+    "images:gallery": "node scripts/gallery-assets.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

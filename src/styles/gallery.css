@@ -1,0 +1,720 @@
+/* ════════════════════════════════════════════════════════════════════
+   CinematicGallery — shared gallery engine styles (Step 2)
+   All colors come from tokens; variant sections below add the identity
+   layers (director's cut / network deck / blueprint HUD).
+   No `transition: all`; only transform/opacity/clip-path animate.
+   ════════════════════════════════════════════════════════════════════ */
+
+.cine-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+/* ── Stage ────────────────────────────────────────────────────────── */
+.cine-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    min-height: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface-alt);
+    outline: none;
+}
+
+.cine-stage:focus-visible {
+    box-shadow: 0 0 0 2px var(--ring);
+}
+
+.cine-stage__backdrop {
+    position: absolute;
+    inset: -8%;
+    filter: blur(28px) saturate(1.15);
+    transform: scale(1.15);
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.cine-stage__backdrop img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cine-layer {
+    position: absolute;
+    inset: 0;
+    /* Photos must paint above the community polaroid deck (z-index: 1 — the
+       white cards peek out behind the photo) but below all variant overlay
+       chrome (letterbox/vignette z-2/3, HUD/brackets/scanline z-4). */
+    z-index: 2;
+    will-change: transform, opacity;
+}
+
+.cine-frame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.cine-frame--cover .cine-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cine-frame--contain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cine-frame--contain .cine-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.cine-img {
+    display: block;
+    max-width: 100%;
+}
+
+/* ── Controls row ─────────────────────────────────────────────────── */
+.cine-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.cine-playpause {
+    position: relative;
+    flex: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+}
+
+.cine-playpause:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.cine-playpause__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.cine-playpause__track {
+    fill: color-mix(in srgb, var(--surface-2) 60%, transparent);
+    stroke: var(--border);
+    stroke-width: 2.5;
+}
+
+.cine-playpause__fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    /* --gallery-progress (0→1) is written by the carousel engine's rAF loop. */
+    stroke-dashoffset: calc(100 - var(--gallery-progress, 0) * 100);
+}
+
+.cine-playpause__icon {
+    font-size: 0.62rem;
+    line-height: 1;
+    letter-spacing: -0.06em;
+}
+
+.cine-counter {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+}
+
+.cine-arrows {
+    display: flex;
+    gap: 0.5rem;
+    margin-inline-start: auto;
+}
+
+.cine-nav {
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-2) 82%, transparent);
+    color: var(--text);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
+}
+
+.cine-nav:hover,
+.cine-nav:focus-visible {
+    background: color-mix(in srgb, var(--accent) 16%, var(--surface-2));
+    border-color: var(--accent);
+}
+
+/* On coarse pointers the arrows are always visible; on fine pointers they
+   fade in when the stage is hovered (opacity only, never display). */
+@media (pointer: fine) {
+    .cine-arrows .cine-nav {
+        opacity: 0.35;
+    }
+
+    .cine-gallery:hover .cine-arrows .cine-nav,
+    .cine-nav:focus-visible {
+        opacity: 1;
+    }
+}
+
+/* ── Thumb strip ──────────────────────────────────────────────────── */
+.cine-thumbs-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.cine-thumbs {
+    position: relative;
+    display: flex;
+    gap: 0.6rem;
+    width: max-content;
+    min-width: 100%;
+    padding: 0.35rem 0 0.45rem;
+}
+
+.cine-thumb {
+    position: relative;
+    flex: none;
+    width: 88px;
+    height: 58px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-alt);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color var(--transition), transform var(--transition);
+}
+
+.cine-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.cine-thumb__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0.25rem;
+    color: var(--accent);
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.cine-thumb:hover,
+.cine-thumb:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+}
+
+.cine-thumb:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 1px;
+}
+
+.cine-thumb-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 88px;
+    border-radius: 2px;
+    background: var(--accent);
+    pointer-events: none;
+}
+
+.cine-thumb.is-active {
+    border-color: var(--accent);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   EVENT — "Director's Cut" (Step 3)
+   ════════════════════════════════════════════════════════════════════ */
+
+.event-modal__gallery .cine-stage {
+    background:
+        radial-gradient(120% 100% at 50% 0%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 55%),
+        #05070C;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.cine-letterbox {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 6.5%;
+    background: #02030A;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.cine-letterbox--top { top: 0; }
+.cine-letterbox--bottom { bottom: 0; }
+
+.cine-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(115% 115% at 50% 45%, transparent 58%, rgba(0, 0, 0, 0.42) 100%);
+}
+
+.cine-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.16;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.3'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+    mix-blend-mode: overlay;
+}
+
+/* Anamorphic horizontal lens streak in accent */
+.cine-streak {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: 38%;
+    height: 2px;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(90deg,
+        transparent,
+        color-mix(in srgb, var(--accent) 55%, transparent) 35%,
+        color-mix(in srgb, var(--accent-warm, #fbbf24) 35%, transparent) 65%,
+        transparent);
+    filter: blur(1px);
+    opacity: 0.35;
+}
+
+html[data-theme="light"] .event-modal__gallery .cine-stage {
+    background:
+        radial-gradient(120% 100% at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 55%),
+        #f6f1e7;
+}
+
+html[data-theme="light"] .cine-letterbox {
+    background: #2A2620;
+}
+
+html[data-theme="light"] .cine-vignette {
+    background: radial-gradient(115% 115% at 50% 45%, transparent 62%, rgba(84, 70, 48, 0.22) 100%);
+}
+
+html[data-theme="light"] .cine-streak {
+    background: linear-gradient(90deg,
+        transparent,
+        color-mix(in srgb, #E88D3A 55%, transparent) 40%,
+        transparent);
+    opacity: 0.4;
+}
+
+/* Projector cone behind the panel (dark cinema room) */
+.event-modal .event-modal__panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.event-modal__panel {
+    position: relative;
+}
+
+.event-modal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        conic-gradient(from 180deg at 50% -6%, transparent 40%, color-mix(in srgb, var(--accent) 8%, transparent) 50%, transparent 60%),
+        radial-gradient(60% 34% at 50% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%);
+    filter: blur(14px);
+    animation: projectorDrift 14s ease-in-out infinite alternate;
+}
+
+@keyframes projectorDrift {
+    from { transform: translateX(-2.5%) rotate(-1.2deg); }
+    to { transform: translateX(2.5%) rotate(1.2deg); }
+}
+
+html[data-theme="light"] .event-modal::before {
+    opacity: 0.55;
+    background:
+        radial-gradient(60% 34% at 50% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
+}
+
+/* REC HUD */
+.cine-hud {
+    position: absolute;
+    top: calc(6.5% + 8px);
+    left: 12px;
+    right: 12px;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: color-mix(in srgb, var(--text) 88%, transparent);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+html[dir="rtl"] .cine-hud {
+    left: 12px;
+    right: 12px;
+}
+
+.cine-hud__rec {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--danger);
+}
+
+.cine-hud__rec::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--danger);
+    animation: recBlink 1.6s steps(2, jump-none) infinite;
+}
+
+@keyframes recBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+}
+
+.cine-hud__spacer {
+    flex: 1;
+}
+
+/* Corner crop-marks on the stage */
+.cine-cropmark {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    z-index: 4;
+    pointer-events: none;
+    border-color: color-mix(in srgb, var(--text) 60%, transparent);
+    border-style: solid;
+    border-width: 0;
+}
+
+.cine-cropmark--tl { top: 9%; left: 10px; border-top-width: 2px; border-inline-start-width: 2px; }
+.cine-cropmark--tr { top: 9%; right: 10px; border-top-width: 2px; border-inline-end-width: 2px; }
+.cine-cropmark--bl { bottom: 9%; left: 10px; border-bottom-width: 2px; border-inline-start-width: 2px; }
+.cine-cropmark--br { bottom: 9%; right: 10px; border-bottom-width: 2px; border-inline-end-width: 2px; }
+
+/* 35 mm film-strip thumbs (sprocket holes via mask) */
+.event-modal__gallery .cine-thumbs {
+    --sprocket: 6px;
+    padding: 10px 14px;
+    background:
+        repeating-linear-gradient(90deg,
+            transparent 0 calc(100% / 9 - var(--sprocket)),
+            #05070C calc(100% / 9 - var(--sprocket)) calc(100% / 9));
+    background-color: #101318;
+    border-radius: 10px;
+    border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+    mask-image:
+        repeating-linear-gradient(90deg,
+            transparent 0 6px,
+            #000 6px calc(100% / 9 - 6px),
+            transparent calc(100% / 9 - 6px) calc(100% / 9)),
+        linear-gradient(#000, #000);
+    mask-composite: intersect;
+    -webkit-mask-image:
+        repeating-linear-gradient(90deg,
+            transparent 0 6px,
+            #000 6px calc(100% / 9 - 6px),
+            transparent calc(100% / 9 - 6px) calc(100% / 9)),
+        linear-gradient(#000, #000);
+    -webkit-mask-composite: source-in;
+}
+
+.event-modal__gallery .cine-thumb {
+    border-radius: 4px;
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+.event-modal__gallery .cine-thumb.is-active {
+    border-color: var(--accent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 55%, transparent),
+        0 0 3px color-mix(in srgb, var(--accent) 80%, transparent);
+}
+
+html[data-theme="light"] .event-modal__gallery .cine-thumbs {
+    background-color: #E9E2D3;
+    background:
+        repeating-linear-gradient(90deg,
+            transparent 0 calc(100% / 9 - 6px),
+            #2A2620 calc(100% / 9 - 6px) calc(100% / 9));
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   COMMUNITY — "Network Deck" (Step 4)
+   ════════════════════════════════════════════════════════════════════ */
+
+.community-modal__gallery .cine-stage {
+    background:
+        radial-gradient(90% 90% at 80% 10%, color-mix(in srgb, #7C3AED 16%, transparent), transparent 60%),
+        radial-gradient(90% 90% at 15% 85%, color-mix(in srgb, #1D4ED8 20%, transparent), transparent 60%),
+        #0B1226;
+}
+
+html[data-theme="light"] .community-modal__gallery .cine-stage {
+    background:
+        radial-gradient(90% 90% at 80% 10%, color-mix(in srgb, #C4B5FD 40%, transparent), transparent 60%),
+        radial-gradient(90% 90% at 15% 85%, color-mix(in srgb, #BFDBFE 55%, transparent), transparent 60%),
+        #EEF2FF;
+}
+
+/* Polaroid stack layers */
+.cine-polaroid-stack {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cine-polaroid {
+    position: absolute;
+    inset: 3.5% 4%;
+    border-radius: 6px;
+    background: #FAFAF7;
+    box-shadow: 0 10px 26px rgba(2, 6, 23, 0.45);
+}
+
+.cine-polaroid::after {
+    /* bottom caption strip of the polaroid */
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 14%;
+    background: #FAFAF7;
+}
+
+.cine-polaroid--top { transform: rotate(1.6deg); z-index: 3; box-shadow: none; background: transparent; }
+.cine-polaroid--top::after { background: transparent; }
+.cine-polaroid--under1 { transform: rotate(-2.4deg) translate(-2.5%, 1.5%); opacity: 0.85; }
+.cine-polaroid--under2 { transform: rotate(3.1deg) translate(2.5%, 2%); opacity: 0.7; }
+
+/* Round avatar thumbs with ring */
+.community-modal__gallery .cine-thumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    border-width: 2px;
+}
+
+.community-modal__gallery .cine-thumb.is-active {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.community-modal__gallery .cine-thumb-indicator {
+    display: none;
+}
+
+/* Constellation canvas sits behind the whole modal panel */
+.cine-constellation {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: auto;
+    opacity: 0.8;
+}
+
+/* NOTE: do not set `position: relative` on the .event-modal/.project-modal
+   wrappers here — it overrides the `position: fixed` overlay declared in
+   events.css/projects.css (this file imports later) and drops the modal into
+   page flow. The constellation canvas anchors to .community-modal__gallery,
+   which is positioned, so the wrapper never needed this. */
+
+.event-modal > .event-modal__panel {
+    position: relative;
+    z-index: 1;
+}
+
+.community-modal__gallery {
+    position: relative;
+}
+
+.community-modal__gallery .cine-constellation {
+    position: absolute;
+    inset: -1rem;
+    z-index: 0;
+    height: auto;
+    width: auto;
+}
+
+.community-modal__gallery > *:not(.cine-constellation) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Polaroid caption strip at the foot of the community stage */
+.cine-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.cine-caption__name {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.cine-caption__year {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Polaroid keep-frame drawn over the active community slide */
+.cine-polaroid-frame {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    border: 10px solid #FAFAF7;
+    border-bottom-width: 56px;
+    border-radius: 6px;
+    box-shadow: 0 12px 30px rgba(2, 6, 23, 0.35);
+}
+
+html[data-theme="light"] .cine-polaroid-frame {
+    border-color: #FFFFFF;
+    box-shadow: 0 10px 24px rgba(84, 70, 48, 0.25);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   PROJECT — "Blueprint HUD" (Step 5)
+   ════════════════════════════════════════════════════════════════════ */
+
+.project-modal__gallery .cine-stage {
+    background: color-mix(in srgb, var(--project-bg, var(--surface-alt)) 88%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.cine-bracket {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    z-index: 4;
+    pointer-events: none;
+    border-color: var(--accent);
+    border-style: solid;
+    border-width: 0;
+    opacity: 0.85;
+}
+
+.cine-bracket--tl { top: 8px; left: 8px; border-top-width: 2px; border-inline-start-width: 2px; }
+.cine-bracket--tr { top: 8px; right: 8px; border-top-width: 2px; border-inline-end-width: 2px; }
+.cine-bracket--bl { bottom: 8px; left: 8px; border-bottom-width: 2px; border-inline-start-width: 2px; }
+.cine-bracket--br { bottom: 8px; right: 8px; border-bottom-width: 2px; border-inline-end-width: 2px; }
+
+.cine-scanline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(90deg,
+        transparent,
+        var(--accent) 30%,
+        color-mix(in srgb, var(--accent) 40%, #fff) 50%,
+        var(--accent) 70%,
+        transparent);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 65%, transparent);
+}
+
+.cine-spec {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: color-mix(in srgb, var(--accent) 82%, var(--text));
+}
+
+/* Loupe for paper-card schematic images (desktop only) */
+.cine-loupe {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 999px;
+    border: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+    pointer-events: none;
+    z-index: 5;
+    background-repeat: no-repeat;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    display: none;
+}
+
+@media (pointer: fine) {
+    .cine-frame--loupeable:hover ~ .cine-loupe,
+    .cine-gallery[data-loupe-visible] .cine-loupe {
+        display: block;
+    }
+}
+
+/* Reduced motion: kill every decorative animation in this file. */
+@media (prefers-reduced-motion: reduce) {
+    .event-modal::before,
+    .cine-hud__rec::before,
+    .cine-scanline {
+        animation: none;
+    }
+
+    .cine-stage,
+    .cine-layer,
+    .cine-frame,
+    .cine-polaroid {
+        transform: none;
+    }
+}

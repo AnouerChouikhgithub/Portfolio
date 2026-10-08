@@ -1,14 +1,89 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
-import CrossfadeImage from './CrossfadeImage';
 import WebpImage from './WebpImage';
 import useModalAccessibility from '../hooks/useModalAccessibility';
-import useAutoCarousel from '../hooks/useAutoCarousel';
+import usePhotoCycle from '../hooks/usePhotoCycle';
+import CinematicGallery from './gallery/CinematicGallery';
+import ChapterConstellation from './gallery/ChapterConstellation';
 import ModalErrorBoundary from './ModalErrorBoundary';
 import { scrollToId } from '../motion/lenisStore';
+import { photoSrc } from '../lib/photoSrc';
 
 const communityImageList = (folder, files) => files.map((file) => `/Communities/${folder}/${file}`);
+
+/**
+ * Card media: auto-cycling photos (events-card design language), with the
+ * club logo as a small badge. Clubs without photos get their logo on a
+ * gradient tile so the grid keeps a consistent rhythm.
+ *
+ * Cycling pauses off-screen, when the tab is hidden, and under reduced
+ * motion (see usePhotoCycle); the incoming photo crossfades over the
+ * previous one so there is never a blank frame.
+ */
+const CARD_PHOTO_INTERVAL_MS = 3000;
+const CARD_PHOTO_FADE_MS = 600;
+
+function CommunityCardMedia({ club }) {
+  const photos = Array.isArray(club.photos) ? club.photos : [];
+  const hostRef = useRef(null);
+  const index = usePhotoCycle(photos.length, hostRef, CARD_PHOTO_INTERVAL_MS);
+  const [previousIndex, setPreviousIndex] = useState(null);
+
+  // Keep the previous photo mounted under the incoming one for the fade.
+  useEffect(() => {
+    if (photos.length < 2) return undefined;
+    setPreviousIndex((index + photos.length - 1) % photos.length);
+    const timerId = window.setTimeout(() => setPreviousIndex(null), CARD_PHOTO_FADE_MS);
+    return () => window.clearTimeout(timerId);
+  }, [index, photos.length]);
+
+  // Warm the next thumb so the crossfade never shows a half-loaded image.
+  useEffect(() => {
+    if (photos.length < 2) return undefined;
+    const nextSrc = photoSrc(photos[(index + 1) % photos.length], 'thumb');
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = encodeURI(nextSrc);
+    return undefined;
+  }, [index, photos]);
+
+  if (!photos.length) {
+    return (
+      <span className="community-card__media community-card__media--logo" aria-hidden="true">
+        <WebpImage src={club.logo} alt="" className="community-card__media-logo" />
+      </span>
+    );
+  }
+
+  return (
+    <span className="community-card__media" ref={hostRef} aria-hidden="true">
+      {previousIndex !== null && previousIndex !== index && (
+        <WebpImage
+          className="community-card__media-photo"
+          src={photos[previousIndex]}
+          alt=""
+          size="thumb"
+        />
+      )}
+      <WebpImage
+        key={photos[index]}
+        className="community-card__media-photo is-active"
+        src={photos[index]}
+        alt=""
+        size="thumb"
+      />
+      <WebpImage src={club.logo} alt="" className="community-card__media-badge" />
+    </span>
+  );
+}
+
+/** Extracts the leading year from an i18n "since" string (e.g. "Since 2024"). */
+const sinceYear = (since) => {
+  const match = typeof since === 'string' ? since.match(/\d{4}/) : null;
+  return match ? match[0] : '';
+};
 
 const ieeeChapterLogos = [
   {
@@ -158,9 +233,6 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
   const modalRef = useRef(null);
   const [activeChapter, setActiveChapter] = useState(initialChapter);
   const hasPhotos = Array.isArray(community.photos) && community.photos.length > 0;
-  const carousel = useAutoCarousel(community.photos, 1500);
-  const selectedPhotoIndex = carousel.index;
-  const activateManualSelection = carousel.selectIndex;
   const closeChapter = useCallback(() => setActiveChapter(null), []);
 
   useModalAccessibility({ panelRef: modalRef, onClose });
@@ -172,6 +244,13 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
   useEffect(() => {
     setActiveChapter(initialChapter ?? null);
   }, [community.slug, initialChapter]);
+
+  const stageCaption = hasPhotos ? (
+    <p className="cine-caption" aria-hidden="true">
+      <span className="cine-caption__name">{community.name}</span>
+      <span className="cine-caption__year">{sinceYear(since) || ''}</span>
+    </p>
+  ) : null;
 
   return (
     <div className="event-modal" onClick={onClose}>
@@ -272,57 +351,28 @@ function CommunityModal({ community, onClose, initialChapter = null }) {
             </div>
           </div>
 
-          <div className="event-modal__gallery modal-scroll-region" {...carousel.carouselProps}>
-            {community.photos?.length ? (
-              <>
-                <div className="event-modal__gallery-main">
-                  <button
-                    type="button"
-                    className="event-modal__nav event-modal__nav--prev"
-                    aria-label={t('common.prevPhoto')}
-                    onClick={() => {
-                      activateManualSelection((selectedPhotoIndex - 1 + community.photos.length) % community.photos.length);
-                    }}
-                  >
-                    ‹
-                  </button>
-
-                  <CrossfadeImage
-                    src={community.photos[selectedPhotoIndex]}
-                    alt={`${community.name} ${selectedPhotoIndex + 1}`}
-                  />
-
-                  <button
-                    type="button"
-                    className="event-modal__nav event-modal__nav--next"
-                    aria-label={t('common.nextPhoto')}
-                    onClick={() => {
-                      activateManualSelection((selectedPhotoIndex + 1) % community.photos.length);
-                    }}
-                  >
-                    ›
-                  </button>
-                </div>
-
-                <div className="event-modal__thumbs" aria-label={`${community.name} photo gallery`}>
-                  {community.photos.map((photo, index) => (
-                    <button
-                      key={`${community.slug}-photo-${index}`}
-                      type="button"
-                      className={`event-modal__thumb ${index === selectedPhotoIndex ? 'is-active' : ''}`}
-                      aria-label={`${t('common.viewPhoto')} ${index + 1}`}
-                      onClick={() => activateManualSelection(index)}
-                    >
-                      <WebpImage src={photo} alt={`${community.name} ${index + 1}`} />
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="event-modal__empty">
-                <span>{t('common.noPhotos')}</span>
-              </div>
-            )}
+          <div className="event-modal__gallery community-modal__gallery modal-scroll-region">
+            <CinematicGallery
+              items={hasPhotos ? community.photos : []}
+              variant="community"
+              altBuilder={(photo, i) => `${community.name} — photo ${i + 1}`}
+              labels={{
+                play: t('common.play'),
+                pause: t('common.pause'),
+                prev: t('common.previousPhoto'),
+                next: t('common.nextPhoto'),
+                viewPhoto: t('common.viewPhoto'),
+                noPhotos: t('common.noPhotos'),
+                stage: `${community.name} — ${t('sections.community')}`,
+                thumbStrip: `${community.name} photo gallery`,
+              }}
+              caption={stageCaption}
+              renderSlideOverlay={() => <div className="cine-polaroid-frame" aria-hidden="true" />}
+            />
+            <ChapterConstellation
+              chapterLogos={community.chapterLogos}
+              onOpenChapter={setActiveChapter}
+            />
           </div>
         </div>
       </div>
@@ -516,24 +566,25 @@ export default function Community() {
                 setActiveChapter(null);
               }}
             >
-              <div className="community-card__logo community-card__logo--image" aria-label={`${club.name} logo`}>
-                <WebpImage src={club.logo} alt={`${club.name} logo`} className="community-card__image" />
-              </div>
-              <div className="community-card__name">
-                <MixedText text={club.name} isRtl={isRtl} />
-              </div>
-              <div className="community-card__detail">
-                <MixedText text={title} isRtl={isRtl} />
-              </div>
-              <div className="community-card__since">
-                <MixedText text={since} isRtl={isRtl} />
-              </div>
+            <CommunityCardMedia club={club} />
+            <span className="events-card__meta">
+              <MixedText text={since} isRtl={isRtl} />
+            </span>
+            <span className="community-card__name">
+              <MixedText text={club.name} isRtl={isRtl} />
+            </span>
+            <span className="community-card__detail">
+              <MixedText text={title} isRtl={isRtl} />
+            </span>
             </button>
           );
         })}
       </div>
 
-      {activeCommunity && (
+      {/* Portaled to <body>: nested inside this section's `.container`
+          (position: relative + z-index: 1) the fixed modal was trapped in that
+          stacking context, so later sections (e.g. Events) painted over it. */}
+      {activeCommunity && createPortal(
         <ModalErrorBoundary
           onClose={() => {
             setActiveCommunity(null);
@@ -550,7 +601,8 @@ export default function Community() {
               setActiveChapter(null);
             }}
           />
-        </ModalErrorBoundary>
+        </ModalErrorBoundary>,
+        document.body,
       )}
     </div>
   );

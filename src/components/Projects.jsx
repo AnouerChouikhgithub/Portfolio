@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, memo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useI18n } from '../i18n/I18nProvider';
 import MixedText from './MixedText';
 import ProjectModal from './ProjectModal';
@@ -99,7 +100,10 @@ export default function Projects() {
         })}
       </div>
 
-      {activeProject && (
+      {/* Portaled to <body>: a fixed modal nested inside this section's
+          `.container` (position: relative + z-index: 1) would be trapped in
+          that stacking context, letting later sections paint over it. */}
+      {activeProject && createPortal(
         <ModalErrorBoundary
           onClose={closeProject}
           message={t('common.viewLoadError')}
@@ -110,7 +114,8 @@ export default function Projects() {
             onClose={closeProject}
             onOpenSkillGroup={handleOpenSkillGroup}
           />
-        </ModalErrorBoundary>
+        </ModalErrorBoundary>,
+        document.body,
       )}
     </div>
   );

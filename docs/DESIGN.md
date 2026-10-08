@@ -244,3 +244,53 @@ scrolling (one instance), anime.js owns SVG/icon micro-motion, CSS owns
 hover/press/keyframes, and one delegated listener owns the card spotlight.
 There is no Framer Motion/`motion` dependency. One library per property per
 element.
+
+## Gallery engine (shared)
+
+All three modals render `src/components/gallery/CinematicGallery.jsx` — one
+16/10 stage, one autoplay engine (`useAutoCarousel`), variant-specific chrome:
+
+- **event → "Director's Cut"** — letterbox bars, vignette, film grain,
+  anamorphic accent streak; Ken Burns drift (scale 1→1.07, alternating pans,
+  2.6 s ease so it never snaps); REC/timecode/frame-counter HUD + crop marks;
+  35 mm sprocket-masked thumb strip with an accent-lit active frame; projector
+  cone behind the panel.
+- **community → "Network Deck"** — photos as polaroid cards (10 px frame,
+  caption strip with the community name + year) over an IEEE blue→violet mesh;
+  a canvas constellation draws one node per chapter badge (gold, green,
+  burgundy, orange, purple), brightens on hover and opens ChapterDetailModal
+  on click; round avatar thumbs.
+- **project → "Blueprint HUD"** — corner brackets + accent scanline sweep with
+  scan-reveal per slide, tabular-nums counter, everything tinted from the
+  project's `--accent`/bg pair via color-mix (never a hardcoded hue); PET keeps
+  its architecture-diagram slide.
+
+### Timing decisions
+
+- `GALLERY_INTERVAL_MS` = 1500 ms everywhere; the PET architecture diagram
+  overrides `dwellMs: 4500` because a dense diagram cannot be read in 1.5 s.
+- After a manual action (arrow / thumb / keyboard / swipe) the next
+  auto-advance waits a 4000 ms grace period.
+- The incoming photo must resolve `img.decode()` before the slot advances —
+  no blank frames; undecodable photos are skipped.
+- Pause only for: hidden tab, modal covered (ChapterDetailModal), gallery
+  out of view, or user pause. Hover/focus never pause.
+- `prefers-reduced-motion`: starts PAUSED with the play button visible and
+  uses a plain crossfade — no Ken Burns, wipes, constellation drift or
+  projector animation.
+- WCAG 2.2.2: the Play/Pause button carries an SVG progress ring driven by a
+  rAF-written `--gallery-progress` variable; `aria-live="off"` on the stage.
+
+### Assets
+
+`node scripts/gallery-assets.mjs` (npm run `images:gallery`) writes
+`-main.webp` (1600 px, q78) and `-thumb.webp` (240 px, q70) siblings for every
+photo and `-poster.webp` for every video. `src/lib/photoSrc.js` maps a logical
+path to a variant. 37.85 MB of source photos → 8.61 MB mains + 0.82 MB thumbs.
+Originals are untouched and remain the fallback chain.
+
+### QA helpers
+
+`.gallerycheck.mjs` (autoplay contract, 9 checks), `.modalsweep.mjs`
+(structure × 3 modals × 2 themes, 37 checks), `.rtlcheck.mjs` (AR/390 +
+reduced-motion, 14 checks) — git-ignored, re-runnable against `vite preview`.

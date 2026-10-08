@@ -342,7 +342,7 @@ export default function PdfModal({ src, title, showDownload = true, onClose, tri
   const isScaleTransformed = Math.abs(cssScale - 1) > 0.005;
 
   return (
-    <div className="event-modal" onClick={onClose} aria-hidden="true">
+    <div className="event-modal" onClick={onClose}>
       <div
         ref={panelRef}
         className="event-modal__panel pdf-modal__panel"

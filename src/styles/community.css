@@ -15,25 +15,40 @@
     align-items: stretch;
 }
 
+/* Card mirrors the events-card design: surface panel, left-aligned text,
+   gradient top-bar reveal on hover/focus. */
 .community-card {
     width: 100%;
     max-width: 220px;
     min-height: 0;
-    background-color: var(--bg);
-    padding: 1.5rem 1rem;
+    background-color: var(--surface);
+    padding: 1.1rem 1.1rem 1.35rem;
     border-radius: 12px;
-    text-align: center;
+    text-align: left;
     border: 1px solid color-mix(in srgb, var(--accent) 10%, transparent);
     transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background-color var(--transition), color var(--transition);
+    position: relative;
+    overflow: hidden;
     cursor: pointer;
     color: inherit;
     font: inherit;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.7rem;
+    align-items: stretch;
+    gap: 0.55rem;
     margin: 0 auto;
+}
+
+.community-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transform: scaleX(0);
+    transition: transform var(--transition);
 }
 
 .community-card:hover,
@@ -44,47 +59,82 @@
     outline: none;
 }
 
+.community-card:hover::before,
+.community-card:focus-visible::before {
+    transform: scaleX(1);
+}
+
 .community-card__icon {
     font-size: 3rem;
     color: var(--accent-2);
     margin-bottom: 1rem;
 }
 
-.community-card__logo {
-    width: 96px;
-    height: 96px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent), rgba(59, 130, 246, 0.2));
-    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+/* ── Card media: auto-cycling photo stack ──────────────────────────── */
+.community-card__media {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 9px;
+    overflow: hidden;
+    background: var(--surface-alt);
+    margin-bottom: 0.35rem;
+}
+
+.community-card__media-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.community-card__media-photo.is-active {
+    animation: communityCardPhotoIn 600ms ease both;
+}
+
+@keyframes communityCardPhotoIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .community-card__media-photo.is-active {
+        animation: none;
+    }
+}
+
+/* Club logo badge pinned to the photo's bottom corner (RTL flips via logical property). */
+.community-card__media-badge {
+    position: absolute;
+    inset-inline-end: 8px;
+    bottom: 8px;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 2px solid var(--surface);
+    object-fit: cover;
+    background: #ffffff;
+    z-index: 1;
+}
+
+/* Clubs without photos: logo on a gradient tile, same footprint. */
+.community-card__media--logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text);
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    margin-bottom: 0.25rem;
-    overflow: hidden;
-    padding: 0;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 14%, transparent), rgba(59, 130, 246, 0.14));
 }
 
-.community-card__logo--image {
-    background: #ffffff;
-}
-
-.community-card__image {
-    width: 100%;
-    height: 100%;
+.community-card__media-logo {
+    width: 58%;
+    height: 58%;
     object-fit: contain;
-    display: block;
-}
-
-.community-card__logo--large {
-    width: 120px;
-    height: 120px;
-    border-radius: 24px;
-    font-size: 1.8rem;
-    margin-bottom: 0;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 6px;
+    border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
 .community-card__name {
@@ -92,7 +142,7 @@
     font-size: 1.12rem;
     font-weight: 600;
     line-height: 1.3;
-    text-align: center;
+    text-align: start;
     margin: 0;
 }
 
@@ -100,15 +150,8 @@
     color: var(--muted);
     font-size: 0.82rem;
     line-height: 1.5;
-    text-align: center;
+    text-align: start;
     margin: 0;
-}
-
-.community-card__since {
-    color: var(--accent);
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-align: center;
 }
 
 @media (max-width: 1024px) {
