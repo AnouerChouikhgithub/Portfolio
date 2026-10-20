@@ -15,6 +15,9 @@ export function initScrollReveal() {
     return () => {};
   }
 
+  // Window/image listeners live outside gsap.context, so track them explicitly
+  // and remove them on cleanup (otherwise StrictMode remounts stack duplicates).
+  const listenerCleanups = [];
   const ctx = gsap.context(() => {
     gsap.utils.toArray('.section__title').forEach((element) => {
       gsap.fromTo(
@@ -248,12 +251,20 @@ export function initScrollReveal() {
     // Layout settles after fonts/images: re-measure trigger positions.
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener('load', refresh);
-    window.addEventListener('localechange', () => window.setTimeout(refresh, 300));
+    listenerCleanups.push(() => window.removeEventListener('load', refresh));
+    const refreshOnLocaleChange = () => window.setTimeout(refresh, 300);
+    window.addEventListener('localechange', refreshOnLocaleChange);
+    listenerCleanups.push(() => window.removeEventListener('localechange', refreshOnLocaleChange));
     if (document.fonts?.ready) document.fonts.ready.then(refresh);
     document.querySelectorAll('img').forEach((image) => {
-      if (!image.complete) image.addEventListener('load', refresh, { once: true });
+      if (image.complete) return;
+      image.addEventListener('load', refresh, { once: true });
+      listenerCleanups.push(() => image.removeEventListener('load', refresh));
     });
   });
 
-  return () => ctx.revert();
+  return () => {
+    listenerCleanups.forEach((cleanup) => cleanup());
+    ctx.revert();
+  };
 }

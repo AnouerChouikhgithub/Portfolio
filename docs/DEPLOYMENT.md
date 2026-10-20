@@ -55,7 +55,7 @@ npx netlify dev      # serves the site + functions at http://localhost:8888
 
 1. **Domain management → Add a domain** → follow the DNS instructions (Netlify DNS or external provider with a CNAME).
 2. Enable **HTTPS → Verify DNS → Provision certificate** (Let's Encrypt, automatic renewal).
-3. Update the canonical + hreflang URLs in `index.html` if the domain differs from `chouikh-anouer.netlify.app`.
+3. Update the canonical, hreflang and `og:url` URLs in `index.html`, plus the URLs in `public/sitemap.xml` and `public/robots.txt`, if the domain differs from `chouikh-anouer.netlify.app`. Both `anouer-chouikh.netlify.app` and `chouikh-anouer.netlify.app` currently serve the site, so pick one canonical domain and keep these files consistent.
 
 ## Function logs
 

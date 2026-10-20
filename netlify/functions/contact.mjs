@@ -1,8 +1,13 @@
+import { VALIDATION } from "../../src/constants/formValidation.js";
+
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), {
     status,
     headers: { "Content-Type": "application/json" },
   });
+
+const isPlainObject = (value) =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
 
 export default async (req) => {
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
@@ -13,6 +18,8 @@ export default async (req) => {
   } catch {
     return json({ error: "Invalid JSON" }, 400);
   }
+  // JSON `null`, arrays and primitives are valid JSON but not a form payload.
+  if (!isPlainObject(body)) return json({ error: "Invalid JSON" }, 400);
 
   const { from_name, from_email, phone, message, website } = body;
 
@@ -21,12 +28,21 @@ export default async (req) => {
 
   const name = String(from_name ?? "").trim();
   const email = String(from_email ?? "").trim();
+  const phoneNumber = String(phone ?? "").trim();
   const msg = String(message ?? "").trim();
 
-  if (!name || name.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !msg) {
+  // Same rules as src/hooks/useFormValidation.js (shared via VALIDATION).
+  if (
+    !name ||
+    name.length > 200 ||
+    !VALIDATION.namePattern.test(name) ||
+    !VALIDATION.emailPattern.test(email) ||
+    (phoneNumber && !VALIDATION.phonePattern.test(phoneNumber)) ||
+    !msg
+  ) {
     return json({ error: "Invalid fields" }, 400);
   }
-  if (msg.length > 5000) return json({ error: "Message too long" }, 400);
+  if (msg.length > VALIDATION.maxMessageLength) return json({ error: "Message too long" }, 400);
 
   const {
     EMAILJS_SERVICE_ID,
@@ -53,7 +69,7 @@ export default async (req) => {
         template_params: {
           from_name: name,
           from_email: email,
-          phone: String(phone ?? "").trim() || "N/A",
+          phone: phoneNumber || "N/A",
           message: msg,
         },
       }),
