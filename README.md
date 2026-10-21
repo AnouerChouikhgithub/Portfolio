@@ -196,7 +196,9 @@ Testing tools: Chrome DevTools device toolbar, [Responsively App](https://respon
 ## 7. Multi-Language & i18n
 
 - **Supported:** `en` (default), `fr`, `ar` (RTL) — 319 translation keys per language.
-- **Detection order:** URL `?lang=` → `localStorage` (`portfolio-language`) → `navigator.language` → `en`.
+- **URLs:** each language has its own static page: `/en/`, `/fr/`, `/ar/` (built by `scripts/prerender.mjs`; the markup is translated before JavaScript runs).
+- **Root `/`:** shows the stored choice (`localStorage` `portfolio-language`), then the browser language, otherwise English. A French or Arabic choice redirects to `/fr/` or `/ar/`; English stays on `/` (canonical `/en/`).
+- **Legacy `?lang=xx` links:** redirected to `/xx/` with a 301 in `netlify.toml` on the root URL, and the app also redirects them on load, keeping other query parameters.
 - **Persistence:** chosen language saved to `localStorage`.
 - **RTL:** `<html dir="rtl">` + `lang="ar"` set automatically; Cairo font preloaded when the visitor is Arabic-first (inline script in `index.html` avoids post-hydration layout shift); [MixedText](src/components/MixedText.jsx) wraps Latin tokens in `<bdi dir="ltr">` so words like "Arduino" or "PID" don't scramble inside Arabic sentences. A [glossary](src/i18n/glossary.md) keeps technical terms consistent across translations.
 
@@ -205,7 +207,7 @@ Testing tools: Chrome DevTools device toolbar, [Responsively App](https://respon
 1. Create `src/i18n/<code>.json` — copy `en.json` and translate all keys (the build fails if keys don't match — `check-i18n` runs automatically).
 2. Register it in `dictionaries` in [src/i18n/I18nProvider.jsx](src/i18n/I18nProvider.jsx).
 3. If RTL, add its code to `RTL_LANGUAGES` in [src/constants/i18nConfig.js](src/constants/i18nConfig.js) and add a font rule in `src/styles/tokens.css` if needed.
-4. Add an hreflang link in `index.html`.
+4. Add the language to `LANGUAGE_PATHS`, `OPEN_GRAPH_LOCALES` and `PAGE_META` in [src/i18n/languageRoutes.js](src/i18n/languageRoutes.js). The sitemap, hreflang tags and prerendered pages are generated from these.
 
 Validate anytime with `npm run check:i18n`.
 
