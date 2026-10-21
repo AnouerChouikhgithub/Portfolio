@@ -19,10 +19,12 @@ export function initScrollReveal() {
   // and remove them on cleanup (otherwise StrictMode remounts stack duplicates).
   const listenerCleanups = [];
   const ctx = gsap.context(() => {
+    // Headings fade from opacity 0 (not autoAlpha/visibility:hidden) so they stay
+    // in the accessibility tree before they scroll into view.
     gsap.utils.toArray('.section__title').forEach((element) => {
       gsap.fromTo(
         element,
-        { autoAlpha: 0, y: 28 },
+        { opacity: 0, y: 28 },
         {
           autoAlpha: 1,
           y: 0,
@@ -88,7 +90,7 @@ export function initScrollReveal() {
     gsap.utils.toArray('.skills__subtitle, .skills__tags').forEach((element) => {
       gsap.fromTo(
         element,
-        { autoAlpha: 0, y: 18 },
+        { opacity: 0, y: 18 },
         {
           autoAlpha: 1,
           y: 0,
