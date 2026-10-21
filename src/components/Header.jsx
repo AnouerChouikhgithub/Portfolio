@@ -218,7 +218,7 @@ export default function Header() {
             <button
               type="button"
               className="language-switcher__trigger"
-              aria-label={t('nav.language')}
+              aria-label={`${t('nav.language')}: ${t(`languages.${language}`)}`}
               aria-haspopup="listbox"
               aria-expanded={isLanguageOpen}
               onClick={() => setIsLanguageOpen((open) => !open)}

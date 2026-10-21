@@ -40,15 +40,6 @@
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
 }
 
-.project-card__image {
-    display: block;
-    width: calc(100% + 4rem);
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    margin: -2rem -2rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-}
-
 .project-card::before {
     content: '';
     position: absolute;

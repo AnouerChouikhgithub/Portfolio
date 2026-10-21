@@ -130,6 +130,13 @@
     box-shadow: 0 14px 30px color-mix(in srgb, var(--accent) 34%, transparent);
 }
 
+/* Tactile press feedback — same transform axis as hover, so it feels like
+   the button gives way under the finger/cursor. */
+.btn:active {
+    transform: translateY(0) scale(0.97);
+    transition-duration: 60ms;
+}
+
 /* ── Secondary: outline that fills on hover ───────────────────── */
 .btn--secondary {
     background: color-mix(in srgb, var(--accent) 8%, transparent);

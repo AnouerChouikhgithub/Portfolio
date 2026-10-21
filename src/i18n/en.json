@@ -53,6 +53,9 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },
+  "a11y": {
+    "skipToContent": "Skip to content"
+  },
   "hero": {
     "title": "3rd year student in Computer Engineering & Internet of Things (ISITCom)",
     "tagline": "Robotics • IoT",
@@ -482,7 +485,9 @@
     "messageRequired": "Message cannot be empty."
   },
   "footer": {
-    "copyright": "© 2026 Anouer Chouikh. All rights reserved."
+    "copyright": "© 2026 Anouer Chouikh. All rights reserved.",
+    "tagline": "Engineering student building robots, systems and community.",
+    "backToTop": "Back to top"
   },
   "languages": {
     "en": "EN",

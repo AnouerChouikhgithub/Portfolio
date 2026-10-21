@@ -15,11 +15,16 @@ export function initScrollReveal() {
     return () => {};
   }
 
+  // Window/image listeners live outside gsap.context, so track them explicitly
+  // and remove them on cleanup (otherwise StrictMode remounts stack duplicates).
+  const listenerCleanups = [];
   const ctx = gsap.context(() => {
+    // Headings fade from opacity 0 (not autoAlpha/visibility:hidden) so they stay
+    // in the accessibility tree before they scroll into view.
     gsap.utils.toArray('.section__title').forEach((element) => {
       gsap.fromTo(
         element,
-        { autoAlpha: 0, y: 28 },
+        { opacity: 0, y: 28 },
         {
           autoAlpha: 1,
           y: 0,
@@ -66,7 +71,7 @@ export function initScrollReveal() {
     gsap.utils.toArray('.about__intro, .about__mission').forEach((element, index) => {
       gsap.fromTo(
         element,
-        { autoAlpha: 0, y: 24 },
+        { opacity: 0, y: 24 },
         {
           autoAlpha: 1,
           y: 0,
@@ -85,7 +90,7 @@ export function initScrollReveal() {
     gsap.utils.toArray('.skills__subtitle, .skills__tags').forEach((element) => {
       gsap.fromTo(
         element,
-        { autoAlpha: 0, y: 18 },
+        { opacity: 0, y: 18 },
         {
           autoAlpha: 1,
           y: 0,
@@ -248,12 +253,20 @@ export function initScrollReveal() {
     // Layout settles after fonts/images: re-measure trigger positions.
     const refresh = () => ScrollTrigger.refresh();
     window.addEventListener('load', refresh);
-    window.addEventListener('localechange', () => window.setTimeout(refresh, 300));
+    listenerCleanups.push(() => window.removeEventListener('load', refresh));
+    const refreshOnLocaleChange = () => window.setTimeout(refresh, 300);
+    window.addEventListener('localechange', refreshOnLocaleChange);
+    listenerCleanups.push(() => window.removeEventListener('localechange', refreshOnLocaleChange));
     if (document.fonts?.ready) document.fonts.ready.then(refresh);
     document.querySelectorAll('img').forEach((image) => {
-      if (!image.complete) image.addEventListener('load', refresh, { once: true });
+      if (image.complete) return;
+      image.addEventListener('load', refresh, { once: true });
+      listenerCleanups.push(() => image.removeEventListener('load', refresh));
     });
   });
 
-  return () => ctx.revert();
+  return () => {
+    listenerCleanups.forEach((cleanup) => cleanup());
+    ctx.revert();
+  };
 }

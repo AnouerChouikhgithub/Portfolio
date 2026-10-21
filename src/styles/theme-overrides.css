@@ -24,11 +24,6 @@ html[data-theme="light"] .contact__field {
    ensure the overlay layers remain translucent in both themes.
    Event and community modals don't use per-item bg, so restore their light overrides. */
 
-html[data-theme="light"] .event-modal__details,
-html[data-theme="light"] .community-modal__details {
-    background: var(--surface);
-}
-
 html[data-theme="light"] .event-modal__gallery,
 html[data-theme="light"] .community-modal__gallery {
     background: var(--surface-alt);
@@ -93,18 +88,6 @@ html[data-theme="light"] .project-modal__tag {
     color: var(--text-2);
     background: rgba(255, 255, 255, 0.75);
     border-color: rgba(0, 0, 0, 0.1);
-}
-
-html[data-theme="light"] .project-modal__nav {
-    color: var(--text);
-    background: rgba(255, 255, 255, 0.75);
-    border-color: rgba(0, 0, 0, 0.1);
-}
-
-html[data-theme="light"] .project-modal__nav:hover,
-html[data-theme="light"] .project-modal__nav:focus-visible {
-    background: var(--bg-elevated);
-    color: var(--text);
 }
 
 html[data-theme="light"] .project-modal__gallery {

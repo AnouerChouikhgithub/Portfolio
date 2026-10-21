@@ -89,6 +89,7 @@ export default function Hero() {
             <div className="hero__portrait-wrap">
               <WebpImage
                 className="hero__portrait"
+                fetchPriority="high"
                 src="/me2.jpg"
                 alt={t('common.portraitAlt')}
               />

@@ -675,34 +675,6 @@ html[data-theme="light"] .cine-polaroid-frame {
     box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 65%, transparent);
 }
 
-.cine-spec {
-    font-variant-numeric: tabular-nums;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    color: color-mix(in srgb, var(--accent) 82%, var(--text));
-}
-
-/* Loupe for paper-card schematic images (desktop only) */
-.cine-loupe {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    border-radius: 999px;
-    border: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
-    pointer-events: none;
-    z-index: 5;
-    background-repeat: no-repeat;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-    display: none;
-}
-
-@media (pointer: fine) {
-    .cine-frame--loupeable:hover ~ .cine-loupe,
-    .cine-gallery[data-loupe-visible] .cine-loupe {
-        display: block;
-    }
-}
-
 /* Reduced motion: kill every decorative animation in this file. */
 @media (prefers-reduced-motion: reduce) {
     .event-modal::before,
