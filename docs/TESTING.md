@@ -57,7 +57,7 @@ Per-section (repeat at mobile + desktop):
 - [ ] Cairo font loads for Arabic (check Network tab)
 - [ ] Latin tokens (Arduino, PID, React…) read correctly inside Arabic text
 - [ ] Language persists across reload
-- [ ] Deep links: `/?lang=fr`, `/?lang=ar`
+- [ ] Language URLs: `/fr/`, `/ar/` load directly; legacy `/?lang=fr`, `/?lang=ar` redirect to them
 
 ## 6. Forms
 

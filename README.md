@@ -360,7 +360,7 @@ npm run dev
 - [ ] Skip link — `Tab` from load shows “Skip to content”; activating it focuses `<main>`
 - [ ] Tablet 768 px, desktop 1024/1440/1920 px — grids reflow, no horizontal scroll
 - [ ] Theme toggle — persists across reload, no FOUC
-- [ ] Languages — EN/FR/AR; Arabic mirrors layout; `?lang=fr` / `?lang=ar` deep links
+- [ ] Languages — EN/FR/AR; Arabic mirrors layout; `/fr/` / `/ar/` language URLs
 - [ ] PDF viewer — open from Hero and Skills; zoom via buttons/keys/wheel/pinch; Escape closes
 - [ ] Modals — open a project/event/community modal, then a stacked detail modal; Tab stays in the top dialog; closing restores focus to the trigger
 - [ ] Contact form — empty submit shows errors; honeypot silently accepts; valid submit delivers (needs env vars)

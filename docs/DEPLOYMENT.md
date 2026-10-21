@@ -13,6 +13,8 @@ The portfolio is hosted on **Netlify** with a serverless function for the contac
 
 `netlify.toml` already contains this configuration, plus dev-server settings for `netlify dev`.
 
+`npm run build` runs `check:i18n`, builds the client and server bundles, then prerenders `/en/`, `/fr/` and `/ar/` into `dist`. It also writes `sitemap.xml` (with reciprocal `hreflang` entries) from `SITE_ORIGIN` in `src/i18n/languageRoutes.js`. Legacy `/?lang=xx` links are redirected by `netlify.toml`.
+
 ## First-time deploy (Git-based, recommended)
 
 1. Push the repository to GitHub (`AnouerChouikhgithub/Portfolio`).
