@@ -231,7 +231,7 @@ export default function Skills() {
                       type="button"
                       className="btn btn--outline-pill certificate-btn"
                       onClick={() => setIsCertOpen(true)}
-                      aria-label={t('certificate.dialogTitle')}
+                      aria-label={`${t('certificate.viewButton')}: ${t('certificate.dialogTitle')}`}
                     >
                       <Eye size={15} aria-hidden="true" />
                       {t('certificate.viewButton')}
@@ -247,7 +247,7 @@ export default function Skills() {
         <div className="skills__section">
           <h3 className="skills__subtitle">{t('sections.technical')}</h3>
 
-          <div className="skills-groups-grid" role="list">
+          <div className="skills-groups-grid">
             {GROUPS.filter(Boolean).map((group) => {
                 const Icon = GROUP_ICONS[group?.icon] || Cpu;
                 const groupTitle = t(`skills.categories.${group?.title || ''}`, group?.title || '');
@@ -256,7 +256,6 @@ export default function Skills() {
                 <button
                   key={group?.id}
                   type="button"
-                  role="listitem"
                   className="skills-group-card"
                   onClick={() => group?.id && handleOpenGroup(group.id)}
                   aria-haspopup="dialog"

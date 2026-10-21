@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chouikh-anouer.netlify.app/sitemap.xml
+Sitemap: https://anouer-chouikh.netlify.app/sitemap.xml
