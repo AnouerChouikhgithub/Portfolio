@@ -219,6 +219,7 @@ export default function Header() {
               type="button"
               className="language-switcher__trigger"
               aria-label={`${t('nav.language')}: ${t(`languages.${language}`)}`}
+              lang={language}
               aria-haspopup="listbox"
               aria-expanded={isLanguageOpen}
               onClick={() => setIsLanguageOpen((open) => !open)}
@@ -234,6 +235,7 @@ export default function Header() {
                     ref={(element) => { languageOptionRefs.current[index] = element; }}
                     type="button"
                     role="option"
+                    lang={locale}
                     aria-selected={false}
                     className="language-switcher__option"
                     onClick={() => selectLanguage(locale)}

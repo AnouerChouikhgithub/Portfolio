@@ -72,3 +72,6 @@ ehthumbs.db
 .graphify-out/
 *.tsbuildinfo
 .eslintcache
+
+# ── Build-time prerender intermediate (SSR render entry) ───────
+dist-ssr/

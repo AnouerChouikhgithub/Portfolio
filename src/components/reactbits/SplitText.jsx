@@ -1,4 +1,7 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
+
+// Server render (prerender) has no layout phase; useEffect is a no-op there and avoids the SSR warning.
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useI18n } from '../../i18n/I18nProvider';
@@ -52,7 +55,7 @@ export default function SplitText({
   // (immediateRender) BEFORE the first paint of these segments, so there is
   // no flash of fully-visible text and no visibility gate to hide the
   // animation itself (the old bug: the node stayed hidden until onComplete).
-  useLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const node = ref.current;
     if (!node || prefersReducedMotion || !text) {
       return undefined;
