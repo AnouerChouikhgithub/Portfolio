@@ -1,4 +1,7 @@
 import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
+
+// Server render (prerender) has no layout phase; useEffect is a no-op there and avoids the SSR warning.
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 import { gsap } from 'gsap';
 import { useI18n } from '../i18n/I18nProvider';
 import HeroBackground from './HeroBackground';
@@ -29,7 +32,7 @@ export default function Hero() {
   // title/tagline words — one owner per element. useLayoutEffect applies
   // the from-state before the first paint (no flash); clearProps hands
   // transform/opacity back to CSS so .btn:hover keeps working.
-  useLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reducedMotion) {
       return undefined;
@@ -89,7 +92,7 @@ export default function Hero() {
             <div className="hero__portrait-wrap">
               <WebpImage
                 className="hero__portrait"
-                fetchPriority="high"
+                fetchpriority="high"
                 src="/me2.jpg"
                 alt={t('common.portraitAlt')}
               />

@@ -9,3 +9,27 @@
   command = "npm run dev"
   targetPort = 5173
   port = 8888
+
+# Legacy ?lang= links on the root URL go to their language path (301). Netlify
+# keeps the query string, and the app removes lang= on load. Only the exact root
+# path matches; the static /en/, /fr/, /ar/ pages and /api/contact are unaffected.
+[[redirects]]
+  from = "/"
+  to = "/en/"
+  status = 301
+  force = true
+  query = {lang = "en"}
+
+[[redirects]]
+  from = "/"
+  to = "/fr/"
+  status = 301
+  force = true
+  query = {lang = "fr"}
+
+[[redirects]]
+  from = "/"
+  to = "/ar/"
+  status = 301
+  force = true
+  query = {lang = "ar"}

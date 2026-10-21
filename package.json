@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:i18n && vite build",
+    "build": "npm run check:i18n && vite build && vite build --ssr src/entry-server.jsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview",
     "check:i18n": "node scripts/check-i18n.mjs",
     "images:convert": "node scripts/convert-images.mjs",
