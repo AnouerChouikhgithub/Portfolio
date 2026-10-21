@@ -71,7 +71,7 @@ export function initScrollReveal() {
     gsap.utils.toArray('.about__intro, .about__mission').forEach((element, index) => {
       gsap.fromTo(
         element,
-        { autoAlpha: 0, y: 24 },
+        { opacity: 0, y: 24 },
         {
           autoAlpha: 1,
           y: 0,
