@@ -1,90 +1,449 @@
-const techSkills = 
-[
-    "Arduino",
-    "ESP32",
-    "Raspberry Pi",
-    "Sensors",
-    "Relays",
-    "3D Printing",
-    "SolidWorks",
-    "CNC Machine",
-    "Fritzing",
+import { lazy, Suspense, useRef, useState, useMemo, useEffect, useCallback } from 'react';
+import {
+  Eye,
+  Cpu,
+  Wrench,
+  Globe,
+  Code,
+  GitBranch,
+  Cloud,
+  ArrowLeft,
+  Box,
+} from 'lucide-react';
+import { useI18n } from '../i18n/I18nProvider';
+import MixedText from './MixedText';
+import ProjectModal from './ProjectModal';
+import {
+  GROUPS,
+  getSkillsForGroup,
+  getProjectsForGroup,
+  getProjectsForSkill,
+  getSkillById,
+} from '../data/portfolio-data';
 
-    "Python",
-    "NumPy",
-    "Pandas",
-    "C/C++",
-    "Java",
-    "Git",
-    "GitHub",
-    "JS",
-    "React",
-    "PHP",
-    "HTML",
-    "CSS",
-    "SQL",
-    "Cloud",
-]
+// Lazy-loaded: pdfjs-dist is only fetched when the certificate is opened.
+const PdfModal = lazy(() => import('./PdfModal'));
 
+// ─── Group Icon Map ─────────────────────────────────────────────────────────────
+const GROUP_ICONS = {
+  Cpu,
+  Wrench,
+  Globe,
+  Code,
+  GitBranch,
+  Cloud,
+};
 
-const softSkills = [
-  'Teamwork',
-  'problem-solving',
-  'project management',
-  'adaptability',
-  'communication',
-  "leadership",
-  "time management",
-  "critical thinking",
-  "analytical thinking",
-  "initiative",
-  "creativity",
-  "self-learning",
-  "decision-making",
-  "resilience",
-  "autonomy",
-  "attention to detail"
-]
-
-const languages = [
-  'Arabic (Native)',
-  'English (Fluent)',
-  'French (Fluent)',
-  "German (Basic)"
-]
-
+// ─── Static Experience Data ───────────────────────────────────────────────────
+const staticExperiences = [
+  {
+    id: 'andalusoft',
+    company: 'AndaluSoft Engineering',
+    tags: ['React', 'React Native', 'Symfony', 'Doctrine', 'Docker', 'Postman'],
+  },
+];
 
 export default function Skills() {
+  const { t, isRtl } = useI18n();
+  const [activeGroupId, setActiveGroupId] = useState(null);
+  const [selectedSkillId, setSelectedSkillId] = useState(null);
+  const [activeProject, setActiveProject] = useState(null);
+  const [isCertOpen, setIsCertOpen] = useState(false);
+  const certTriggerRef = useRef(null);
+  const groupCardRefs = useRef({});
+  const subscreenRef = useRef(null);
+  const subscreenScrollPosRef = useRef(0);
+
+  // Active group data & all its skills
+  const activeGroup = useMemo(
+    () => GROUPS.find((g) => g.id === activeGroupId) ?? null,
+    [activeGroupId],
+  );
+
+  const groupSkills = useMemo(
+    () => (activeGroupId ? getSkillsForGroup(activeGroupId) : []),
+    [activeGroupId],
+  );
+
+  // Filtered projects: if a skill is selected, filter by that skill; otherwise show all group projects
+  const filteredProjects = useMemo(() => {
+    if (!activeGroupId) return [];
+    if (selectedSkillId) {
+      return getProjectsForSkill(selectedSkillId);
+    }
+    return getProjectsForGroup(activeGroupId);
+  }, [activeGroupId, selectedSkillId]);
+
+  // Total projects in this group (to know if the whole group has zero projects)
+  const totalGroupProjectsCount = useMemo(
+    () => (activeGroupId ? getProjectsForGroup(activeGroupId).length : 0),
+    [activeGroupId],
+  );
+
+  const selectedSkillObj = useMemo(
+    () => (selectedSkillId ? getSkillById(selectedSkillId) : null),
+    [selectedSkillId],
+  );
+
+  // Synchronize with URL hash (e.g. #skills/embedded-iot?skill=arduino)
+  const syncFromHash = useCallback(() => {
+    const fullHash = window.location.hash;
+    if (!fullHash.toLowerCase().startsWith('#skills')) return;
+
+    const [pathPart, queryPart] = fullHash.split('?');
+    const rawId = pathPart.replace(/^#skills[\/-]?/, '').toLowerCase();
+    const foundGroup = GROUPS.find((g) => g.id === rawId);
+
+    if (foundGroup) {
+      setActiveGroupId(foundGroup.id);
+      if (queryPart) {
+        const params = new URLSearchParams(queryPart);
+        const skillParam = params.get('skill');
+        if (skillParam && getSkillById(skillParam)) {
+          setSelectedSkillId(skillParam);
+        } else {
+          setSelectedSkillId(null);
+        }
+      } else {
+        setSelectedSkillId(null);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, [syncFromHash]);
+
+  // Handle ESC key for subscreen overlay
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (activeProject) return; // Project detail modal handles its own ESC
+        if (activeGroupId) {
+          handleCloseSubscreen();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeGroupId, activeProject]);
+
+  const handleOpenGroup = (groupId, skillId = null) => {
+    setActiveGroupId(groupId);
+    setSelectedSkillId(skillId);
+    setActiveProject(null);
+
+    const hashString = skillId ? `#skills/${groupId}?skill=${skillId}` : `#skills/${groupId}`;
+    window.history.pushState(null, '', hashString);
+  };
+
+  const handleCloseSubscreen = () => {
+    const prevGroupId = activeGroupId;
+    setActiveGroupId(null);
+    setSelectedSkillId(null);
+    setActiveProject(null);
+    window.history.pushState(null, '', '#skills');
+
+    // Return focus to the group card
+    if (prevGroupId && groupCardRefs.current[prevGroupId]) {
+      groupCardRefs.current[prevGroupId].focus();
+    }
+  };
+
+  const handleSkillChipClick = (skillId) => {
+    setSelectedSkillId((prev) => {
+      const next = prev === skillId ? null : skillId;
+      const hashString = next
+        ? `#skills/${activeGroupId}?skill=${next}`
+        : `#skills/${activeGroupId}`;
+      window.history.replaceState(null, '', hashString);
+      return next;
+    });
+  };
+
+  const handleSelectProject = (project) => {
+    // Preserve subscreen scroll position before opening project modal
+    if (subscreenRef.current) {
+      subscreenScrollPosRef.current = subscreenRef.current.scrollTop;
+    }
+    setActiveProject(project);
+  };
+
+  const handleCloseProjectModal = () => {
+    setActiveProject(null);
+    // Restore subscreen scroll position
+    setTimeout(() => {
+      if (subscreenRef.current) {
+        subscreenRef.current.scrollTop = subscreenScrollPosRef.current;
+      }
+    }, 0);
+  };
+
+  // ── Translations ──
+  const translatedExperiences = t('skills.experience') || [];
+  const softSkillsList = t('skills.soft') || [];
+  const languagesList = t('skills.languages') || [];
+
   return (
-    <div className="container">
-      <h2 className="section__title">Skills & Expertise</h2>
+    <>
+      <div className="container">
+        <h2 className="section__title">{t('sections.skills')}</h2>
 
-      <div className="skills__section">
-        <h3 className="skills__subtitle">Technical Skills</h3>
-        <div className="skills__tags">
-          {techSkills.map((t) => (
-            <span key={t} className="skill-tag">{t}</span>
-          ))}
+        {/* ── Experience ──────────────────────────────────────────── */}
+        <div className="skills__section">
+          <h3 className="skills__subtitle">{t('sections.experience')}</h3>
+          <div className="skills__experience-grid">
+            {staticExperiences.map((experience, idx) => {
+              const trans = translatedExperiences[idx] || {};
+              const expTitle = trans.title || 'Software Engineering Intern';
+              const expDates = trans.dates || 'June 2026 – August 2026';
+              const expBullets = trans.bullets || [];
+              const expSubtext = trans.subtext || '';
+
+              return (
+                <article key={experience.id} className="events-card skills__experience-card">
+                  <span className="events-card__meta">{expDates}</span>
+                  <h4 className="events-card__title">{expTitle}</h4>
+                  <p className="skills__experience-company">{experience.company}</p>
+                  <ul className="skills__experience-bullets">
+                    {expBullets.map((bullet, bIdx) => (
+                      <li key={bIdx}>
+                        <MixedText text={bullet} isRtl={isRtl} />
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="skills__tags skills__experience-tags" aria-label={`${expTitle} technologies`}>
+                    {experience.tags.map((tag) => (
+                      <span key={tag} className="skill-tag">{tag}</span>
+                    ))}
+                  </div>
+                  <p className="skills__experience-subtext">
+                    <MixedText text={expSubtext} isRtl={isRtl} />
+                  </p>
+                  <div className="skills__experience-actions">
+                    <button
+                      ref={certTriggerRef}
+                      type="button"
+                      className="btn btn--outline-pill certificate-btn"
+                      onClick={() => setIsCertOpen(true)}
+                      aria-label={t('certificate.dialogTitle')}
+                    >
+                      <Eye size={15} aria-hidden="true" />
+                      {t('certificate.viewButton')}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Technical Skills (6 Group Cards) ────────────────────── */}
+        <div className="skills__section">
+          <h3 className="skills__subtitle">{t('sections.technical')}</h3>
+
+          <div className="skills-groups-grid" role="list">
+            {GROUPS.map((group) => {
+              const Icon = GROUP_ICONS[group.icon] || Cpu;
+              const groupTitle = t(`skills.categories.${group.title}`, group.title);
+
+              return (
+                <button
+                  key={group.id}
+                  ref={(el) => { groupCardRefs.current[group.id] = el; }}
+                  type="button"
+                  role="listitem"
+                  className="skills-group-card"
+                  onClick={() => handleOpenGroup(group.id)}
+                  aria-haspopup="dialog"
+                  aria-label={groupTitle}
+                  style={{ '--group-accent': group.color }}
+                >
+                  <div className="skills-group-card__icon-wrapper" aria-hidden="true">
+                    <Icon size={28} strokeWidth={1.8} />
+                  </div>
+                  <span className="skills-group-card__title">{groupTitle}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Soft Skills ─────────────────────────────────────────── */}
+        <div className="skills__section">
+          <h3 className="skills__subtitle">{t('sections.soft')}</h3>
+          <div className="skills__tags">
+            {softSkillsList.map((s, idx) => (
+              <span key={idx} className="skill-tag skill-tag--soft">{s}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Languages ───────────────────────────────────────────── */}
+        <div className="skills__section">
+          <h3 className="skills__subtitle">{t('sections.languages')}</h3>
+          <ul className="skills__tags">
+            {languagesList.map((l, idx) => (
+              <li key={idx} className="skills__item"><i>•</i> {l}</li>
+            ))}
+          </ul>
         </div>
       </div>
 
-      <div className="skills__section">
-        <h3 className="skills__subtitle">Soft Skills</h3>
-        <div className="skills__tags">
-          {softSkills.map((s) => (
-            <span key={s} className="skill-tag">{s}</span>
-          ))}
-        </div>
-      </div>
+      {/* ── Group Subscreen Overlay ─────────────────────────────────── */}
+      {activeGroup && (
+        <div
+          className="skills-subscreen"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="skills-subscreen-title"
+          ref={subscreenRef}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              handleCloseSubscreen();
+            }
+          }}
+        >
+          <div className="skills-subscreen__container">
+            {/* Header */}
+            <div className="skills-subscreen__header">
+              <button
+                type="button"
+                className="skills-subscreen__back-btn"
+                onClick={handleCloseSubscreen}
+                aria-label={t('skills.backToSkills', 'Back to Technical Skills')}
+              >
+                <ArrowLeft size={18} className="skills-subscreen__back-icon" aria-hidden="true" />
+                <span>{t('skills.backToSkills', 'Back to Technical Skills')}</span>
+              </button>
 
-      <div className="skills__section">
-        <h3 className="skills__subtitle">Languages</h3>
-        <ul className="skills__tags">
-          {languages.map((l) => (
-            <li key={l} className="skills__item"><i>•</i> {l}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
+              <div className="skills-subscreen__title-wrapper">
+                <h3 id="skills-subscreen-title" className="skills-subscreen__title">
+                  {t(`skills.categories.${activeGroup.title}`, activeGroup.title)}
+                </h3>
+              </div>
+            </div>
+
+            {/* Skills Filter Chips */}
+            <div className="skills-subscreen__skills-section">
+              <div className="skills__tags" aria-label="Skills filter">
+                {groupSkills.map((skill) => {
+                  const isSelected = selectedSkillId === skill.id;
+                  return (
+                    <button
+                      key={skill.id}
+                      type="button"
+                      className={`skill-tag skill-tag--filter ${isSelected ? 'is-selected' : ''}`}
+                      onClick={() => handleSkillChipClick(skill.id)}
+                      aria-pressed={isSelected}
+                    >
+                      {skill.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Related Projects Section (hidden entirely if whole group has zero projects) */}
+            {totalGroupProjectsCount > 0 && (
+              <div className="skills-subscreen__projects-section">
+                <div className="skills-subscreen__projects-header">
+                  <h4 className="skills-subscreen__subtitle">
+                    {selectedSkillObj
+                      ? `${t('skills.projectsUsingSkill', 'Projects using')} ${selectedSkillObj.name} (${filteredProjects.length})`
+                      : `${t('skills.relatedProjects', 'Related Projects')} (${filteredProjects.length})`}
+                  </h4>
+                </div>
+
+                {filteredProjects.length > 0 ? (
+                  <ul className="skills-subscreen__projects-list" role="list">
+                    {filteredProjects.map((project) => {
+                      const projectTitle = t(`projects.items.${project.slug}.title`, project.title || project.name);
+                      const accentColor = project.accent || 'var(--accent)';
+
+                      return (
+                        <li key={project.id} role="listitem">
+                          <button
+                            type="button"
+                            className="skills-project-item-btn"
+                            onClick={() => handleSelectProject(project)}
+                            aria-label={projectTitle}
+                            style={{ '--item-accent': accentColor }}
+                          >
+                            <div className="skills-project-item__icon-wrapper">
+                              {project.logo ? (
+                                <img
+                                  src={project.logo}
+                                  alt=""
+                                  className="skills-project-item__logo"
+                                  loading="lazy"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                    if (e.currentTarget.nextElementSibling) {
+                                      e.currentTarget.nextElementSibling.style.display = 'flex';
+                                    }
+                                  }}
+                                />
+                              ) : null}
+                              <div
+                                className="skills-project-item__placeholder"
+                                style={{ display: project.logo ? 'none' : 'flex' }}
+                                aria-hidden="true"
+                              >
+                                <Box size={22} />
+                              </div>
+                            </div>
+
+                            <span className="skills-project-item__title" style={{ color: accentColor }}>
+                              {projectTitle}
+                            </span>
+
+                            <span className="skills-project-item__view-more">
+                              {t('skills.viewMore', 'View more')}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <div className="skills-subscreen__empty">
+                    <p>{t('skills.noProjectsYet', 'No projects yet')}</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── Project Detail Modal (Preserves Subscreen Scroll State) ── */}
+      {activeProject && (
+        <ProjectModal
+          project={activeProject}
+          onClose={handleCloseProjectModal}
+          onOpenSkillGroup={(groupId, skillId) => {
+            handleCloseProjectModal();
+            handleOpenGroup(groupId, skillId);
+          }}
+        />
+      )}
+
+      {/* ── Internship Certificate Modal ───────────────────────────── */}
+      {isCertOpen && (
+        <Suspense fallback={null}>
+          <PdfModal
+            src="/internship-certificate.pdf"
+            title={t('certificate.dialogTitle')}
+            showDownload={false}
+            onClose={() => setIsCertOpen(false)}
+            triggerRef={certTriggerRef}
+          />
+        </Suspense>
+      )}
+    </>
+  );
 }
